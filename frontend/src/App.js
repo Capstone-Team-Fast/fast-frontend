@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom'
 import { Route, Link } from 'react-router-dom'
 
-import CustomersList from './example/CustomersList'
+//import CustomersList from './example/CustomersList'
 
 import Recipient from './components/Data/Recipient/Recipient'
+import Driver from './components/Data/Driver/Driver'
 
 import './App.css';
 
@@ -28,9 +29,9 @@ const BaseLayout = () => (
     <div className="content">
       {//<Route path="/" exact component={CustomersList} />
       }
+      <Route path="/" exact component={Driver} />
       <Route path="/" exact component={Recipient} />
-
-
+  
     </div>
 
   </div>
