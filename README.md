@@ -4,6 +4,9 @@
 
 Our original goal for milestone 1 was to complete the Data component page. That goal turned out to be impractical as our frontend team scrambled to implement a tool (REACT) that they had just learned. To stay productive, our frontend team decided to implement an example component which is working locally. Our team will reference that example as we create our Data component. We plan to have our Data component complete by 10/10. 
 
+## Milestone 2 Release Notes: All of our frontend pages are still in development. Currently, we have the outline of our Data page started. Our Data page consists of the Driver component and the Recipient component. These components are not interactive yet. Internally, our milestone 2 will be completed on October 31st. By October 31st, we hope to have the Driver and REcipient Components interactive, and the Routing page complete. 
+
+
 #Installation
 
 - Install latest version of [Nodejs](https://nodejs.org/en/download/) and [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
