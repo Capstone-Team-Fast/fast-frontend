@@ -42,12 +42,13 @@ render() {
     return (
         <Container>
             <Row>
-                <Col sm={9} className="table-title">Recipients</Col>
-                <Col sm={3}> 
+                <Col sm={11} className="table-title">Recipients</Col>
+                <Col sm={1}> 
                     <Button>Add New</Button>
                 </Col>
                 
             </Row>
+            <br/>
             <Row>
                 <Col cols="9" class="mt-3">
                     <InputGroup class="mb-2">
@@ -67,6 +68,7 @@ render() {
                     </InputGroup>
                 </Col>
             </Row>
+            <br/>
             <Row>
                 <Table striped bordered hover>
                     <thead>
@@ -86,6 +88,7 @@ render() {
                             <td>Hardcoded Language</td>
                             <td >
                                 <Button>
+                                    {'               '}
                                 Edit
                                 </Button>
                                 {' '}
