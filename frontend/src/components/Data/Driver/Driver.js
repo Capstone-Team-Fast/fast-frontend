@@ -7,11 +7,11 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+
 //import Search from 'react-bootstrap-icons/Search';
 
 
 //import Search from 'react-bootstrap-icons';
-
 
 class  Driver  extends  Component {
 
@@ -44,7 +44,7 @@ render() {
             <Row>
                 <Col sm={9} className="table-title">Drivers</Col>
                 <Col sm={3}> 
-                    <Button>Add New</Button>
+                    <Button href="/addDriver">Add New</Button>
                 </Col>
                 
             </Row>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 const API_URL = 'http://localhost:8000';
 
-export default class DriverService{
+export default class RecipientService{
 
     constructor(){}
 
