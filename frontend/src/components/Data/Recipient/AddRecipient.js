@@ -12,9 +12,7 @@ class  AddRecipient  extends  Component {
 
 constructor(props) {
     super(props);
-    this.state = {'first_name': '', 'last_name': '', 'phone': '',
-                    'address': '', 'room_number': '', 'city': '',
-                    'state': '','zipcode': '', 'languages': []
+    this.state = {'user': {}, 'phone': '', 'location': {}, 'languages': []
                 };
     this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
@@ -22,33 +20,50 @@ constructor(props) {
     
     this.recipientService = new RecipientService();
     this.handleChange = this.handleChange.bind(this);
+    this.handleObjectChange = this.handleObjectChange.bind(this);
+    this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.getEventValues = this.getEventValues.bind(this);
+}
+
+getEventValues(event) {
+    let [value, name, id] = [   event.target.value, 
+                                event.target.name, 
+                                event.target.id];
+    return [value, name, id];
+}
+
+handleObjectChange(event) {
+    let [value, name, id] = this.getEventValues(event);
+    this.setState(prevState => ({
+        [name]: {
+             ...prevState[name],
+            [id]: value
+        }    
+    }
+    ));
+}
+
+handleLanguageChange(event) {
+    let [value, name, id] = this.getEventValues(event);
+    if (event.target.checked) {
+        this.setState({
+            languages: this.state.languages.concat(id)
+        });
+    }
+    else {
+        var newArr = this.state.languages.filter( l => {
+            return l !== id;
+        })
+        this.setState({languages:  newArr});
+    }
 }
 
 handleChange(event) {
-    const value = event.target.value 
-    const name = event.target.name 
-
-    if (name === "language") {
-        const id = event.target.id
-        let found = false;
-        for (let language in this.state.languages) {
-            console.log("id = " + id + "\nlanguage = " + language)
-            if (id === this.state.languages[language]) {
-                this.state.languages.splice(language, 1);
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            this.state.languages.push(id)
-        }
-    }
-    else {
-        this.setState({
-            [name]: value
-        });
-    }
+    let [value, name] = this.getEventValues(event);
+    this.setState({
+        [name]: value
+    });
 }
 
 handleSubmit = (event) => {
@@ -66,16 +81,16 @@ render() {
         <Container>
             <Form onSubmit={this.handleSubmit}>
                 <Row className="mb-3">
-                    <Form.Group as={Col} controlId="formGridFirstName">
-                        <Form.Label>First Name</Form.Label>
-                        <Form.Control type="text" name="first_name"
-                            onChange={this.handleChange} required placeholder="Enter First Name" />
+                    <Form.Group as={Col}>
+                        <Form.Label htmlFor="first_name">First Name</Form.Label>
+                        <Form.Control type="text" name="user" id="first_name"
+                            onChange={this.handleObjectChange} required placeholder="Enter First Name" />
                     </Form.Group>
 
-                    <Form.Group as={Col} controlId="formGridLastName">
-                        <Form.Label>Last Name</Form.Label>
-                        <Form.Control type="text" name="last_name"
-                        onChange={this.handleChange} required placeholder="Enter Last Name" />
+                    <Form.Group as={Col}>
+                        <Form.Label htmlFor="last_name">Last Name</Form.Label>
+                        <Form.Control type="text" name="user" id="last_name"
+                        onChange={this.handleObjectChange} required placeholder="Enter Last Name" />
                     </Form.Group>
                 </Row>
 
@@ -85,39 +100,39 @@ render() {
                     required placeholder="402-345-6789" name="phone"/>
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formGridAddress1">
-                    <Form.Label>Address</Form.Label>
-                    <Form.Control type="text" name="address"
-                    onChange={this.handleChange} required placeholder="1234 Main St" />
+                <Form.Group className="mb-3">
+                    <Form.Label htmlFor="address">Address</Form.Label>
+                    <Form.Control type="text" name="location" id="address"
+                    onChange={this.handleObjectChange} required placeholder="1234 Main St" />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="formGridAddress2">
-                    <Form.Label>Address 2</Form.Label>
-                    <Form.Control type="text" name="room_number"
-                    onChange={this.handleChange} placeholder="Apartment, studio, or floor" />
+                <Form.Group className="mb-3">
+                    <Form.Label htmlFor="room_number">Address 2</Form.Label>
+                    <Form.Control type="text" name="location" id="room_number"
+                    onChange={this.handleObjectChange} placeholder="Apartment, studio, or floor" />
                 </Form.Group>
 
                 <Row className="mb-3">
-                    <Form.Group as={Col} controlId="formGridCity">
-                        <Form.Label>City</Form.Label>
-                        <Form.Control type="text" name="city"
-                        onChange={this.handleChange} required />
+                    <Form.Group as={Col}>
+                        <Form.Label htmlFor="city">City</Form.Label>
+                        <Form.Control type="text" name="location" id="city"
+                        onChange={this.handleObjectChange} required />
                     </Form.Group>
 
-                    <Form.Group as={Col} controlId="formGridState">
-                        <Form.Label>State</Form.Label>
-                        <Form.Select onChange={this.handleChange}
-                            name="state">
+                    <Form.Group as={Col} >
+                        <Form.Label htmlFor="state">State</Form.Label>
+                        <Form.Select onChange={this.handleObjectChange}
+                            name="location" id="state">
                         { this.states.map( s => 
                             <option>{s}</option>
                         )}
                         </Form.Select>
                     </Form.Group>
 
-                    <Form.Group as={Col} controlId="formGridZip">
-                        <Form.Label>Zip</Form.Label>
-                        <Form.Control type="number"
-                        onChange={this.handleChange} name="zipcode"/>
+                    <Form.Group as={Col}>
+                        <Form.Label htmlFor="zipcode">Zip</Form.Label>
+                        <Form.Control type="number" onChange={this.handleObjectChange} 
+                            name="location" id="zipcode"/>
                     </Form.Group>
                 </Row>
 
@@ -125,7 +140,7 @@ render() {
                     <Row><Form.Label>Languages</Form.Label></Row>
                         { this.languages.map( l => 
                             <Form.Check type="checkbox" inline label={l} id={l}
-                                name="language" onChange={this.handleChange} />
+                                name="language" onChange={this.handleLanguageChange} />
                         )}
                 </Form.Group>
 
