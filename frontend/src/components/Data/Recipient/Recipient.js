@@ -42,11 +42,10 @@ render() {
     return (
         <Container>
             <Row>
-                <Col sm={11} className="table-title">Recipients</Col>
-                <Col sm={1}> 
-                    <Button>Add New</Button>
+                <Col sm={9} className="table-title">Recipients</Col>
+                <Col sm={3}> 
+                    <Button href="/addRecipient">Add New</Button>
                 </Col>
-                
             </Row>
             <br/>
             <Row>
