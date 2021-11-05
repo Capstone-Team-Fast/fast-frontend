@@ -44,7 +44,7 @@ render() {
             <Row>
                 <Col sm={9} className="table-title">Recipients</Col>
                 <Col sm={3}> 
-                    <Button>Add New</Button>
+                    <Button href="/addRecipient">Add New</Button>
                 </Col>
                 
             </Row>
