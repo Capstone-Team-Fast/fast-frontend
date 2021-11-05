@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Badge from 'react-bootstrap/Badge'
 import DriverService from '../../../services/DriverService';
 
 class  AddDriver  extends  Component {
@@ -96,6 +97,7 @@ render() {
 
     return (
         <Container>
+            <h1>Add a New Driver</h1>
             <Form onSubmit={this.handleSubmit}>
                 <Row className="mb-3">
                     <Form.Group as={Col}>

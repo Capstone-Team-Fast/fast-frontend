@@ -21,7 +21,7 @@ constructor(props) {
         //customers: [],
         //nextPageURL:  ''
     };
-;
+    this.dummy = { pk: 1792}; // Dummy variable for updateRecipient route
 }
 
 componentDidMount() {
@@ -85,7 +85,7 @@ render() {
                             <td>Hardcoded Address</td>
                             <td>Hardcoded Language</td>
                             <td >
-                                <Button>
+                                <Button href={"/updateRecipient/" + this.dummy.pk}>
                                 Edit
                                 </Button>
                                 {' '}
