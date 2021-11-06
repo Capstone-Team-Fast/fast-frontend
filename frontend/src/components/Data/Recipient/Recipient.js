@@ -7,10 +7,13 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import RecipientService from '../../../services/RecipientService';
 //import Search from 'react-bootstrap-icons/Search';
 
 
 //import Search from 'react-bootstrap-icons';
+
+const recipientService = new RecipientService();
 
 
 class  Recipient  extends  Component {
@@ -18,23 +21,30 @@ class  Recipient  extends  Component {
 constructor(props) {
     super(props);
     this.state  = {
-        //customers: [],
-        //nextPageURL:  ''
+        recipients: [],
     };
+
+    this.handleRecipientDelete  =  this.handleRecipientDelete.bind(this);
     this.dummy = { pk: 1792}; // Dummy variable for updateRecipient route
 }
 
 componentDidMount() {
-    console.log("Method example");
-}
+    var  self  =  this;
+    recipientService.getRecipients().then(function (result) {
+        console.log(result);
+        self.setState({ recipients:  result.data});
+    });
 
-handleDelete(e,pk){
-    console.log("Method example");
 }
+handleRecipientDelete(e,pk){
+    var  self  =  this;
+    recipientService.deleteRecipient({pk :  pk}).then(()=>{
+        var  newArr  =  self.state.recipients.filter(function(obj) {
+            return  obj.pk  !==  pk;
+        });
 
-nextPage(){
-    console.log("Method example");
-    
+        self.setState({recipients:  newArr})
+    });
 }
 
 render() {
@@ -46,8 +56,8 @@ render() {
                 <Col sm={3}> 
                     <Button href="/addRecipient">Add New</Button>
                 </Col>
-                
             </Row>
+            <br/>
             <Row>
                 <Col cols="9" class="mt-3">
                     <InputGroup class="mb-2">
@@ -67,6 +77,7 @@ render() {
                     </InputGroup>
                 </Col>
             </Row>
+            <br/>
             <Row>
                 <Table striped bordered hover>
                     <thead>
@@ -79,6 +90,17 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
+                        {this.state.recipients.map( r  =>
+                            <tr  key={r.pk}>
+                            <td>{r.first_name}</td>
+                            <td>{r.last_name}</td>
+                            <td>{r.address}</td>
+                            <td>{r.language}</td>
+                            <td>
+                                <Button>EDIT</Button>
+                                <Button  onClick={(e)=>  this.handleRecipientDelete(e,r.pk) }> Delete</Button>
+                            </td>
+                        </tr>)}
                         <tr>
                             <td>Hardcoded First Name</td>
                             <td>Hardcoded Last Name</td>

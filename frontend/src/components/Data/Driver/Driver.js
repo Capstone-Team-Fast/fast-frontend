@@ -7,38 +7,47 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import DriverService from '../../../services/DriverService';
+
 
 //import Search from 'react-bootstrap-icons/Search';
 
 
 //import Search from 'react-bootstrap-icons';
 
+const  driverService  =  new  DriverService();
+
 class  Driver  extends  Component {
 
 constructor(props) {
     super(props);
     this.state  = {
-        //customers: [],
-        //nextPageURL:  ''
+        drivers: [],
     };
-    
-    this.dummy = { pk: 5, nothing: 6};  // Dummy value to get updateDriver route working
 
-;
+    this.handleDriverDelete  =  this.handleDriverDelete.bind(this);
+    this.dummy = { pk: 5, nothing: 6};  // Dummy value to get updateDriver route working
 }
 
 componentDidMount() {
-    console.log("Method example");
+    var  self  =  this;
+    driverService.getDrivers().then(function (result) {
+        console.log(result);
+        self.setState({ drivers:  result.data});
+    });
+
+}
+handleDriverDelete(e,pk){
+    var  self  =  this;
+    driverService.deleteDriver({pk :  pk}).then(()=>{
+        var  newArr  =  self.state.drivers.filter(function(obj) {
+            return  obj.pk  !==  pk;
+        });
+
+        self.setState({drivers:  newArr})
+    });
 }
 
-handleDelete(e,pk){
-    console.log("Method example");
-}
-
-nextPage(){
-    console.log("Method example");
-    
-}
 
 render() {
 
@@ -48,9 +57,9 @@ render() {
                 <Col sm={9} className="table-title">Drivers</Col>
                 <Col sm={3}> 
                     <Button href="/addDriver">Add New</Button>
-                </Col>
-                
+                </Col>   
             </Row>
+            <br/>
             <Row>
                 <Col cols="9" class="mt-3">
                     <InputGroup class="mb-2">
@@ -70,6 +79,7 @@ render() {
                     </InputGroup>
                 </Col>
             </Row>
+            <br/>
             <Row>
                 <Table striped bordered hover>
                     <thead>
@@ -81,6 +91,16 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
+                    {this.state.drivers.map( d  =>
+                            <tr  key={d.pk}>
+                            <td>{d.first_name}</td>
+                            <td>{d.last_name}</td>
+                            <td>{d.phone}</td>
+                            <td>
+                                <Button>EDIT</Button>
+                                <Button  onClick={(e)=>  this.handleDriverDelete(e,d.pk) }> Delete</Button>
+                            </td>
+                        </tr>)}
                         <tr>
                             <td>Hardcoded First Name</td>
                             <td>Hardcoded Last Name</td>
