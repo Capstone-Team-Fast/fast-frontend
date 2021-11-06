@@ -7,21 +7,28 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Badge from 'react-bootstrap/Badge'
-import RecipientService from '../../../services/RecipientService';
+import DriverService from '../../../services/DriverService';
 
-class  AddRecipient  extends  Component {
+class  UpdateDriver  extends  Component {
 
 constructor(props) {
     super(props);
-    this.state = {'user': {}, 'phone': '', 'location': {}, 'languages': []
+    const {id} = props.match.params; 
+    this.state = {'pk': id,'user': {}, 'phone': '', 'availability': 
+                    {'sunday': false, 'monday': false, 'tuesday': false, 
+                    'wednesday': false, 'thursday': false, 'friday': false, 
+                    'saturday': false}, 
+                    'employee_status': '', 'capacity': '', 'languages': []
                 };
-    this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
                         'Hindi', 'Russian', 'Portugese', 'Other'];
+    this.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 
+                    'Friday', 'Saturday']
     
-    this.recipientService = new RecipientService();
+    this.driverService = new DriverService();
     this.handleChange = this.handleChange.bind(this);
-    this.handleObjectChange = this.handleObjectChange.bind(this);
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
     this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getEventValues = this.getEventValues.bind(this);
@@ -34,7 +41,7 @@ getEventValues(event) {
     return [value, name, id];
 }
 
-handleObjectChange(event) {
+handleNameChange(event) {
     let [value, name, id] = this.getEventValues(event);
     this.setState(prevState => ({
         [name]: {
@@ -43,6 +50,18 @@ handleObjectChange(event) {
         }    
     }
     ));
+}
+
+handleAvailabilityChange(event) {
+    let [value, name, id] = this.getEventValues(event);
+    let checked = event.target.checked 
+    this.setState(prevState => ({
+            [name]: {
+                 ...prevState[name],
+                [id.toLowerCase()]: checked
+            }    
+        }
+        ));
 }
 
 handleLanguageChange(event) {
@@ -69,7 +88,7 @@ handleChange(event) {
 
 handleSubmit = (event) => {
     event.preventDefault();
-    this.recipientService.createRecipient(this.state);
+    this.driverService.updateDriver(this.state);
     this.setState({redirect: "/"});
 }
     
@@ -80,69 +99,59 @@ render() {
 
     return (
         <Container>
-            <h1>Add a New Recipient</h1>
+            <h1>Update Driver Data</h1>
             <Form onSubmit={this.handleSubmit}>
                 <Row className="mb-3">
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="first_name">First Name</Form.Label>
                         <Form.Control type="text" name="user" id="first_name"
-                            onChange={this.handleObjectChange} required placeholder="Enter First Name" />
+                            onChange={this.handleNameChange} required placeholder="Enter First Name" />
                     </Form.Group>
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="last_name">Last Name</Form.Label>
                         <Form.Control type="text" name="user" id="last_name"
-                        onChange={this.handleObjectChange} required placeholder="Enter Last Name" />
+                        onChange={this.handleNameChange} required placeholder="Enter Last Name" />
                     </Form.Group>
                 </Row>
 
-                <Form.Group className="mb-3" controlId="formGridPhone">
-                    <Form.Label>Phone Number</Form.Label>
-                    <Form.Control  onChange={this.handleChange} 
-                    required placeholder="402-345-6789" name="phone"/>
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                    <Form.Label htmlFor="address">Address</Form.Label>
-                    <Form.Control type="text" name="location" id="address"
-                    onChange={this.handleObjectChange} required placeholder="1234 Main St" />
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                    <Form.Label htmlFor="room_number">Address 2</Form.Label>
-                    <Form.Control type="text" name="location" id="room_number"
-                    onChange={this.handleObjectChange} placeholder="Apartment, studio, or floor" />
-                </Form.Group>
-
-                <Row className="mb-3">
-                    <Form.Group as={Col}>
-                        <Form.Label htmlFor="city">City</Form.Label>
-                        <Form.Control type="text" name="location" id="city"
-                        onChange={this.handleObjectChange} required />
+                <Row>
+                    <Form.Group as={Col} className="mb-3" controlId="formGridPhone">
+                        <Form.Label>Phone Number</Form.Label>
+                        <Form.Control  onChange={this.handleChange} 
+                        required placeholder="402-345-6789" name="phone"/>
                     </Form.Group>
 
-                    <Form.Group as={Col} >
-                        <Form.Label htmlFor="state">State</Form.Label>
-                        <Form.Select onChange={this.handleObjectChange}
-                            name="location" id="state">
-                        { this.states.map( s => 
-                            <option>{s}</option>
-                        )}
+                    <Form.Group as={Col} className="mb-3" controlId="formGridStatus">
+                        <Form.Label>Status</Form.Label>
+                        <Form.Select onChange={this.handleChange} name="employee_status">
+                            <option>Choose...</option>
+                            <option>Employee</option>
+                            <option>Volunteer</option>
                         </Form.Select>
                     </Form.Group>
 
-                    <Form.Group as={Col}>
-                        <Form.Label htmlFor="zipcode">Zip</Form.Label>
-                        <Form.Control type="number" onChange={this.handleObjectChange} 
-                            name="location" id="zipcode"/>
+                    <Form.Group as={Col} controlId="formGridCapacity">
+                        <Form.Label>Capacity</Form.Label>
+                        <Form.Control type="number" placeholder="Vehicle Capacity"
+                        onChange={this.handleChange} name="capacity" min="0"/>
                     </Form.Group>
                 </Row>
 
-                <Form.Group className="mb-3" id="formGridCheckbox">
+                <Form.Group className="mb-3">
+                    <Row><Form.Label>Availabilty</Form.Label></Row>
+                        { this.days.map( d => 
+                            <Form.Check type="checkbox" name="availability" value="true" 
+                            inline label={d} id={d} 
+                            onChange={this.handleAvailabilityChange} />
+                        )}
+                </Form.Group>
+
+                <Form.Group className="mb-3">
                     <Row><Form.Label>Languages</Form.Label></Row>
                         { this.languages.map( l => 
                             <Form.Check type="checkbox" inline label={l} id={l}
-                                name="language" onChange={this.handleLanguageChange} />
+                                name="languages" onChange={this.handleLanguageChange} />
                         )}
                 </Form.Group>
 
@@ -152,4 +161,4 @@ render() {
         );
     }
 }
-export default AddRecipient;
+export default UpdateDriver;

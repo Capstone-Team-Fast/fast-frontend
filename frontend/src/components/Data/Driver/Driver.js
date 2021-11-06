@@ -21,6 +21,9 @@ constructor(props) {
         //customers: [],
         //nextPageURL:  ''
     };
+    
+    this.dummy = { pk: 5, nothing: 6};  // Dummy value to get updateDriver route working
+
 ;
 }
 
@@ -84,7 +87,7 @@ render() {
                             <td>Hardcoded Last Name</td>
                             <td>Hardcoded Phone Number</td>
                             <td >
-                                <Button>
+                                <Button href={"/updateDriver/" + this.dummy.pk}>
                                 Edit
                                 </Button>
                                 {' '}
