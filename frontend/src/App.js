@@ -8,6 +8,8 @@ import Recipient from './components/Data/Recipient/Recipient'
 import Driver from './components/Data/Driver/Driver'
 import AddDriver from './components/Data/Driver/AddDriver'
 import AddRecipient from './components/Data/Recipient/AddRecipient'
+import UpdateDriver from './components/Data/Driver/UpdateDriver';
+import UpdateRecipient from './components/Data/Recipient/UpdateRecipient';
 
 import './App.css';
 
@@ -35,6 +37,8 @@ const BaseLayout = () => (
       <Route path="/" exact component={Recipient} />
       <Route path="/addDriver" exact component={AddDriver} />
       <Route path="/addRecipient" exact component={AddRecipient} />
+      <Route path="/updateDriver/:id" exact component={UpdateDriver} />
+      <Route path="/updateRecipient/:id" exact component={UpdateRecipient} />
     </div>
   </div>
   
