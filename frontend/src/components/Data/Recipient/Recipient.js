@@ -23,8 +23,9 @@ constructor(props) {
     this.state  = {
         recipients: [],
     };
+
     this.handleRecipientDelete  =  this.handleRecipientDelete.bind(this);
-;
+    this.dummy = { pk: 1792}; // Dummy variable for updateRecipient route
 }
 
 componentDidMount() {
@@ -106,8 +107,7 @@ render() {
                             <td>Hardcoded Address</td>
                             <td>Hardcoded Language</td>
                             <td >
-                                <Button>
-                                    {'               '}
+                                <Button href={"/updateRecipient/" + this.dummy.pk}>
                                 Edit
                                 </Button>
                                 {' '}

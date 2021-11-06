@@ -6,14 +6,15 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Badge from 'react-bootstrap/Badge'
 import RecipientService from '../../../services/RecipientService';
 
-class  AddRecipient  extends  Component {
+class  UpdateRecipient  extends  Component {
 
 constructor(props) {
     super(props);
-    this.state = {'user': {}, 'phone': '', 'location': {}, 'languages': []
+    const {id} = props.match.params; 
+    this.state = {'pk': id, 'user': {}, 'phone': '', 'location': {},
+                    'languages': []
                 };
     this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
@@ -69,7 +70,7 @@ handleChange(event) {
 
 handleSubmit = (event) => {
     event.preventDefault();
-    this.recipientService.createRecipient(this.state);
+    this.recipientService.updateRecipient(this.state);
     this.setState({redirect: "/"});
 }
     
@@ -80,7 +81,7 @@ render() {
 
     return (
         <Container>
-            <h1>Add a New Recipient</h1>
+            <h1>Update Recipient Data</h1>
             <Form onSubmit={this.handleSubmit}>
                 <Row className="mb-3">
                     <Form.Group as={Col}>
@@ -152,4 +153,4 @@ render() {
         );
     }
 }
-export default AddRecipient;
+export default UpdateRecipient;

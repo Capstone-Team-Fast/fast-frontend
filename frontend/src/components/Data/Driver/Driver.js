@@ -24,8 +24,9 @@ constructor(props) {
     this.state  = {
         drivers: [],
     };
+
     this.handleDriverDelete  =  this.handleDriverDelete.bind(this);
-;
+    this.dummy = { pk: 5, nothing: 6};  // Dummy value to get updateDriver route working
 }
 
 componentDidMount() {
@@ -105,7 +106,7 @@ render() {
                             <td>Hardcoded Last Name</td>
                             <td>Hardcoded Phone Number</td>
                             <td >
-                                <Button>
+                                <Button href={"/updateDriver/" + this.dummy.pk}>
                                 Edit
                                 </Button>
                                 {' '}
