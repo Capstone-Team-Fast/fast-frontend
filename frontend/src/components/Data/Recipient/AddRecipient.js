@@ -13,7 +13,8 @@ class  AddRecipient  extends  Component {
 
 constructor(props) {
     super(props);
-    this.state = {'user': {}, 'phone': '', 'location': {}, 'languages': []
+    this.state = {'user': '', 'first_name': '', 'last_name': '', 
+                    'phone': '', 'location': {}, 'languages': []
                 };
     this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
@@ -43,6 +44,7 @@ handleObjectChange(event) {
         }    
     }
     ));
+    console.log(this.state)
 }
 
 handleLanguageChange(event) {
@@ -58,6 +60,7 @@ handleLanguageChange(event) {
         })
         this.setState({languages:  newArr});
     }
+    console.log(this.state)
 }
 
 handleChange(event) {
@@ -65,12 +68,14 @@ handleChange(event) {
     this.setState({
         [name]: value
     });
+    console.log(this.state)
 }
 
 handleSubmit = (event) => {
     event.preventDefault();
     this.recipientService.createRecipient(this.state);
     this.setState({redirect: "/"});
+    console.log(this.state)
 }
     
 render() {
@@ -85,14 +90,14 @@ render() {
                 <Row className="mb-3">
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="first_name">First Name</Form.Label>
-                        <Form.Control type="text" name="user" id="first_name"
-                            onChange={this.handleObjectChange} required placeholder="Enter First Name" />
+                        <Form.Control type="text" name="first_name"
+                            onChange={this.handleChange} required placeholder="Enter First Name" />
                     </Form.Group>
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="last_name">Last Name</Form.Label>
-                        <Form.Control type="text" name="user" id="last_name"
-                        onChange={this.handleObjectChange} required placeholder="Enter Last Name" />
+                        <Form.Control type="text" name="last_name"
+                        onChange={this.handleChange} required placeholder="Enter Last Name" />
                     </Form.Group>
                 </Row>
 

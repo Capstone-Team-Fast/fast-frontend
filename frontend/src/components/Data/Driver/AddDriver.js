@@ -13,7 +13,8 @@ class  AddDriver  extends  Component {
 
 constructor(props) {
     super(props);
-    this.state = {'user': {}, 'phone': '', 'availability': {'sunday': false,
+    this.state = {'user': '', 'first_name': '', 'last_name': '', 
+                    'phone': '', 'availability': {'sunday': false,
                     'monday': false, 'tuesday': false, 'wednesday': false, 
                     'thursday': false, 'friday': false, 'saturday': false}, 
                     'employee_status': '', 'capacity': '', 'languages': []
@@ -25,7 +26,6 @@ constructor(props) {
     
     this.driverService = new DriverService();
     this.handleChange = this.handleChange.bind(this);
-    this.handleNameChange = this.handleNameChange.bind(this);
     this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
     this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,17 +39,6 @@ getEventValues(event) {
     return [value, name, id];
 }
 
-handleNameChange(event) {
-    let [value, name, id] = this.getEventValues(event);
-    this.setState(prevState => ({
-        [name]: {
-             ...prevState[name],
-            [id]: value
-        }    
-    }
-    ));
-}
-
 handleAvailabilityChange(event) {
     let [value, name, id] = this.getEventValues(event);
     let checked = event.target.checked 
@@ -60,6 +49,7 @@ handleAvailabilityChange(event) {
             }    
         }
         ));
+        console.log(this.state)
 }
 
 handleLanguageChange(event) {
@@ -75,6 +65,7 @@ handleLanguageChange(event) {
         })
         this.setState({languages:  newArr});
     }
+    console.log(this.state)
 }
 
 handleChange(event) {
@@ -82,12 +73,14 @@ handleChange(event) {
     this.setState({
         [name]: value
     });
+    console.log(this.state)
 }
 
 handleSubmit = (event) => {
     event.preventDefault();
     this.driverService.createDriver(this.state);
     this.setState({redirect: "/"});
+    console.log(this.state)
 }
     
 render() {
@@ -102,14 +95,14 @@ render() {
                 <Row className="mb-3">
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="first_name">First Name</Form.Label>
-                        <Form.Control type="text" name="user" id="first_name"
-                            onChange={this.handleNameChange} required placeholder="Enter First Name" />
+                        <Form.Control type="text" name="first_name" 
+                            onChange={this.handleChange} required placeholder="Enter First Name" />
                     </Form.Group>
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="last_name">Last Name</Form.Label>
-                        <Form.Control type="text" name="user" id="last_name"
-                        onChange={this.handleNameChange} required placeholder="Enter Last Name" />
+                        <Form.Control type="text" name="last_name"
+                        onChange={this.handleChange} required placeholder="Enter Last Name" />
                     </Form.Group>
                 </Row>
 
