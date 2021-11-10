@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:8000';
+const API_URL = 'http://3.144.105.249:8000';
 
 export default class DriverService{
 

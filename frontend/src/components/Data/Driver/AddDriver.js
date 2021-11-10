@@ -56,12 +56,12 @@ handleLanguageChange(event) {
     let [value, name, id] = this.getEventValues(event);
     if (event.target.checked) {
         this.setState({
-            languages: this.state.languages.concat(id)
+            languages: this.state.languages.concat({'name':id})
         });
     }
     else {
         var newArr = this.state.languages.filter( l => {
-            return l !== id;
+            return l.name !== id;
         })
         this.setState({languages:  newArr});
     }
