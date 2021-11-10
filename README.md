@@ -6,6 +6,8 @@ Our original goal for milestone 1 was to complete the Data component page. That 
 
 ## Milestone 2 Release Notes: All of our frontend pages are still in development. Currently, we have the outline of our Data page started. Our Data page consists of the Driver component and the Recipient component. These components are not interactive yet. Internally, our milestone 2 will be completed on October 31st. By October 31st, we hope to have the Driver and REcipient Components interactive, and the Routing page complete. 
 
+## Milestone 3 Release Notes: We have our Data page finished. We just need to test its connection to the backend.  We are behind on our routing page. As we get more people moved to the frontend, that will allow us to pick up the pace on the routing page and our other pages. 
+
 
 #Installation
 
