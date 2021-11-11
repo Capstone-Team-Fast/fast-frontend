@@ -32,8 +32,8 @@ constructor(props) {
 componentDidMount() {
     var  self  =  this;
     driverService.getDrivers().then(function (result) {
-        console.log(result);
-        self.setState({ drivers:  result.data});
+        console.log(result.data);
+        self.setState({ drivers:  result});
     });
 
 }
@@ -92,7 +92,7 @@ render() {
                     </thead>
                     <tbody>
                     {this.state.drivers.map( d  =>
-                            <tr  key={d.pk}>
+                            <tr  key={d.id}>
                             <td>{d.first_name}</td>
                             <td>{d.last_name}</td>
                             <td>{d.phone}</td>

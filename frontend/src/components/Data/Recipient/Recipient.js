@@ -32,7 +32,7 @@ componentDidMount() {
     var  self  =  this;
     recipientService.getRecipients().then(function (result) {
         console.log(result);
-        self.setState({ recipients:  result.data});
+        self.setState({ recipients:  result});
     });
 
 }
@@ -91,7 +91,7 @@ render() {
                     </thead>
                     <tbody>
                         {this.state.recipients.map( r  =>
-                            <tr  key={r.pk}>
+                            <tr  key={r.id}>
                             <td>{r.first_name}</td>
                             <td>{r.last_name}</td>
                             <td>{r.address}</td>
