@@ -8,6 +8,7 @@ export default class DriverService{
 
     getDrivers() {
         const url = `${API_URL}/api/drivers/`;
+        //const url = `${API_URL}/drivers/`;
         return axios.get(url).then(response => response.data);
     }
 
@@ -18,11 +19,13 @@ export default class DriverService{
 
     getDriver(pk) {
         const url = `${API_URL}/api/drivers/${pk}`;
+        //const url = `${API_URL}/drivers/${pk}/`;
         return axios.get(url).then(response => response.data);
     }
 
     deleteDriver(driver){
         const url = `${API_URL}/api/drivers/${driver.pk}`;
+        //const url = `${API_URL}/drivers/${driver.pk}/`;
         return axios.delete(url);
     }
 
@@ -30,16 +33,19 @@ export default class DriverService{
     // multiple drivers at one time?
     createDrivers(drivers) {
         const url = `${API_URL}/api/drivers/`;
+        //const url = `${API_URL}/drivers/`;
         return axios.post(url, drivers).then(response => response.data);
     }
 
     createDriver(driver){
         const url = `${API_URL}/api/drivers/`;
+        //const url = `${API_URL}/drivers/`;
         return axios.post(url,driver).then(response => response.data);
     }
 
     updateDriver(driver){
         const url = `${API_URL}/api/drivers/${driver.pk}`;
+        //const url = `${API_URL}/drivers/${driver.pk}`;
         return axios.put(url,driver);
     }
 }

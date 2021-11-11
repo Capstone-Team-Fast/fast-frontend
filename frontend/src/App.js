@@ -23,17 +23,18 @@ const BaseLayout = () => (
       </button>
   <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div className="navbar-nav">
-      {/*<a className="nav-item nav-link" href="/">CUSTOMERS</a>
-      <a className="nav-item nav-link" href="/customer">CREATE CUSTOMER</a>
-*/}
+      <a className="nav-item nav-link" href="/">ADD DATA</a>
+      <a className="nav-item nav-link" href="/customer">CREATE ROUTE</a>
+      <a className="nav-item nav-link" href="/customer">ROUTE HISTORY</a>
+
     </div>
   </div>
 </nav>
 
     <div className="content">
-      {//<Route path="/" exact component={CustomersList} />
-      }
+      
       <Route path="/" exact component={Driver} />
+      <br/>
       <Route path="/" exact component={Recipient} />
       <Route path="/addDriver" exact component={AddDriver} />
       <Route path="/addRecipient" exact component={AddRecipient} />

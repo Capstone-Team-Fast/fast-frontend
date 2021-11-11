@@ -8,6 +8,7 @@ export default class RecipientService{
 
     getRecipients() {
         const url = `${API_URL}/api/clients/`;
+        //const url = `${API_URL}/clients/`;
         return axios.get(url).then(response => response.data);
     }
 
@@ -18,11 +19,13 @@ export default class RecipientService{
 
     getRecipient(pk) {
         const url = `${API_URL}/api/clients/${pk}`;
+        //const url = `${API_URL}/clients/${pk}`;
         return axios.get(url).then(response => response.data);
     }
 
     deleteRecipient(recipient){
         const url = `${API_URL}/api/clients/${recipient.pk}`;
+        //const url = `${API_URL}/clients/${recipient.pk}`;
         return axios.delete(url);
     }
 
@@ -30,16 +33,19 @@ export default class RecipientService{
     // multiple recipients at one time?
     createRecipients(recipients) {
         const url = `${API_URL}/api/clients/`;
+        //const url = `${API_URL}/clients/`;
         return axios.post(url, recipients).then(response => response.data);
     }
 
     createRecipient(recipient){
         const url = `${API_URL}/api/clients/`;
+        //const url = `${API_URL}/clients/`;
         return axios.post(url,recipient).then(response => response.data);
     }
 
     updateRecipient(recipient){
         const url = `${API_URL}/api/clients/${recipient.pk}`;
+        //const url = `${API_URL}/clients/${recipient.pk}`;
         return axios.put(url,recipient);
     }
 }
