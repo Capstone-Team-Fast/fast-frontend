@@ -13,8 +13,9 @@ class  UpdateRecipient  extends  Component {
 constructor(props) {
     super(props);
     const {id} = props.match.params; 
-    this.state = {'pk': id, 'user': '', 'first_name': '', 'last_name': '', 
-                    'phone': '', 'location': {}, 'languages': []
+    this.state = {'pk': id, 'first_name': '', 'last_name': '', 'quantity': '', 
+                    'phone': '', 'languages': [], 'location': { 'is_center': false,
+                    'latitude': '','longitude': ''}
                 };
     this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
@@ -26,6 +27,14 @@ constructor(props) {
     this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getEventValues = this.getEventValues.bind(this);
+}
+
+componentDidMount() {
+    var  self  =  this;
+    this.recipientService.getRecipient(self.state.pk).then(function (result) {
+        console.log(result);
+        self.setState(result.data)
+    });
 }
 
 getEventValues(event) {
@@ -51,12 +60,12 @@ handleLanguageChange(event) {
     let [value, name, id] = this.getEventValues(event);
     if (event.target.checked) {
         this.setState({
-            languages: this.state.languages.concat(id)
+            languages: this.state.languages.concat({'name': id})
         });
     }
     else {
         var newArr = this.state.languages.filter( l => {
-            return l !== id;
+            return l.name !== id
         })
         this.setState({languages:  newArr});
     }

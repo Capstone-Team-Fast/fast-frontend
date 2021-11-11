@@ -21,7 +21,7 @@ constructor(props) {
         //customers: [],
         //nextPageURL:  ''
     };
-    this.dummy = { pk: 1792}; // Dummy variable for updateRecipient route
+    this.dummy = { pk: 3}; // Dummy variable for updateRecipient route
 }
 
 componentDidMount() {
