@@ -13,7 +13,9 @@ class  AddRecipient  extends  Component {
 
 constructor(props) {
     super(props);
-    this.state = {'user': {}, 'phone': '', 'location': {}, 'languages': []
+    this.state = {'user': '', 'first_name': '', 'last_name': '', 'quantity': '', 
+                    'phone': '', 'languages': [], 'location': { 'is_center': false,
+                    'latitude': '','longitude': ''}  
                 };
     this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
@@ -49,15 +51,16 @@ handleLanguageChange(event) {
     let [value, name, id] = this.getEventValues(event);
     if (event.target.checked) {
         this.setState({
-            languages: this.state.languages.concat(id)
+            languages: this.state.languages.concat({'name': id})
         });
     }
     else {
         var newArr = this.state.languages.filter( l => {
-            return l !== id;
+            return l.name !== id;
         })
         this.setState({languages:  newArr});
     }
+    console.log(this.state.languages)
 }
 
 handleChange(event) {
@@ -85,22 +88,32 @@ render() {
                 <Row className="mb-3">
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="first_name">First Name</Form.Label>
-                        <Form.Control type="text" name="user" id="first_name"
-                            onChange={this.handleObjectChange} required placeholder="Enter First Name" />
+                        <Form.Control type="text" name="first_name"
+                            onChange={this.handleChange} required placeholder="Enter First Name" />
                     </Form.Group>
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="last_name">Last Name</Form.Label>
-                        <Form.Control type="text" name="user" id="last_name"
-                        onChange={this.handleObjectChange} required placeholder="Enter Last Name" />
+                        <Form.Control type="text" name="last_name"
+                        onChange={this.handleChange} required placeholder="Enter Last Name" />
                     </Form.Group>
                 </Row>
 
-                <Form.Group className="mb-3" controlId="formGridPhone">
-                    <Form.Label>Phone Number</Form.Label>
-                    <Form.Control  onChange={this.handleChange} 
-                    required placeholder="402-345-6789" name="phone"/>
-                </Form.Group>
+                <Row>
+                    <Form.Group as={Col} className="mb-3" controlId="formGridPhone">
+                        <Form.Label>Phone Number</Form.Label>
+                        <Form.Control  onChange={this.handleChange} 
+                        required placeholder="402-345-6789" name="phone"/>
+                    </Form.Group>
+
+                    <Form.Group as={Col}>
+                        <Form.Label htmlFor="quantity">Quantity</Form.Label> 
+                        <Form.Control type="number" onChange={this.handleChange} 
+                            name="quantity" min="0"/>
+                    </Form.Group>
+                </Row>
+
+                
 
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="address">Address</Form.Label>
@@ -134,7 +147,7 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="zipcode">Zip</Form.Label>
                         <Form.Control type="number" onChange={this.handleObjectChange} 
-                            name="location" id="zipcode"/>
+                            name="location" id="zipcode" min="68000"/>
                     </Form.Group>
                 </Row>
 
