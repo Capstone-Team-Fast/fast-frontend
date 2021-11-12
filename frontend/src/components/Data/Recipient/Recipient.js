@@ -51,31 +51,30 @@ render() {
             <Row className="card-header">
                 <Col>
                     <Row>
-                        <Col sm={9} className="table-title">Recipients</Col>
-                        <Col sm={3}> 
+                        <Col sm={2} className="table-title">Recipients</Col>
+                        <Col sm={8} class="mt-3">
+                                <InputGroup class="mb-2">
+                                     <InputGroup.Text>
+                                    {// <Search icon="search"></Search>
+                                    }
+                                    </InputGroup.Text>
+                                    <FormControl
+                                            type="text"
+                                            placeholder="Search recipients"
+                                            id="search"
+                                            v-model="search"
+                                            name="search"
+                                            aria-label="Search"
+                                         //ref="title"
+                                ></FormControl>
+                            </InputGroup>
+                        </Col>
+                        <Col sm={2}> 
                             <Button href="/addRecipient">Add New</Button>
                         </Col>
                     </Row>
                     <br/>
-                    <Row>
-                        <Col cols="9" class="mt-3">
-                            <InputGroup class="mb-2">
-                                <InputGroup.Text>
-                                {// <Search icon="search"></Search>
-                                }
-                                </InputGroup.Text>
-                                <FormControl
-                                        type="text"
-                                        placeholder="Search recipients"
-                                        id="search"
-                                        v-model="search"
-                                        name="search"
-                                        aria-label="Search"
-                                        //ref="title"
-                                ></FormControl>
-                            </InputGroup>
-                        </Col>
-                    </Row>
+                   
                 </Col>
             </Row>
         

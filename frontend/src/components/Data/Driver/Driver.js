@@ -55,14 +55,8 @@ render() {
             <Row className="card-header">
                 <Col>
                     <Row >
-                        <Col sm={9} className="table-title">Drivers</Col>
-                        <Col sm={3}> 
-                            <Button href="/addDriver">Add New</Button>
-                        </Col>   
-                    </Row>
-                    <br/>
-                    <Row className="card-body">
-                        <Col cols="9" class="mt-3">
+                        <Col sm={2} className="table-title">Drivers</Col>
+                        <Col sm={8} class="mt-3">
                             <InputGroup class="mb-2">
                                 <InputGroup.Text>
                                 {// <Search icon="search"></Search>
@@ -79,12 +73,15 @@ render() {
                                 ></FormControl>
                             </InputGroup>
                         </Col>
+                        <Col sm={2}> 
+                            <Button href="/addDriver">Add New</Button>
+                        </Col>   
                     </Row>
                 </Col>
             </Row>
            
             <br/>
-            <Row>
+            <Row className="card-body">
                 <Table striped bordered hover>
                     <thead>
                         <tr>
