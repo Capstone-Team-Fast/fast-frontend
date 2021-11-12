@@ -13,7 +13,7 @@ class  UpdateRecipient  extends  Component {
 constructor(props) {
     super(props);
     const {id} = props.match.params; 
-    this.state = {'pk': id, 'first_name': '', 'last_name': '', 'quantity': '', 
+    this.state = {'id': id, 'first_name': '', 'last_name': '', 'quantity': '', 
                     'phone': '', 'languages': [], 'location': { 'is_center': false,
                     'latitude': '','longitude': ''}
                 };
@@ -31,10 +31,13 @@ constructor(props) {
 
 componentDidMount() {
     var  self  =  this;
-    this.recipientService.getRecipient(self.state.pk).then(function (result) {
+    this.recipientService.getRecipient(this.state.id).then(function (result) {
         console.log(result);
-        self.setState(result.data)
+        self.setState(prevState => ({
+            [prevState]: result,
+        }))
     });
+    console.log(self.state)
 }
 
 getEventValues(event) {

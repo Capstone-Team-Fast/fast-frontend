@@ -23,7 +23,6 @@ constructor(props) {
     this.state  = {
         recipients: [],
     };
-    this.dummy = { pk: 3}; // Dummy variable for updateRecipient route
 }
 
 componentDidMount() {
@@ -95,25 +94,10 @@ render() {
                             <td>{r.address}</td>
                             <td>{r.language}</td>
                             <td>
-                                <Button>EDIT</Button>
-                                <Button  onClick={(e)=>  this.handleRecipientDelete(e,r.pk) }> Delete</Button>
+                                <Button href={"/updateRecipient/" + r.id}>Edit</Button>
+                                <Button  onClick={(e)=>  this.handleRecipientDelete(e,r.id) }> Delete</Button>
                             </td>
                         </tr>)}
-                        <tr>
-                            <td>Hardcoded First Name</td>
-                            <td>Hardcoded Last Name</td>
-                            <td>Hardcoded Address</td>
-                            <td>Hardcoded Language</td>
-                            <td >
-                                <Button href={"/updateRecipient/" + this.dummy.pk}>
-                                Edit
-                                </Button>
-                                {' '}
-                                <Button>
-                                Delete
-                                </Button>
-                            </td>
-                        </tr>
                     </tbody>
                 </Table>
             </Row>

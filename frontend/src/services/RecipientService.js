@@ -18,7 +18,7 @@ export default class RecipientService{
     }
 
     getRecipient(pk) {
-        const url = `${API_URL}/api/clients/${pk}`;
+        const url = `${API_URL}/api/clients/${pk}/`;
         //const url = `${API_URL}/clients/${pk}`;
         return axios.get(url).then(response => response.data);
     }

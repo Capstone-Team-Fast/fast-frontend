@@ -1,4 +1,4 @@
-import  React, { Component } from  'react';
+import  React, { Component, useState } from  'react';
 import { Redirect } from 'react-router';
 
 import Container from 'react-bootstrap/Container';
@@ -6,19 +6,19 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Badge from 'react-bootstrap/Badge'
 import DriverService from '../../../services/DriverService';
+import { object } from 'prop-types';
 
 class  UpdateDriver  extends  Component {
 
 constructor(props) {
     super(props);
     const {id} = props.match.params; 
-    this.state = {'pk': id,'user': '', 'first_name': '', 'last_name': '', 
+    this.state = {'id': id,'user': '', 'first_name': '', 'last_name': '', 
                     'phone': '', 'availability': 
                     {'sunday': false, 'monday': false, 'tuesday': false, 
                     'wednesday': false, 'thursday': false, 'friday': false, 
-                    'saturday': false}, 
+                    'saturday': false, 'id': ''}, 
                     'employee_status': '', 'capacity': '', 'languages': []
                 };
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
@@ -26,12 +26,20 @@ constructor(props) {
     this.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 
                     'Friday', 'Saturday']
     
-    this.driverService = new DriverService();
+    this.driverService = new DriverService()
     this.handleChange = this.handleChange.bind(this);
     this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
     this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getEventValues = this.getEventValues.bind(this);
+}
+
+componentDidMount() {
+    var self = this 
+    self.driverService.getDriver(self.state.id).then(function (result) {
+        self.setState(result, () => {console.log(self.state)});
+    })  
+    
 }
 
 getEventValues(event) {
@@ -58,12 +66,12 @@ handleLanguageChange(event) {
     let [value, name, id] = this.getEventValues(event);
     if (event.target.checked) {
         this.setState({
-            languages: this.state.languages.concat(id)
+            languages: this.state.languages.concat({'name': id})
         });
     }
     else {
         var newArr = this.state.languages.filter( l => {
-            return l !== id;
+            return l.name !== id;
         })
         this.setState({languages:  newArr});
     }
@@ -99,21 +107,20 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="first_name">First Name</Form.Label>
                         <Form.Control type="text" name="first_name"
-                            onChange={this.handleChange} required placeholder="Enter First Name" />
+                            onChange={this.handleChange} />
                     </Form.Group>
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="last_name">Last Name</Form.Label>
                         <Form.Control type="text" name="last_name"
-                        onChange={this.handleChange} required placeholder="Enter Last Name" />
+                        onChange={this.handleChange}  />
                     </Form.Group>
                 </Row>
 
                 <Row>
                     <Form.Group as={Col} className="mb-3" controlId="formGridPhone">
                         <Form.Label>Phone Number</Form.Label>
-                        <Form.Control  onChange={this.handleChange} 
-                        required placeholder="402-345-6789" name="phone"/>
+                        <Form.Control  onChange={this.handleChange} name="phone"/>
                     </Form.Group>
 
                     <Form.Group as={Col} className="mb-3" controlId="formGridStatus">
@@ -127,7 +134,7 @@ render() {
 
                     <Form.Group as={Col} controlId="formGridCapacity">
                         <Form.Label>Capacity</Form.Label>
-                        <Form.Control type="number" placeholder="Vehicle Capacity"
+                        <Form.Control type="number" 
                         onChange={this.handleChange} name="capacity" min="0"/>
                     </Form.Group>
                 </Row>

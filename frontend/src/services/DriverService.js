@@ -18,7 +18,7 @@ export default class DriverService{
     }
 
     getDriver(pk) {
-        const url = `${API_URL}/api/drivers/${pk}`;
+        const url = `${API_URL}/api/drivers/${pk}/`;
         //const url = `${API_URL}/drivers/${pk}/`;
         return axios.get(url).then(response => response.data);
     }
@@ -44,7 +44,7 @@ export default class DriverService{
     }
 
     updateDriver(driver){
-        const url = `${API_URL}/api/drivers/${driver.pk}`;
+        const url = `${API_URL}/api/drivers/${driver.id}/`;
         //const url = `${API_URL}/drivers/${driver.pk}`;
         return axios.put(url,driver);
     }
