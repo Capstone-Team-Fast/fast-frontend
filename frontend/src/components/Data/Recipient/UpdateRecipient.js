@@ -99,44 +99,45 @@ render() {
                 <Row className="mb-3">
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="first_name">First Name</Form.Label>
-                        <Form.Control type="text" name="first_name"
+                        <Form.Control type="text" name="first_name" value={this.state.first_name}
                             onChange={this.handleChange} />
                     </Form.Group>
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="last_name">Last Name</Form.Label>
-                        <Form.Control type="text" name="last_name"
+                        <Form.Control type="text" name="last_name" value={this.state.last_name}
                         onChange={this.handleChange} />
                     </Form.Group>
                 </Row>
 
                 <Form.Group className="mb-3" controlId="formGridPhone">
                     <Form.Label>Phone Number</Form.Label>
-                    <Form.Control  onChange={this.handleChange} name="phone"/>
+                    <Form.Control  onChange={this.handleChange} name="phone"
+                                    value={this.state.phone}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="address">Address</Form.Label>
-                    <Form.Control type="text" name="location" id="address"
-                    onChange={this.handleObjectChange} />
+                    <Form.Control type="text" name="location" id="address" 
+                    value={this.state.location.address}  onChange={this.handleObjectChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="room_number">Address 2</Form.Label>
                     <Form.Control type="text" name="location" id="room_number"
-                    onChange={this.handleObjectChange}  />
+                    onChange={this.handleObjectChange} value={this.state.location.room_number} />
                 </Form.Group>
 
                 <Row className="mb-3">
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="city">City</Form.Label>
-                        <Form.Control type="text" name="location" id="city"
-                        onChange={this.handleObjectChange} />
+                        <Form.Control type="text" name="location" id="city" 
+                        onChange={this.handleObjectChange} value={this.state.location.city} />
                     </Form.Group>
 
                     <Form.Group as={Col} >
                         <Form.Label htmlFor="state">State</Form.Label>
-                        <Form.Select onChange={this.handleObjectChange}
+                        <Form.Select onChange={this.handleObjectChange} value={this.state.location.state}
                             name="location" id="state">
                         { this.states.map( s => 
                             <option>{s}</option>
@@ -147,7 +148,7 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="zipcode">Zip</Form.Label>
                         <Form.Control type="number" onChange={this.handleObjectChange} 
-                            name="location" id="zipcode"/>
+                            name="location" id="zipcode" value={this.state.location.zipcode}/>
                     </Form.Group>
                 </Row>
 
