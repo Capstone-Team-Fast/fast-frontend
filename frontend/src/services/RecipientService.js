@@ -24,7 +24,7 @@ export default class RecipientService{
     }
 
     deleteRecipient(recipient){
-        const url = `${API_URL}/api/clients/${recipient.pk}`;
+        const url = `${API_URL}/api/clients/${recipient.id}/`;
         //const url = `${API_URL}/clients/${recipient.pk}`;
         return axios.delete(url);
     }

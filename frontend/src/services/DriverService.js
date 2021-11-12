@@ -24,7 +24,7 @@ export default class DriverService{
     }
 
     deleteDriver(driver){
-        const url = `${API_URL}/api/drivers/${driver.id}`;
+        const url = `${API_URL}/api/drivers/${driver.id}/`;
         //const url = `${API_URL}/drivers/${driver.pk}/`;
         return axios.delete(url);
     }

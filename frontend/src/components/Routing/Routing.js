@@ -38,11 +38,11 @@ class  Routing  extends  Component {
 //     });
 
 // }
-// handleDriverDelete(e,pk){
+// handleDriverDelete(e, r){
 //     var  self  =  this;
-//     driverService.deleteDriver({pk :  pk}).then(()=>{
+//     driverService.deleteDriver(r).then(()=>{
 //         var  newArr  =  self.state.drivers.filter(function(obj) {
-//             return  obj.pk  !==  pk;
+//             return  obj.id  !==  r.id;
 //         });
 
 //         self.setState({drivers:  newArr})

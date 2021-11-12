@@ -33,11 +33,11 @@ componentDidMount() {
     });
 
 }
-handleRecipientDelete(e,pk){
+handleRecipientDelete(e, r){
     var  self  =  this;
-    recipientService.deleteRecipient({pk :  pk}).then(()=>{
+    recipientService.deleteRecipient(r).then(()=>{
         var  newArr  =  self.state.recipients.filter(function(obj) {
-            return  obj.pk  !==  pk;
+            return  obj.id  !==  r.id;
         });
 
         self.setState({recipients:  newArr})
@@ -95,7 +95,7 @@ render() {
                             <td>{r.language}</td>
                             <td>
                                 <Button className="mr-2" href={"/updateRecipient/" + r.id}>Edit</Button>
-                                <Button  onClick={(e)=>  this.handleRecipientDelete(e,r.id) }> Delete</Button>
+                                <Button  onClick={(e)=>  this.handleRecipientDelete(e,r) }> Delete</Button>
                             </td>
                         </tr>)}
                     </tbody>
