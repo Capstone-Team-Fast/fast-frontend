@@ -18,7 +18,7 @@ export default class RecipientService{
     }
 
     getRecipient(pk) {
-        const url = `${API_URL}/api/clients/${pk}`;
+        const url = `${API_URL}/api/clients/${pk}/`;
         //const url = `${API_URL}/clients/${pk}`;
         return axios.get(url).then(response => response.data);
     }
@@ -44,7 +44,7 @@ export default class RecipientService{
     }
 
     updateRecipient(recipient){
-        const url = `${API_URL}/api/clients/${recipient.pk}`;
+        const url = `${API_URL}/api/clients/${recipient.id}/`;
         //const url = `${API_URL}/clients/${recipient.pk}`;
         return axios.put(url,recipient);
     }
