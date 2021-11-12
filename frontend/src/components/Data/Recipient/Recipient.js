@@ -47,12 +47,12 @@ handleRecipientDelete(e,pk){
 render() {
 
     return (
-        <Container className="card">
+        <Container className="card mt-2">
             <Row className="card-header">
                 <Col>
                     <Row>
-                        <Col sm={2} className="table-title">Recipients</Col>
-                        <Col sm={8} class="mt-3">
+                        <Col sm={2} className="table-title title">Recipients</Col>
+                        <Col sm={8} class="mt-3"> 
                                 <InputGroup class="mb-2">
                                      <InputGroup.Text>
                                     {// <Search icon="search"></Search>
@@ -73,14 +73,10 @@ render() {
                             <Button href="/addRecipient">Add New</Button>
                         </Col>
                     </Row>
-                    <br/>
-                   
                 </Col>
             </Row>
-        
-            <br/>
-            <Row className="card-body">
-                <Table striped bordered hover>
+            <Row className="card-body table-wrapper-scroll-y my-custom-scrollbar">
+                <Table className="striped bordered hover table table-bordered table-striped mb-0">
                     <thead>
                         <tr>
                             <th>First Name</th>
