@@ -7,7 +7,6 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import DriverService from '../../../services/DriverService';
-import { object } from 'prop-types';
 
 class  UpdateDriver  extends  Component {
 
@@ -31,26 +30,35 @@ constructor(props) {
     this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
     this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.getEventValues = this.getEventValues.bind(this);
+    this.getEventValue = this.getEventValue.bind(this);
+    this.getEventName = this.getEventName.bind(this);
+    this.getEventID = this.getEventID.bind(this);
+    this.checkLanguage = this.checkLanguage.bind(this)
+    this.getAvailability = this.getAvailability.bind(this)
 }
 
 componentDidMount() {
     var self = this 
     self.driverService.getDriver(self.state.id).then(function (result) {
         self.setState(result, () => {console.log(self.state)});
-    })  
-    
+    })     
 }
 
-getEventValues(event) {
-    let [value, name, id] = [   event.target.value, 
-                                event.target.name, 
-                                event.target.id];
-    return [value, name, id];
+getEventValue(event) {
+    return event.target.value ;
+}
+
+getEventName(event) {
+    return event.target.name;
+}
+
+getEventID(event) {
+    return event.target.id ;
 }
 
 handleAvailabilityChange(event) {
-    let [value, name, id] = this.getEventValues(event);
+    let name = this.getEventName(event);
+    let id = this.getEventID(event);
     let checked = event.target.checked 
     this.setState(prevState => ({
             [name]: {
@@ -63,7 +71,7 @@ handleAvailabilityChange(event) {
 }
 
 handleLanguageChange(event) {
-    let [value, name, id] = this.getEventValues(event);
+    let id = this.getEventID(event);
     if (event.target.checked) {
         this.setState({
             languages: this.state.languages.concat({'name': id})
@@ -80,7 +88,8 @@ handleLanguageChange(event) {
 }
 
 handleChange(event) {
-    let [value, name] = this.getEventValues(event);
+    let value = this.getEventValue(event);
+    let name = this.getEventName(event);
     this.setState({
         [name]: value
     });
@@ -93,7 +102,19 @@ handleSubmit = (event) => {
     this.setState({redirect: "/"});
     console.log(this.state)
 }
-    
+
+checkLanguage(language) {
+    for (let i = 0; i < this.state.languages.length; i++) {
+        if (this.state.languages[i].name === language)
+            return true 
+    }
+}
+
+getAvailability(day) {
+    day = day.toLowerCase()
+    return this.state.availability[day] ;
+}
+
 render() {
     if (this.state.redirect) {
         return <Redirect to={this.state.redirect} />
@@ -144,9 +165,10 @@ render() {
                 <Form.Group className="mb-3">
                     <Row><Form.Label>Availabilty</Form.Label></Row>
                         { this.days.map( d => 
-                            <Form.Check type="checkbox" name="availability" value="true" 
-                            inline label={d} id={d} 
-                            onChange={this.handleAvailabilityChange} />
+                            <Form.Check type="checkbox" name="availability" 
+                                        checked={this.getAvailability(d)} 
+                                        inline label={d} id={d} 
+                                        onChange={this.handleAvailabilityChange} />
                         )}
                 </Form.Group>
 
@@ -154,6 +176,7 @@ render() {
                     <Row><Form.Label>Languages</Form.Label></Row>
                         { this.languages.map( l => 
                             <Form.Check type="checkbox" inline label={l} id={l}
+                                checked={this.checkLanguage(l)}
                                 name="languages" onChange={this.handleLanguageChange} />
                         )}
                 </Form.Group>
