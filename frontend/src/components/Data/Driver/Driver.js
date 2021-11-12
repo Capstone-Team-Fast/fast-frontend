@@ -36,11 +36,14 @@ componentDidMount() {
     });
 
 }
-handleDriverDelete(e,pk){
+handleDriverDelete(e, d){
     var  self  =  this;
-    driverService.deleteDriver({pk :  pk}).then(()=>{
+    console.log(d);
+
+    driverService.deleteDriver(d).then(()=>{
+        console.log("43");
         var  newArr  =  self.state.drivers.filter(function(obj) {
-            return  obj.pk  !==  pk;
+            return  obj.id  !==  d.id;
         });
 
         self.setState({drivers:  newArr})
@@ -97,7 +100,7 @@ render() {
                             <td>{d.phone}</td>
                             <td >
                                 <Button className="mr-2" href={"/updateDriver/" + d.id}>Edit</Button>
-                                <Button  onClick={(e)=>  this.handleDriverDelete(e,d.pk) }> Delete</Button>
+                                <Button  onClick={(e)=>  this.handleDriverDelete(e, d) }> Delete</Button>
                             </td>
                         </tr>)}
                     </tbody>

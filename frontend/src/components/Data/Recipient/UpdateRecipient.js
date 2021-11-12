@@ -27,6 +27,9 @@ constructor(props) {
     this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getEventValues = this.getEventValues.bind(this);
+    this.getEventIDValue = this.getEventIDValue.bind(this);
+    this.checkLanguage = this.checkLanguage.bind(this)
+    this.getCenter = this.getCenter.bind(this)
 }
 
 componentDidMount() {
@@ -44,8 +47,17 @@ getEventValues(event) {
     return [value, name, id];
 }
 
+getEventIDValue(event) {
+    return event.target.id;
+}
+
+
 handleObjectChange(event) {
     let [value, name, id] = this.getEventValues(event);
+    if (id === "is_center") {
+        value = (value === "No") ? false : true 
+    }
+
     this.setState(prevState => ({
         [name]: {
              ...prevState[name],
@@ -57,7 +69,7 @@ handleObjectChange(event) {
 }
 
 handleLanguageChange(event) {
-    let [value, name, id] = this.getEventValues(event);
+    let id = this.getEventIDValue(event);
     if (event.target.checked) {
         this.setState({
             languages: this.state.languages.concat({'name': id})
@@ -85,6 +97,17 @@ handleSubmit = (event) => {
     this.recipientService.updateRecipient(this.state);
     this.setState({redirect: "/"});
     console.log(this.state)
+}
+
+checkLanguage(language) {
+    for (let i = 0; i < this.state.languages.length; i++) {
+        if (this.state.languages[i].name === language)
+            return true 
+    }
+}
+
+getCenter() {
+    return (this.state.location.is_center) ? "Yes" : "No" ; 
 }
 
 render() {
@@ -122,11 +145,23 @@ render() {
                     value={this.state.location.address}  onChange={this.handleObjectChange} />
                 </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label htmlFor="room_number">Address 2</Form.Label>
-                    <Form.Control type="text" name="location" id="room_number"
-                    onChange={this.handleObjectChange} value={this.state.location.room_number} />
-                </Form.Group>
+                <Row className="mb-3">
+                    <Form.Group as={Col}>
+                        <Form.Label htmlFor="room_number">Address 2</Form.Label>
+                        <Form.Control type="text" name="location" id="room_number"
+                        onChange={this.handleObjectChange} value={this.state.location.room_number} />
+                    </Form.Group>
+
+                    <Form.Group as={Col}>
+                        <Form.Label htmlFor="is_center">Central Location?</Form.Label> 
+                        <Form.Select onChange={this.handleObjectChange}
+                            name="location" id="is_center" 
+                            value={this.getCenter()}>
+                            <option>No</option>
+                            <option>Yes</option>
+                        </Form.Select>
+                    </Form.Group>
+                </Row>
 
                 <Row className="mb-3">
                     <Form.Group as={Col}>
@@ -155,7 +190,8 @@ render() {
                 <Form.Group className="mb-3" id="formGridCheckbox">
                     <Row><Form.Label>Languages</Form.Label></Row>
                         { this.languages.map( l => 
-                            <Form.Check type="checkbox" inline label={l} id={l}
+                            <Form.Check type="checkbox" inline label={l} id={l} 
+                                checked={this.checkLanguage(l)}
                                 name="language" onChange={this.handleLanguageChange} />
                         )}
                 </Form.Group>
