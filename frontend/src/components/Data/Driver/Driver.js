@@ -23,6 +23,10 @@ constructor(props) {
     super(props);
     this.state  = {
         drivers: [],
+        pageTitle: props.pageTitle,
+        column3: props.column3,
+        columns: props.columns
+
     };
 
     this.handleDriverDelete  =  this.handleDriverDelete.bind(this);
@@ -38,14 +42,10 @@ componentDidMount() {
 }
 handleDriverDelete(e, d){
     var  self  =  this;
-    console.log(d);
-
     driverService.deleteDriver(d).then(()=>{
-        console.log("43");
         var  newArr  =  self.state.drivers.filter(function(obj) {
             return  obj.id  !==  d.id;
         });
-
         self.setState({drivers:  newArr})
     });
 }
@@ -58,7 +58,7 @@ render() {
             <Row className="card-header">
                 <Col>
                     <Row >
-                        <Col sm={2} className="table-title title">Drivers</Col>
+                        <Col sm={2} className="table-title title">{this.state.pageTitle}</Col>
                         <Col sm={8} class="mt-3">
                             <InputGroup class="mb-2">
                                 <InputGroup.Text>
@@ -88,7 +88,10 @@ render() {
                         <tr>
                             <th>First Name</th>
                             <th>Last Name</th>
-                            <th>Phone Number</th>
+                            {for int i: columns
+                            
+                            }
+                            <th>{this.state.column3}</th>
                             <th></th>
                         </tr>
                     </thead>

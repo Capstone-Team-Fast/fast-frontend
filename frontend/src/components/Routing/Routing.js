@@ -54,7 +54,7 @@ render() {
 
     return (
       <Container>
-        <Driver></Driver>
+        <Driver columns={3} column3={"Phone Number"} pageTitle={"Drivers"}></Driver>
         <Recipient></Recipient>
       </Container>
     
