@@ -106,13 +106,13 @@ render() {
                 <Row className="mb-3">
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="first_name">First Name</Form.Label>
-                        <Form.Control type="text" name="first_name"
+                        <Form.Control type="text" name="first_name" value={this.state.first_name}
                             onChange={this.handleChange} />
                     </Form.Group>
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="last_name">Last Name</Form.Label>
-                        <Form.Control type="text" name="last_name"
+                        <Form.Control type="text" name="last_name" value={this.state.last_name}
                         onChange={this.handleChange}  />
                     </Form.Group>
                 </Row>
@@ -120,12 +120,14 @@ render() {
                 <Row>
                     <Form.Group as={Col} className="mb-3" controlId="formGridPhone">
                         <Form.Label>Phone Number</Form.Label>
-                        <Form.Control  onChange={this.handleChange} name="phone"/>
+                        <Form.Control  onChange={this.handleChange} name="phone"
+                            value={this.state.phone}/>
                     </Form.Group>
 
                     <Form.Group as={Col} className="mb-3" controlId="formGridStatus">
                         <Form.Label>Status</Form.Label>
-                        <Form.Select onChange={this.handleChange} name="employee_status">
+                        <Form.Select onChange={this.handleChange} name="employee_status"
+                            value={this.state.employee_status}>
                             <option>Choose...</option>
                             <option>Employee</option>
                             <option>Volunteer</option>
@@ -134,7 +136,7 @@ render() {
 
                     <Form.Group as={Col} controlId="formGridCapacity">
                         <Form.Label>Capacity</Form.Label>
-                        <Form.Control type="number" 
+                        <Form.Control type="number" value={this.state.capacity}
                         onChange={this.handleChange} name="capacity" min="0"/>
                     </Form.Group>
                 </Row>
