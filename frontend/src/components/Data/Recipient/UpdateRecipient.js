@@ -30,14 +30,11 @@ constructor(props) {
 }
 
 componentDidMount() {
-    var  self  =  this;
-    this.recipientService.getRecipient(this.state.id).then(function (result) {
-        console.log(result);
-        self.setState(prevState => ({
-            [prevState]: result,
-        }))
-    });
-    console.log(self.state)
+    var self = this 
+    self.recipientService.getRecipient(self.state.id).then(function (result) {
+        self.setState(result, () => {console.log(JSON.stringify(self.state))});
+    })  
+    
 }
 
 getEventValues(event) {
@@ -56,7 +53,7 @@ handleObjectChange(event) {
         }    
     }
     ));
-    console.log(this.state)
+    console.log(JSON.stringify(this.state))
 }
 
 handleLanguageChange(event) {
@@ -103,39 +100,38 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="first_name">First Name</Form.Label>
                         <Form.Control type="text" name="first_name"
-                            onChange={this.handleChange} required placeholder="Enter First Name" />
+                            onChange={this.handleChange} />
                     </Form.Group>
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="last_name">Last Name</Form.Label>
                         <Form.Control type="text" name="last_name"
-                        onChange={this.handleChange} required placeholder="Enter Last Name" />
+                        onChange={this.handleChange} />
                     </Form.Group>
                 </Row>
 
                 <Form.Group className="mb-3" controlId="formGridPhone">
                     <Form.Label>Phone Number</Form.Label>
-                    <Form.Control  onChange={this.handleChange} 
-                    required placeholder="402-345-6789" name="phone"/>
+                    <Form.Control  onChange={this.handleChange} name="phone"/>
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="address">Address</Form.Label>
                     <Form.Control type="text" name="location" id="address"
-                    onChange={this.handleObjectChange} required placeholder="1234 Main St" />
+                    onChange={this.handleObjectChange} />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="room_number">Address 2</Form.Label>
                     <Form.Control type="text" name="location" id="room_number"
-                    onChange={this.handleObjectChange} placeholder="Apartment, studio, or floor" />
+                    onChange={this.handleObjectChange}  />
                 </Form.Group>
 
                 <Row className="mb-3">
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="city">City</Form.Label>
                         <Form.Control type="text" name="location" id="city"
-                        onChange={this.handleObjectChange} required />
+                        onChange={this.handleObjectChange} />
                     </Form.Group>
 
                     <Form.Group as={Col} >
