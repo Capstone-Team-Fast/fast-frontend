@@ -51,36 +51,36 @@ handleDriverDelete(e,pk){
 render() {
 
     return (
-        <Container>
-            <Row>
-                <Col sm={9} className="table-title">Drivers</Col>
-                <Col sm={3}> 
-                    <Button href="/addDriver">Add New</Button>
-                </Col>   
-            </Row>
-            <br/>
-            <Row>
-                <Col cols="9" class="mt-3">
-                    <InputGroup class="mb-2">
-                        <InputGroup.Text>
-                        {// <Search icon="search"></Search>
-                        }
-                        </InputGroup.Text>
-                        <FormControl
-                                type="text"
-                                placeholder="Search recipients"
-                                id="search"
-                                v-model="search"
-                                name="search"
-                                aria-label="Search"
-                                //ref="title"
-                        ></FormControl>
-                    </InputGroup>
+        <Container className="card">
+            <Row className="card-header">
+                <Col>
+                    <Row >
+                        <Col sm={2} className="table-title title">Drivers</Col>
+                        <Col sm={8} class="mt-3">
+                            <InputGroup class="mb-2">
+                                <InputGroup.Text>
+                                {// <Search icon="search"></Search>
+                                }
+                                </InputGroup.Text>
+                                <FormControl
+                                        type="text"
+                                        placeholder="Search Drivers"
+                                        id="search"
+                                        v-model="search"
+                                        name="search"
+                                        aria-label="Search"
+                                        //ref="title"
+                                ></FormControl>
+                            </InputGroup>
+                        </Col>
+                        <Col sm={2}> 
+                            <Button href="/addDriver">Add New</Button>
+                        </Col>   
+                    </Row>
                 </Col>
             </Row>
-            <br/>
-            <Row>
-                <Table striped bordered hover>
+            <Row className="card-body table-wrapper-scroll-y my-custom-scrollbar">
+                <Table className="striped bordered hover table table-bordered table-striped mb-0">
                     <thead>
                         <tr>
                             <th>First Name</th>
@@ -95,8 +95,8 @@ render() {
                             <td>{d.first_name}</td>
                             <td>{d.last_name}</td>
                             <td>{d.phone}</td>
-                            <td>
-                                <Button href={"/updateDriver/" + d.id}>Edit</Button>
+                            <td >
+                                <Button className="mr-2" href={"/updateDriver/" + d.id}>Edit</Button>
                                 <Button  onClick={(e)=>  this.handleDriverDelete(e,d.pk) }> Delete</Button>
                             </td>
                         </tr>)}
