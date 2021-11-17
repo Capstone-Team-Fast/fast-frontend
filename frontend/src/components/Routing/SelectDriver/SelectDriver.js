@@ -19,7 +19,7 @@ import Multiselect from 'multiselect-react-dropdown';
 
 const  driverService  =  new  DriverService();
 
-class  Driver  extends  Component {
+class  SelectDriver  extends  Component {
 
 constructor(props) {
     super(props);
@@ -64,37 +64,18 @@ render() {
                     <Row >
                         <Col sm={2} className="table-title title">Drivers</Col>
                         <Col sm={10} class="mt-3">
-                            <InputGroup class="mb-2">
-                                <InputGroup.Text>
-                                {// <Search icon="search"></Search>
-                                }
-                                </InputGroup.Text>
-                                <FormControl
-                                        type="text"
-                                        placeholder="Search Drivers"
-                                        id="search"
-                                        v-model="search"
-                                        name="search"
-                                        aria-label="Search"
-                                        //ref="title"
-                                ></FormControl>
-                            </InputGroup>
+                        <Form>
+                            <Multiselect
+                                options={this.state.drivers} // Options to display in the dropdown
+                                // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
+                                // onSelect={this.onSelect} // Function will trigger on select event
+                                // onRemove={this.onRemove} // Function will trigger on remove event
+                                displayValue="first_name" // Property name to display in the dropdown options
+                            />
+                        </Form>
                         </Col>   
                     </Row>
                 </Col>
-            </Row>
-            <Row className="card-body table-wrapper-scroll-y my-custom-scrollbar">
-            <Form>
-                <Multiselect
-                    options={this.state.drivers} // Options to display in the dropdown
-                    // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
-                    // onSelect={this.onSelect} // Function will trigger on select event
-                    // onRemove={this.onRemove} // Function will trigger on remove event
-                    displayValue="first_name" // Property name to display in the dropdown options
-                />
-
-
-            </Form>
             </Row>
         </Container>
 
@@ -102,4 +83,4 @@ render() {
         
   }
 }
-export  default  Driver;
+export  default  SelectDriver;
