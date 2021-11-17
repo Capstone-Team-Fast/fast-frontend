@@ -22,7 +22,6 @@ constructor(props) {
     super(props);
     this.state  = {
         recipients: [],
-        filteredRecipients: [],
         filterWord: ''
     };
 }
@@ -55,11 +54,11 @@ render() {
                     <Row>
                         <Col sm={2} className="table-title title">Recipients</Col>
                         <Col sm={8} class="mt-3"> 
-                                {/* <InputGroup class="mb-2">
-                                     <InputGroup.Text>
-                                    {// <Search icon="search"></Search>
-                                    }
-                                    </InputGroup.Text>
+                            <InputGroup class="mb-2">
+                                <InputGroup.Text>
+                                {// <Search icon="search"></Search>
+                                  }
+                                </InputGroup.Text>
                                     <FormControl
                                             type="text"
                                             placeholder="Search recipients"
@@ -67,16 +66,10 @@ render() {
                                             v-model="search"
                                             name="search"
                                             aria-label="Search"
-                                            onChange={ this.search("jim") }
+                                            onChange={event => this.setState({filterWord: event.target.value})}
                                          //ref="title"
                                 ></FormControl>
-                            </InputGroup> */}
-                            Search: {' '}
-                            <input 
-                                type="text"
-                                onChange={event => this.setState({filterWord: event.target.value})}
-                            />
-
+                            </InputGroup>
                         </Col>
                         <Col sm={2}> 
                             <Button href="/addRecipient">Add New</Button>
@@ -101,6 +94,14 @@ render() {
                                     return r;
                                 }
                                 else if(r.first_name.toLowerCase().includes(this.state.filterWord.toLowerCase()))
+                                {
+                                    return r;
+                                }
+                                else if(r.last_name.toLowerCase().includes(this.state.filterWord.toLowerCase()))
+                                {
+                                    return r;
+                                }
+                                else if(r.location.address.toLowerCase().includes(this.state.filterWord.toLowerCase()))
                                 {
                                     return r;
                                 }

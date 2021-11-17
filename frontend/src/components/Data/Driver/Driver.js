@@ -23,6 +23,7 @@ constructor(props) {
     super(props);
     this.state  = {
         drivers: [],
+        filterWord: ''
     };
 
     this.handleDriverDelete  =  this.handleDriverDelete.bind(this);
@@ -72,7 +73,7 @@ render() {
                                         v-model="search"
                                         name="search"
                                         aria-label="Search"
-                                        //ref="title"
+                                        onChange={event => this.setState({filterWord: event.target.value})}
                                 ></FormControl>
                             </InputGroup>
                         </Col>
@@ -93,7 +94,20 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                    {this.state.drivers.map( d  =>
+                    {this.state.drivers.filter((d) => {
+                                if (this.state.filterWord == "")
+                                {
+                                    return d;
+                                }
+                                else if(d.first_name.toLowerCase().includes(this.state.filterWord.toLowerCase()))
+                                {
+                                    return d;
+                                }
+                                else if(d.last_name.toLowerCase().includes(this.state.filterWord.toLowerCase()))
+                                {
+                                    return d;
+                                }
+                        }).map( d  =>
                             <tr  key={d.id}>
                             <td>{d.first_name}</td>
                             <td>{d.last_name}</td>
