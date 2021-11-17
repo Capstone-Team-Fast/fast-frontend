@@ -24,6 +24,7 @@ constructor(props) {
     super(props);
     this.state  = {
         recipients: [],
+        selectedRecipients: []
     };
 }
 
