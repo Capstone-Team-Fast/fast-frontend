@@ -8,6 +8,8 @@ import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import RecipientService from '../../../services/RecipientService';
+import Form from 'react-bootstrap/Form';
+import Multiselect from 'multiselect-react-dropdown';
 //import Search from 'react-bootstrap-icons/Search';
 
 
@@ -30,9 +32,9 @@ componentDidMount() {
     recipientService.getRecipients().then(function (result) {
         console.log(result);
         self.setState({ recipients:  result});
-    });
-
+    })
 }
+
 handleRecipientDelete(e, r){
     var  self  =  this;
     recipientService.deleteRecipient(r).then(()=>{
@@ -73,49 +75,22 @@ render() {
                 </Col>
             </Row>
             <Row className="card-body table-wrapper-scroll-y my-custom-scrollbar">
-                <Table className="striped bordered hover table table-bordered table-striped mb-0">
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Address</th>
-                            <th>Language</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.recipients.map( r  =>
-                            <tr  key={r.id}>
-                            <td>{r.first_name}</td>
-                            <td>{r.last_name}</td>
-                            <td>{r.address}</td>
-                            <td>{r.language}</td>
-                        </tr>)}
-                    </tbody>
-                </Table>
+                <Form>
+                    <Multiselect
+                        options={this.state.recipients} // Options to display in the dropdown
+                        // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
+                        // onSelect={this.onSelect} // Function will trigger on select event
+                        // onRemove={this.onRemove} // Function will trigger on remove event
+                        displayValue="first_name"
+                        // Property name to display in the dropdown options
+                    />
+
+
+            </Form>
             </Row>
-            <Button>Create Route</Button>
         </Container>
 
     );
-
-
-
-        {/*<b-container>
-            <div className="input-group">
-                    <div className="form-outline">
-                        <input id="search-input" type="search" id="form1" className="form-control"/>
-                    {// <label className="form-label" htmlFor="form1">Search</label>
-                        }
-                    </div>
-                    <button id="search-button" type="button" className="btn btn-primary">
-                        Search
-                        <i className="fas fa-search"></i>
-                    </button>
-                </div>
-
-        </b-container>
-                    */}
-      
         
   }
 }

@@ -9,6 +9,7 @@ import Form from 'react-bootstrap/Form';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import DriverService from '../../../services/DriverService';
+import Multiselect from 'multiselect-react-dropdown';
 
 
 //import Search from 'react-bootstrap-icons/Search';
@@ -32,17 +33,15 @@ constructor(props) {
 componentDidMount() {
     var  self  =  this;
     driverService.getDrivers().then(function (result) {
-        console.log(result.data);
+        console.log(result);
         self.setState({ drivers:  result});
     });
 
 }
 handleDriverDelete(e, d){
     var  self  =  this;
-    console.log(d);
 
     driverService.deleteDriver(d).then(()=>{
-        console.log("43");
         var  newArr  =  self.state.drivers.filter(function(obj) {
             return  obj.id  !==  d.id;
         });
@@ -85,53 +84,21 @@ render() {
                 </Col>
             </Row>
             <Row className="card-body table-wrapper-scroll-y my-custom-scrollbar">
-            <Table className="striped bordered hover table table-bordered table-striped mb-0">
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Phone Number</th>
-                        </tr>
-                    </thead>
-                    <Form onSubmit={this.handleSubmit}> 
-                        {/*<tbody>   */}  
-                        {this.state.drivers.map( d  =>
-                            <Form.Select>
-                                <tr  key={d.id}>
-                                    <td>{d.first_name}</td>
-                                    <td>{d.last_name}</td>
-                                    <td>{d.phone}</td>
-                                </tr>
-                            </Form.Select>
-                                )}
-                        {/*</tbody>*/}
-        
-                    </Form>
-                 
-                </Table>
+            <Form>
+                <Multiselect
+                    options={this.state.drivers} // Options to display in the dropdown
+                    // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
+                    // onSelect={this.onSelect} // Function will trigger on select event
+                    // onRemove={this.onRemove} // Function will trigger on remove event
+                    displayValue="first_name" // Property name to display in the dropdown options
+                />
+
+
+            </Form>
             </Row>
         </Container>
 
     );
-
-
-
-        {/*<b-container>
-            <div className="input-group">
-                    <div className="form-outline">
-                        <input id="search-input" type="search" id="form1" className="form-control"/>
-                    {// <label className="form-label" htmlFor="form1">Search</label>
-                        }
-                    </div>
-                    <button id="search-button" type="button" className="btn btn-primary">
-                        Search
-                        <i className="fas fa-search"></i>
-                    </button>
-                </div>
-
-        </b-container>
-                    */}
-      
         
   }
 }
