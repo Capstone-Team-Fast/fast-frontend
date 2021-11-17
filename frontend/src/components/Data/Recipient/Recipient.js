@@ -22,6 +22,8 @@ constructor(props) {
     super(props);
     this.state  = {
         recipients: [],
+        filteredRecipients: [],
+        filterWord: ''
     };
 }
 
@@ -53,7 +55,7 @@ render() {
                     <Row>
                         <Col sm={2} className="table-title title">Recipients</Col>
                         <Col sm={8} class="mt-3"> 
-                                <InputGroup class="mb-2">
+                                {/* <InputGroup class="mb-2">
                                      <InputGroup.Text>
                                     {// <Search icon="search"></Search>
                                     }
@@ -65,9 +67,16 @@ render() {
                                             v-model="search"
                                             name="search"
                                             aria-label="Search"
+                                            onChange={ this.search("jim") }
                                          //ref="title"
                                 ></FormControl>
-                            </InputGroup>
+                            </InputGroup> */}
+                            Search: {' '}
+                            <input 
+                                type="text"
+                                onChange={event => this.setState({filterWord: event.target.value})}
+                            />
+
                         </Col>
                         <Col sm={2}> 
                             <Button href="/addRecipient">Add New</Button>
@@ -86,7 +95,16 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.recipients.map( r  =>
+                        {this.state.recipients.filter((r) => {
+                                if (this.state.filterWord == "")
+                                {
+                                    return r;
+                                }
+                                else if(r.first_name.toLowerCase().includes(this.state.filterWord.toLowerCase()))
+                                {
+                                    return r;
+                                }
+                        }).map( r  =>
                             <tr  key={r.id}>
                             <td>{r.first_name}</td>
                             <td>{r.last_name}</td>
@@ -102,25 +120,6 @@ render() {
         </Container>
 
     );
-
-
-
-        {/*<b-container>
-            <div className="input-group">
-                    <div className="form-outline">
-                        <input id="search-input" type="search" id="form1" className="form-control"/>
-                    {// <label className="form-label" htmlFor="form1">Search</label>
-                        }
-                    </div>
-                    <button id="search-button" type="button" className="btn btn-primary">
-                        Search
-                        <i className="fas fa-search"></i>
-                    </button>
-                </div>
-
-        </b-container>
-                    */}
-      
         
   }
 }
