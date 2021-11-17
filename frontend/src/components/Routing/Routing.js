@@ -8,8 +8,8 @@ import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 
-import Driver from '../Data/Driver/Driver.js';
-import Recipient from '../Data/Recipient/Recipient.js';
+import SelectDriver from './SelectDriver/SelectDriver.js';
+import SelectRecipient from './SelectRecipient/SelectRecipient.js';
 
 
 
@@ -54,8 +54,8 @@ render() {
 
     return (
       <Container>
-        <Driver></Driver>
-        <Recipient></Recipient>
+        <SelectDriver></SelectDriver>
+        <SelectRecipient></SelectRecipient>
       </Container>
     
     
