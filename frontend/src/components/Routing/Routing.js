@@ -68,8 +68,6 @@ render() {
     return (
       <Container>
         <Form>
-        <Driver></Driver>
-        <Recipient></Recipient>
         <Row className="mt-4">
         <Form.Group as={Col} controlId="formGridDeliveryLimit">
           <Form.Label className="title">Delivery Limit</Form.Label>
@@ -90,15 +88,13 @@ render() {
             </Form.Select>
         </Form.Group>
         </Row>   
-        <Row>
-          <Col>
-            <Button className="mr-2 mt-4 btn" variant="primary" type="submit">Submit</Button>
-          </Col>
-        </Row>  
         </Form>   
+        <br/>
         <SelectDriver></SelectDriver>
         <SelectRecipient></SelectRecipient>
-        <Button>Create Route</Button>
+       
+        
+        <Button className="mr-2 mt-4 btn" variant="primary" type="submit" >Create Route</Button>
       </Container>
     
     
