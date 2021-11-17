@@ -82,7 +82,6 @@ render() {
                             <th>First Name</th>
                             <th>Last Name</th>
                             <th>Address</th>
-                            <th>Language</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -91,8 +90,7 @@ render() {
                             <tr  key={r.id}>
                             <td>{r.first_name}</td>
                             <td>{r.last_name}</td>
-                            <td>{r.address}</td>
-                            <td>{r.language}</td>
+                            <td>{r.location.address}</td>
                             <td>
                                 <Button className="mr-2" href={"/updateRecipient/" + r.id}>Edit</Button>
                                 <Button  onClick={(e)=>  this.handleRecipientDelete(e,r) }> Delete</Button>
