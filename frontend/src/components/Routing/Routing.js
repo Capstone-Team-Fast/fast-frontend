@@ -8,6 +8,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import SelectDriver from './SelectDriver/SelectDriver.js';
+import SelectRecipient from './SelectRecipient/SelectRecipient.js';
 import Driver from '../Data/Driver/Driver.js';
 import Recipient from '../Data/Recipient/Recipient.js';
 import LocationService from '../../services/LocationService'
@@ -94,6 +96,9 @@ render() {
           </Col>
         </Row>  
         </Form>   
+        <SelectDriver></SelectDriver>
+        <SelectRecipient></SelectRecipient>
+        <Button>Create Route</Button>
       </Container>
     
     
