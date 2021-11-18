@@ -25,7 +25,8 @@ constructor(props) {
     super(props);
     this.state  = {
         drivers: [],
-        selectedDrivers: []
+        selectedDrivers: [],
+        selectedNumber: 0
     };
 
     this.handleDriverDelete  =  this.handleDriverDelete.bind(this);
@@ -42,15 +43,19 @@ componentDidMount() {
 }
 
 getEventValues(event) {
-    console.log("44: ", event[0].id);
-    return event[0].id;
+    var  self  =  this;
+    console.log(self.state.selectedNumber);
+    console.log(event[self.state.selectedNumber].id);
+    self.setState({selectedNumber: (self.state.selectedNumber + 1) });
+    console.log(self.state.selectedNumber);
+    return event[self.state.selectedNumber].id;
+    
 }
 
 onSelect(event){
     let id = this.getEventValues(event);
     const newDrivers = this.state.selectedDrivers.concat({ id });
     this.setState({selectedDrivers: newDrivers});
-    console.log("50 ", this.state.selectedDrivers);
 }
 
 
@@ -99,7 +104,6 @@ render() {
                 </Col>
             </Row>
         </Container>
-
     );
         
   }

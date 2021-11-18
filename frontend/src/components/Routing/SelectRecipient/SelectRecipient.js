@@ -10,7 +10,6 @@ import Button from 'react-bootstrap/Button';
 import RecipientService from '../../../services/RecipientService';
 import Form from 'react-bootstrap/Form';
 import Multiselect from 'multiselect-react-dropdown';
-//import Search from 'react-bootstrap-icons/Search';
 
 
 //import Search from 'react-bootstrap-icons';
