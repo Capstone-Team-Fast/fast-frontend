@@ -8,12 +8,14 @@ import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import RecipientService from '../../../services/RecipientService';
+import SearchService from '../../../services/SearchService';
 //import Search from 'react-bootstrap-icons/Search';
 
 
 //import Search from 'react-bootstrap-icons';
 
 const recipientService = new RecipientService();
+const searchService = new SearchService();
 
 
 class  Recipient  extends  Component {
@@ -22,15 +24,20 @@ constructor(props) {
     super(props);
     this.state  = {
         recipients: [],
+        filtered: []
     };
+
+    this.handleRecipientDelete = this.handleRecipientDelete.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
 }
 
 componentDidMount() {
     var  self  =  this;
     recipientService.getRecipients().then(function (result) {
         console.log(result);
-        self.setState({ recipients:  result});
+        self.setState({ recipients:  result, filtered: result});
     });
+    console.log(this.state.filtered)
 
 }
 handleRecipientDelete(e, r){
@@ -44,6 +51,14 @@ handleRecipientDelete(e, r){
     });
 }
 
+handleSearch(e) {
+    let newList = searchService.findRecipients(e, this.state.recipients);
+    this.setState({
+        filtered: newList
+    });
+}
+
+
 render() {
 
     return (
@@ -53,11 +68,11 @@ render() {
                     <Row>
                         <Col sm={2} className="table-title title">Recipients</Col>
                         <Col sm={8} class="mt-3"> 
-                                <InputGroup class="mb-2">
-                                     <InputGroup.Text>
-                                    {// <Search icon="search"></Search>
-                                    }
-                                    </InputGroup.Text>
+                            <InputGroup class="mb-2">
+                                <InputGroup.Text>
+                                {// <Search icon="search"></Search>
+                                  }
+                                </InputGroup.Text>
                                     <FormControl
                                             type="text"
                                             placeholder="Search recipients"
@@ -65,6 +80,7 @@ render() {
                                             v-model="search"
                                             name="search"
                                             aria-label="Search"
+                                            onChange={this.handleSearch}
                                          //ref="title"
                                 ></FormControl>
                             </InputGroup>
@@ -86,12 +102,13 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.recipients.map( r  =>
+                        {this.state.filtered.map( r  =>
                             <tr  key={r.id}>
                             <td>{r.first_name}</td>
                             <td>{r.last_name}</td>
                             <td>{r.location.address}</td>
                             <td>
+                                <Button className="mr-2" href={"/recipientDetail/" + r.id}>View</Button>
                                 <Button className="mr-2" href={"/updateRecipient/" + r.id}>Edit</Button>
                                 <Button  onClick={(e)=>  this.handleRecipientDelete(e,r) }> Delete</Button>
                             </td>
@@ -102,25 +119,6 @@ render() {
         </Container>
 
     );
-
-
-
-        {/*<b-container>
-            <div className="input-group">
-                    <div className="form-outline">
-                        <input id="search-input" type="search" id="form1" className="form-control"/>
-                    {// <label className="form-label" htmlFor="form1">Search</label>
-                        }
-                    </div>
-                    <button id="search-button" type="button" className="btn btn-primary">
-                        Search
-                        <i className="fas fa-search"></i>
-                    </button>
-                </div>
-
-        </b-container>
-                    */}
-      
         
   }
 }
