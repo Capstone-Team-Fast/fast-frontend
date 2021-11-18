@@ -83,7 +83,6 @@ render() {
                                         name="search"
                                         aria-label="Search"
                                         onChange={this.handleSearch}
-                                        //ref="title"
                                 ></FormControl>
                             </InputGroup>
                         </Col>
