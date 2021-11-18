@@ -37,6 +37,7 @@ componentDidMount() {
         console.log(result);
         self.setState({ recipients:  result, filtered: result});
     });
+    console.log(this.state.filtered)
 
 }
 handleRecipientDelete(e, r){
@@ -107,6 +108,7 @@ render() {
                             <td>{r.last_name}</td>
                             <td>{r.location.address}</td>
                             <td>
+                                <Button className="mr-2" href={"/recipientDetail/" + r.id}>View</Button>
                                 <Button className="mr-2" href={"/updateRecipient/" + r.id}>Edit</Button>
                                 <Button  onClick={(e)=>  this.handleRecipientDelete(e,r) }> Delete</Button>
                             </td>

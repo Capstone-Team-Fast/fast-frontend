@@ -35,7 +35,7 @@ constructor(props) {
 componentDidMount() {
     var self = this 
     self.recipientService.getRecipient(self.state.id).then(function (result) {
-        self.setState(result, () => {console.log(JSON.stringify(self.state))});
+        self.setState(result);
     })  
     
 }
