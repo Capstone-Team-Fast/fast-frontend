@@ -8,12 +8,14 @@ import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import RecipientService from '../../../services/RecipientService';
+import SearchService from '../../../services/SearchService';
 //import Search from 'react-bootstrap-icons/Search';
 
 
 //import Search from 'react-bootstrap-icons';
 
 const recipientService = new RecipientService();
+const searchService = new SearchService();
 
 
 class  Recipient  extends  Component {
@@ -22,14 +24,18 @@ constructor(props) {
     super(props);
     this.state  = {
         recipients: [],
+        filtered: []
     };
+
+    this.handleRecipientDelete = this.handleRecipientDelete.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
 }
 
 componentDidMount() {
     var  self  =  this;
     recipientService.getRecipients().then(function (result) {
         console.log(result);
-        self.setState({ recipients:  result});
+        self.setState({ recipients:  result, filtered: result});
     });
 
 }
@@ -43,6 +49,14 @@ handleRecipientDelete(e, r){
         self.setState({recipients:  newArr})
     });
 }
+
+handleSearch(e) {
+    let newList = searchService.findRecipients(e, this.state.recipients);
+    this.setState({
+        filtered: newList
+    });
+}
+
 
 render() {
 
@@ -65,6 +79,7 @@ render() {
                                             v-model="search"
                                             name="search"
                                             aria-label="Search"
+                                            onChange={this.handleSearch}
                                          //ref="title"
                                 ></FormControl>
                             </InputGroup>
@@ -86,7 +101,7 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.recipients.map( r  =>
+                        {this.state.filtered.map( r  =>
                             <tr  key={r.id}>
                             <td>{r.first_name}</td>
                             <td>{r.last_name}</td>

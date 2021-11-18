@@ -8,6 +8,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import DriverService from '../../../services/DriverService';
+import SearchService from '../../../services/SearchService';
 
 
 //import Search from 'react-bootstrap-icons/Search';
@@ -16,6 +17,7 @@ import DriverService from '../../../services/DriverService';
 //import Search from 'react-bootstrap-icons';
 
 const  driverService  =  new  DriverService();
+const  searchService = new SearchService();
 
 class  Driver  extends  Component {
 
@@ -23,19 +25,21 @@ constructor(props) {
     super(props);
     this.state  = {
         drivers: [],
+        filtered: []
     };
 
     this.handleDriverDelete  =  this.handleDriverDelete.bind(this);
+    this.handleSearch  =  this.handleSearch.bind(this);
 }
 
 componentDidMount() {
     var  self  =  this;
     driverService.getDrivers().then(function (result) {
         console.log(result.data);
-        self.setState({ drivers:  result});
+        self.setState({ drivers:  result, filtered: result});
     });
-
 }
+
 handleDriverDelete(e, d){
     var  self  =  this;
     console.log(d);
@@ -47,6 +51,13 @@ handleDriverDelete(e, d){
         });
 
         self.setState({drivers:  newArr})
+    });
+}
+
+handleSearch(e) {
+    let newList = searchService.findDrivers(e, this.state.drivers);
+    this.setState({
+        filtered: newList
     });
 }
 
@@ -72,6 +83,7 @@ render() {
                                         v-model="search"
                                         name="search"
                                         aria-label="Search"
+                                        onChange={this.handleSearch}
                                         //ref="title"
                                 ></FormControl>
                             </InputGroup>
@@ -93,7 +105,7 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                    {this.state.drivers.map( d  =>
+                    {this.state.filtered.map( d  =>
                             <tr  key={d.id}>
                             <td>{d.first_name}</td>
                             <td>{d.last_name}</td>
