@@ -35,7 +35,7 @@ constructor(props) {
 componentDidMount() {
     var  self  =  this;
     driverService.getDrivers().then(function (result) {
-        console.log(result.data);
+        console.log(result);
         self.setState({ drivers:  result, filtered: result});
     });
 }
@@ -45,7 +45,6 @@ handleDriverDelete(e, d){
     console.log(d);
 
     driverService.deleteDriver(d).then(()=>{
-        console.log("43");
         var  newArr  =  self.state.drivers.filter(function(obj) {
             return  obj.id  !==  d.id;
         });
@@ -111,6 +110,7 @@ render() {
                             <td>{d.last_name}</td>
                             <td>{d.phone}</td>
                             <td >
+                                <Button className="mr-2" href={"/driverDetail/" + d.id}>View</Button>
                                 <Button className="mr-2" href={"/updateDriver/" + d.id}>Edit</Button>
                                 <Button  onClick={(e)=>  this.handleDriverDelete(e, d) }> Delete</Button>
                             </td>
