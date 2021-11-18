@@ -25,9 +25,12 @@ constructor(props) {
     super(props);
     this.state  = {
         drivers: [],
+        selectedDrivers: []
     };
 
     this.handleDriverDelete  =  this.handleDriverDelete.bind(this);
+    this.onSelect  =  this.onSelect.bind(this);
+    this.getEventValues  =  this.getEventValues.bind(this);
 }
 
 componentDidMount() {
@@ -36,8 +39,21 @@ componentDidMount() {
         console.log(result);
         self.setState({ drivers:  result});
     });
-
 }
+
+getEventValues(event) {
+    console.log("44: ", event[0].id);
+    return event[0].id;
+}
+
+onSelect(event){
+    let id = this.getEventValues(event);
+    const newDrivers = this.state.selectedDrivers.concat({ id });
+    this.setState({selectedDrivers: newDrivers});
+    console.log("50 ", this.state.selectedDrivers);
+}
+
+
 handleDriverDelete(e, d){
     var  self  =  this;
 
@@ -64,14 +80,19 @@ render() {
                     <Row >
                         <Col sm={2} className="table-title title">Drivers</Col>
                         <Col sm={10} class="mt-3">
-                        <Form>
-                            <Multiselect
-                                options={this.state.drivers} // Options to display in the dropdown
-                                // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
-                                // onSelect={this.onSelect} // Function will trigger on select event
-                                // onRemove={this.onRemove} // Function will trigger on remove event
-                                displayValue="first_name" // Property name to display in the dropdown options
-                            />
+                        <Form onSubmit={this.handleSubmit}>
+                            <Row className="mb-3">
+                                <Form.Group>
+                                    <Multiselect
+                                    options={this.state.drivers} // Options to display in the dropdown
+                                    onSelect={this.onSelect} // Function will trigger on select 
+                                    displayValue="first_name" // Property name to display in the dropdown options
+                                    // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
+                                    // onRemove={this.onRemove} // Function will trigger on remove event
+                                   
+                                />
+                                </Form.Group>
+                            </Row>  
                         </Form>
                         </Col>   
                     </Row>
