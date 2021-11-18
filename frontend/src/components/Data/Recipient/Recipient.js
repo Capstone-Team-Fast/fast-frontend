@@ -47,7 +47,7 @@ handleRecipientDelete(e, r){
             return  obj.id  !==  r.id;
         });
 
-        self.setState({recipients:  newArr})
+        self.setState({recipients:  newArr, filtered: newArr})
     });
 }
 

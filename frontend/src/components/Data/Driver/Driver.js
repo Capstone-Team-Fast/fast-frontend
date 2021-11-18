@@ -35,7 +35,6 @@ constructor(props) {
 componentDidMount() {
     var  self  =  this;
     driverService.getDrivers().then(function (result) {
-        console.log(result);
         self.setState({ drivers:  result, filtered: result});
     });
 }
@@ -49,7 +48,7 @@ handleDriverDelete(e, d){
             return  obj.id  !==  d.id;
         });
 
-        self.setState({drivers:  newArr})
+        self.setState({drivers:  newArr, filtered: newArr})
     });
 }
 

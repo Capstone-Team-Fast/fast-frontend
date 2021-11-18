@@ -54,7 +54,7 @@ const BaseLayout = () => (
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
+      <BrowserRouter forceRefresh={true}>
         <BaseLayout/>
       </BrowserRouter>
     );
