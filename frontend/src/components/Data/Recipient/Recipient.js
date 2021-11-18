@@ -8,12 +8,14 @@ import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import RecipientService from '../../../services/RecipientService';
+import SearchService from '../../../services/SearchService';
 //import Search from 'react-bootstrap-icons/Search';
 
 
 //import Search from 'react-bootstrap-icons';
 
 const recipientService = new RecipientService();
+const searchService = new SearchService();
 
 
 class  Recipient  extends  Component {
@@ -22,16 +24,20 @@ constructor(props) {
     super(props);
     this.state  = {
         recipients: [],
-        filterWord: ''
+        filtered: []
     };
+
+    this.handleRecipientDelete = this.handleRecipientDelete.bind(this)
+    this.handleSearch = this.handleSearch.bind(this)
 }
 
 componentDidMount() {
     var  self  =  this;
     recipientService.getRecipients().then(function (result) {
         console.log(result);
-        self.setState({ recipients:  result});
+        self.setState({ recipients:  result, filtered: result});
     });
+    console.log(this.state.filtered)
 
 }
 handleRecipientDelete(e, r){
@@ -44,6 +50,14 @@ handleRecipientDelete(e, r){
         self.setState({recipients:  newArr})
     });
 }
+
+handleSearch(e) {
+    let newList = searchService.findRecipients(e, this.state.recipients);
+    this.setState({
+        filtered: newList
+    });
+}
+
 
 render() {
 
@@ -66,7 +80,7 @@ render() {
                                             v-model="search"
                                             name="search"
                                             aria-label="Search"
-                                            onChange={event => this.setState({filterWord: event.target.value})}
+                                            onChange={this.handleSearch}
                                          //ref="title"
                                 ></FormControl>
                             </InputGroup>
@@ -88,29 +102,13 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.recipients.filter((r) => {
-                                if (this.state.filterWord == "")
-                                {
-                                    return r;
-                                }
-                                else if(r.first_name.toLowerCase().includes(this.state.filterWord.toLowerCase()))
-                                {
-                                    return r;
-                                }
-                                else if(r.last_name.toLowerCase().includes(this.state.filterWord.toLowerCase()))
-                                {
-                                    return r;
-                                }
-                                else if(r.location.address.toLowerCase().includes(this.state.filterWord.toLowerCase()))
-                                {
-                                    return r;
-                                }
-                        }).map( r  =>
+                        {this.state.filtered.map( r  =>
                             <tr  key={r.id}>
                             <td>{r.first_name}</td>
                             <td>{r.last_name}</td>
                             <td>{r.location.address}</td>
                             <td>
+                                <Button className="mr-2" href={"/recipientDetail/" + r.id}>View</Button>
                                 <Button className="mr-2" href={"/updateRecipient/" + r.id}>Edit</Button>
                                 <Button  onClick={(e)=>  this.handleRecipientDelete(e,r) }> Delete</Button>
                             </td>

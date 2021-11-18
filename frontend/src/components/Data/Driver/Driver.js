@@ -8,6 +8,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import DriverService from '../../../services/DriverService';
+import SearchService from '../../../services/SearchService';
 
 
 //import Search from 'react-bootstrap-icons/Search';
@@ -16,6 +17,7 @@ import DriverService from '../../../services/DriverService';
 //import Search from 'react-bootstrap-icons';
 
 const  driverService  =  new  DriverService();
+const  searchService = new SearchService();
 
 class  Driver  extends  Component {
 
@@ -23,31 +25,38 @@ constructor(props) {
     super(props);
     this.state  = {
         drivers: [],
-        filterWord: ''
+        filtered: []
     };
 
     this.handleDriverDelete  =  this.handleDriverDelete.bind(this);
+    this.handleSearch  =  this.handleSearch.bind(this);
 }
 
 componentDidMount() {
     var  self  =  this;
     driverService.getDrivers().then(function (result) {
-        console.log(result.data);
-        self.setState({ drivers:  result});
+        console.log(result);
+        self.setState({ drivers:  result, filtered: result});
     });
-
 }
+
 handleDriverDelete(e, d){
     var  self  =  this;
     console.log(d);
 
     driverService.deleteDriver(d).then(()=>{
-        console.log("43");
         var  newArr  =  self.state.drivers.filter(function(obj) {
             return  obj.id  !==  d.id;
         });
 
         self.setState({drivers:  newArr})
+    });
+}
+
+handleSearch(e) {
+    let newList = searchService.findDrivers(e, this.state.drivers);
+    this.setState({
+        filtered: newList
     });
 }
 
@@ -73,7 +82,7 @@ render() {
                                         v-model="search"
                                         name="search"
                                         aria-label="Search"
-                                        onChange={event => this.setState({filterWord: event.target.value})}
+                                        onChange={this.handleSearch}
                                 ></FormControl>
                             </InputGroup>
                         </Col>
@@ -94,26 +103,13 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                    {this.state.drivers.filter((d) => {
-                                if (this.state.filterWord == "")
-                                {
-                                    return d;
-                                }
-                                else if(d.first_name.toLowerCase().includes(this.state.filterWord.toLowerCase()))
-                                {
-                                    return d;
-                                }
-                                else if(d.last_name.toLowerCase().includes(this.state.filterWord.toLowerCase()))
-                                {
-                                    return d;
-                                }
-                               
-                        }).map( d  =>
+                    {this.state.filtered.map( d  =>
                             <tr  key={d.id}>
                             <td>{d.first_name}</td>
                             <td>{d.last_name}</td>
                             <td>{d.phone}</td>
                             <td >
+                                <Button className="mr-2" href={"/driverDetail/" + d.id}>View</Button>
                                 <Button className="mr-2" href={"/updateDriver/" + d.id}>Edit</Button>
                                 <Button  onClick={(e)=>  this.handleDriverDelete(e, d) }> Delete</Button>
                             </td>
