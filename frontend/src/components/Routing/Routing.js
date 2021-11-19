@@ -29,9 +29,12 @@ constructor(props) {
      super(props);
      this.state  = {
          locations: [],
+         drivers:[],
+         recipients:[],
      };
 
-     this.getCenter = this.getCenter.bind(this)
+     this.getCenter = this.getCenter.bind(this);
+     this.handleDriverCallback = this.handleDriverCallback.bind(this)
 }
 
 //     this.handleDriverDelete  =  this.handleDriverDelete.bind(this);
@@ -44,24 +47,39 @@ componentDidMount() {
      });
 }
 
+handleDriverCallback = (id, deselect) =>{
+  if (deselect){
+    this.setState({drivers: this.state.drivers.filter(function(d) { 
+      return d !== id; 
+    })});
+    console.log("55", this.state.drivers);
+  }
+  else{
+    const newDrivers = this.state.drivers.concat({ id });
+    this.setState({drivers : newDrivers});
+    console.log("60", this.state.drivers);
+  }
+}
+
+handleRecipientCallback = (id, deselect) =>{
+  if (deselect){
+    this.setState({recipients: this.state.recipients.filter(function(r) { 
+      return r !== id; 
+    })});
+    console.log("69", this.state.drivers);
+  }
+  else{
+    const newRecipients = this.state.recipients.concat({ id });
+    this.setState({recipients : newRecipients});
+    console.log("74", this.state.recipients);
+  }
+}
+
 getCenter(location) {
   if (location.is_center) {
     return location.address;
   }
 }
-
-// }
-// handleDriverDelete(e, r){
-//     var  self  =  this;
-//     driverService.deleteDriver(r).then(()=>{
-//         var  newArr  =  self.state.drivers.filter(function(obj) {
-//             return  obj.id  !==  r.id;
-//         });
-
-//         self.setState({drivers:  newArr})
-//     });
-// }
-
 
 render() {
 
@@ -90,8 +108,8 @@ render() {
         </Row>   
         </Form>   
         <br/>
-        <SelectDriver></SelectDriver>
-        <SelectRecipient></SelectRecipient>
+        <SelectDriver parentCallback = {this.handleDriverCallback}></SelectDriver>
+        <SelectRecipient parentCallback = {this.handleRecipientCallback}></SelectRecipient>
        
         
         <Button className="mr-2 mt-4 btn" variant="primary" type="submit" >Create Route</Button>

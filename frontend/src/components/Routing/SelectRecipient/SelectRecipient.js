@@ -22,9 +22,12 @@ class  SelectRecipient  extends  Component {
 constructor(props) {
     super(props);
     this.state  = {
-        recipients: [],
-        selectedRecipients: []
+        selectedNumber: 0
     };
+
+    this.onSelect  =  this.onSelect.bind(this);
+    this.onDeselect  =  this.onDeselect.bind(this);
+    this.getEventValues  =  this.getEventValues.bind(this);
 }
 
 componentDidMount() {
@@ -35,16 +38,28 @@ componentDidMount() {
     })
 }
 
-handleRecipientDelete(e, r){
+getEventValues(event) {
     var  self  =  this;
-    recipientService.deleteRecipient(r).then(()=>{
-        var  newArr  =  self.state.recipients.filter(function(obj) {
-            return  obj.id  !==  r.id;
-        });
-
-        self.setState({recipients:  newArr})
-    });
+    return event[self.state.selectedNumber].id;
+    
 }
+
+onSelect(event){
+    var self = this;
+    let id = this.getEventValues(event);
+    self.setState({selectedNumber: (self.state.selectedNumber + 1) });
+    //passing driver id to parent component in Routing.js
+    self.props.parentCallback(id, false);
+}
+
+onDeselect(event){
+    var self = this;
+    let id = self.getEventValues(event);
+    self.setState({selectedNumber: (self.state.selectedNumber - 1) });
+    //passing driver id to parent component in Routing.js
+    self.props.parentCallback(id, true);
+}
+
 
 render() {
 
@@ -59,10 +74,9 @@ render() {
                                 <Multiselect
                                     options={this.state.recipients} // Options to display in the dropdown
                                     // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
-                                    // onSelect={this.onSelect} // Function will trigger on select event
-                                    // onRemove={this.onRemove} // Function will trigger on remove event
+                                    onSelect={this.onSelect} // Function will trigger on select event
+                                    onRemove={this.onDeselect} // Function will trigger on remove event
                                     displayValue="first_name"
-                                    // Property name to display in the dropdown options
                                 />
                             </Form>
                         </Col>
