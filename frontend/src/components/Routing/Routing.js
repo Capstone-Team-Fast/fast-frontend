@@ -81,11 +81,20 @@ getCenter(location) {
   }
 }
 
+handleSubmit = (event) => {
+  event.preventDefault();
+  this.routeService.createRoute(this.state);
+  
+  //#TODO: how to redirect to view route??
+  //this.setState({redirect: "/"});
+  console.log(this.state)
+}
+
 render() {
 
     return (
       <Container>
-        <Form>
+        <Form onSubmit={this.handleSubmit}>
         <Row className="mt-4">
         <Form.Group as={Col} controlId="formGridDeliveryLimit">
           <Form.Label className="title">Delivery Limit</Form.Label>
@@ -106,13 +115,14 @@ render() {
             </Form.Select>
         </Form.Group>
         </Row>   
-        </Form>   
+          
         <br/>
         <SelectDriver parentCallback = {this.handleDriverCallback}></SelectDriver>
         <SelectRecipient parentCallback = {this.handleRecipientCallback}></SelectRecipient>
        
         
         <Button className="mr-2 mt-4 btn" variant="primary" type="submit" >Create Route</Button>
+        </Form> 
       </Container>
     
     
