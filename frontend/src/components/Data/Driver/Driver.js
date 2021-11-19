@@ -7,8 +7,10 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import DriverService from '../../../services/DriverService';
 import SearchService from '../../../services/SearchService';
+import FileService from '../../../services/FileService';
 
 
 //import Search from 'react-bootstrap-icons/Search';
@@ -18,6 +20,7 @@ import SearchService from '../../../services/SearchService';
 
 const  driverService  =  new  DriverService();
 const  searchService = new SearchService();
+const  fileService = new FileService();
 
 class  Driver  extends  Component {
 
@@ -25,11 +28,14 @@ constructor(props) {
     super(props);
     this.state  = {
         drivers: [],
-        filtered: []
+        filtered: [],
+        fileText: ""
     };
 
     this.handleDriverDelete  =  this.handleDriverDelete.bind(this);
     this.handleSearch  =  this.handleSearch.bind(this);
+    this.readFile = this.readFile.bind(this)
+    this.handleBulkUpload = this.handleBulkUpload.bind(this)
 }
 
 componentDidMount() {
@@ -59,6 +65,36 @@ handleSearch(e) {
     });
 }
 
+readFile(event) {
+    const fileObj = event.target.files[0]; 
+    const reader = new FileReader(); 
+  
+    let fileloaded = e => {
+      const fileContents = e.target.result;
+      const text = fileContents.substring(0,fileObj.length);
+      localStorage.setItem('fileText', text)
+    }
+
+    let text = localStorage.getItem('fileText');
+    fileloaded = fileloaded.bind(this);
+    reader.onload = fileloaded;
+    reader.readAsText(fileObj);
+
+    this.setState({
+        fileText: text
+    });
+}
+
+handleBulkUpload(e) {
+    /*
+    let drivers = fileService.convertFileFromExcel(this.state.fileText)
+    driverService.createDrivers()
+    this.setState({
+        fileText: ""
+    });
+    window.location.reload()
+    */
+}
 
 render() {
 
@@ -115,6 +151,27 @@ render() {
                         </tr>)}
                     </tbody>
                 </Table>
+            </Row>
+            <Row className="justify-content-md-left mt-2 pt-2 mb-2 title border-top">
+                <Col xs md="auto" className="h4">File Upload</Col>
+            </Row>
+            <Row>
+                <Col md="auto" className="ml-4">
+                    <Row>
+                        <Form.Group controlId="formFile" className="mb-3">
+                            <Form.Control type="file" onChange={
+                                e => this.readFile(e)}/>
+                        </Form.Group>
+                    </Row>
+                </Col>
+                <Col>
+                    <Row>
+                    <Col sm={2}> 
+                            <Button
+                                onClick={this.handleBulkUpload}>Add Drivers</Button>
+                        </Col>   
+                    </Row>
+                </Col>
             </Row>
         </Container>
 
