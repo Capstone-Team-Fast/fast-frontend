@@ -3,9 +3,6 @@ const API_URL = 'http://3.144.105.249:8000';
 
 export default class DriverService{
 
-    constructor(){}
-
-
     getDrivers() {
         const url = `${API_URL}/api/drivers/`;
         //const url = `${API_URL}/drivers/`;

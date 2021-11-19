@@ -3,9 +3,6 @@ const API_URL = 'http://localhost:8000';
 
 export default class RouteService{
 
-    constructor(){}
-
-
     getRoutes() {
         const url = `${API_URL}/api/routes/`;
         return axios.get(url).then(response => response.data);

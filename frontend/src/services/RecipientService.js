@@ -3,9 +3,6 @@ const API_URL = 'http://3.144.105.249:8000';
 
 export default class RecipientService{
 
-    constructor(){}
-
-
     getRecipients() {
         const url = `${API_URL}/api/clients/`;
         //const url = `${API_URL}/clients/`;
