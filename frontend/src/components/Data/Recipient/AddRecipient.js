@@ -168,7 +168,7 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="zipcode">Zip</Form.Label>
                         <Form.Control type="number" onChange={this.handleObjectChange} 
-                            name="location" id="zipcode" min="68000"/>
+                            name="location" id="zipcode" min="0"/>
                     </Form.Group>
                 </Row>
 

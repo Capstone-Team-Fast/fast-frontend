@@ -6,9 +6,11 @@ import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import RecipientService from '../../../services/RecipientService';
 import SearchService from '../../../services/SearchService';
+import FileService from '../../../services/FileService';
 //import Search from 'react-bootstrap-icons/Search';
 
 
@@ -16,6 +18,7 @@ import SearchService from '../../../services/SearchService';
 
 const recipientService = new RecipientService();
 const searchService = new SearchService();
+const  fileService = new FileService();
 
 
 class  Recipient  extends  Component {
@@ -24,11 +27,14 @@ constructor(props) {
     super(props);
     this.state  = {
         recipients: [],
-        filtered: []
+        filtered: [], 
+        fileText: ""
     };
 
     this.handleRecipientDelete = this.handleRecipientDelete.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
+    this.readFile = this.readFile.bind(this)
+    this.handleBulkUpload = this.handleBulkUpload.bind(this)
 }
 
 componentDidMount() {
@@ -47,7 +53,7 @@ handleRecipientDelete(e, r){
             return  obj.id  !==  r.id;
         });
 
-        self.setState({recipients:  newArr})
+        self.setState({recipients:  newArr, filtered: newArr})
     });
 }
 
@@ -58,11 +64,43 @@ handleSearch(e) {
     });
 }
 
+readFile(event) {
+    const fileObj = event.target.files[0]; 
+    const reader = new FileReader(); 
+  
+    let fileloaded = e => {
+      const fileContents = e.target.result;
+      const text = fileContents.substring(0,fileObj.length);
+      localStorage.setItem('fileText', text)
+    }
+
+    let text = localStorage.getItem('fileText');
+    fileloaded = fileloaded.bind(this);
+    reader.onload = fileloaded;
+    reader.readAsText(fileObj);
+
+    this.setState({
+        fileText: text
+    });
+}
+
+handleBulkUpload(e) {
+    /*
+    let recipients = fileService.convertFileFromExcel(this.state.fileText)
+    recipientService.createRecipients()
+    this.setState({
+        fileText: ""
+    });
+    window.location.reload()
+    */
+}
+
+
 
 render() {
 
     return (
-        <Container className="card mt-2">
+        <Container className="card mt-2 mb-4">
             <Row className="card-header">
                 <Col>
                     <Row>
@@ -115,6 +153,27 @@ render() {
                         </tr>)}
                     </tbody>
                 </Table>
+            </Row>
+            <Row className="justify-content-md-left mt-2 pt-2 mb-2 title border-top">
+                <Col xs md="auto" className="h4">File Upload</Col>
+            </Row>
+            <Row classname="pb-4 mb-4">
+                <Col md="auto" className="ml-4">
+                    <Row>
+                        <Form.Group controlId="formFile" className="mb-3">
+                            <Form.Control type="file" onChange={
+                                e => this.readFile(e)}/>
+                        </Form.Group>
+                    </Row>
+                </Col>
+                <Col>
+                    <Row>
+                    <Col sm={2}> 
+                            <Button
+                                onClick={this.handleBulkUpload}>Add Recipients</Button>
+                        </Col>   
+                    </Row>
+                </Col>
             </Row>
         </Container>
 
