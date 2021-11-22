@@ -115,6 +115,21 @@ render() {
                     </tbody>
                 </Table>
             </Row>
+            <Row className="card-body">
+                <h2 className="title">Recipient Notes</h2>
+                <Table className="striped bordered hover table table-bordered table-striped mb-0">
+                    <thead>
+                        <tr>
+                            <th>Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            <tr key={this.state.comments}>
+                            <td>{this.state.comments}</td>
+                        </tr>
+                    </tbody>
+                </Table>
+            </Row>
         </Container>
     );
 }

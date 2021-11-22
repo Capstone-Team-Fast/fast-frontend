@@ -88,12 +88,10 @@ readFile(event) {
 handleBulkUpload(e) {
     /*
     let drivers = fileService.convertFileFromExcel(this.state.fileText)
-    driverService.createDrivers()
-    this.setState({
-        fileText: ""
-    });
+    driverService.createDrivers(drivers)
     window.location.reload()
     */
+    
 }
 
 render() {
