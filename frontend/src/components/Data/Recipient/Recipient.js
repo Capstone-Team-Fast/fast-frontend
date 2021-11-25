@@ -135,6 +135,7 @@ render() {
                         <tr>
                             <th>First Name</th>
                             <th>Last Name</th>
+                            <th>Quantity</th>
                             <th>Address</th>
                             <th></th>
                         </tr>
@@ -144,6 +145,7 @@ render() {
                             <tr  key={r.id}>
                             <td>{r.first_name}</td>
                             <td>{r.last_name}</td>
+                            <td>{r.quantity}</td>
                             <td>{r.location.address}</td>
                             <td>
                                 <Button className="mr-2" href={"/recipientDetail/" + r.id}>View</Button>

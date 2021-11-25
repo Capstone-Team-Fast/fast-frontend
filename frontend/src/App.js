@@ -13,6 +13,8 @@ import UpdateRecipient from './components/Data/Recipient/UpdateRecipient';
 import ViewRecipient from './components/Data/Recipient/ViewRecipient';
 import ViewDriver from './components/Data/Driver/ViewDriver';
 import Routing from './components/Routing/Routing';
+import RouteResults from './components/Route_Results/RouteResults';
+import DriverRoute from './components/Route_Results/DriverRoute';
 
 import './App.css';
 
@@ -40,6 +42,8 @@ const BaseLayout = () => (
       <br/>
       <Route path="/" exact component={Recipient} />
       <Route path="/routing" exact component={Routing} />
+      <Route path="/routeResults/" exact component={RouteResults} />
+      <Route path="/routeResults/driverRoute/:routeId" exact component={DriverRoute} />
       <Route path="/addDriver" exact component={AddDriver} />
       <Route path="/addRecipient" exact component={AddRecipient} />
       <Route path="/updateDriver/:id" exact component={UpdateDriver} />

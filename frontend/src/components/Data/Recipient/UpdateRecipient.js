@@ -6,6 +6,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
 import RecipientService from '../../../services/RecipientService';
 
 class  UpdateRecipient  extends  Component {
@@ -133,11 +135,19 @@ render() {
                     </Form.Group>
                 </Row>
 
-                <Form.Group className="mb-3" controlId="formGridPhone">
+                <Row className="mb-3">
+                <Form.Group as={Col} className="mb-3" controlId="formGridPhone">
                     <Form.Label>Phone Number</Form.Label>
                     <Form.Control  onChange={this.handleChange} name="phone"
                                     value={this.state.phone}/>
                 </Form.Group>
+
+                <Form.Group as={Col}>
+                        <Form.Label htmlFor="quantity">Quantity</Form.Label> 
+                        <Form.Control type="number" onChange={this.handleChange} 
+                            name="quantity" min="0"/>
+                </Form.Group>
+                </Row>
 
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="address">Address</Form.Label>
@@ -195,6 +205,14 @@ render() {
                                 name="language" onChange={this.handleLanguageChange} />
                         )}
                 </Form.Group>
+
+                <Row className="mb-3">
+                <InputGroup>
+                    <InputGroup.Text>Comments</InputGroup.Text>
+                    <FormControl as="textarea" aria-label="With textarea" 
+                                name="comments" onChange={this.handleChange}/>
+                </InputGroup>
+                </Row>
 
                 <Button variant="primary" type="submit">Submit</Button>
             </Form>

@@ -27,6 +27,7 @@ constructor(props) {
     
     this.driverService = new DriverService()
     this.handleChange = this.handleChange.bind(this);
+    this.handlePhoneChange = this.handlePhoneChange.bind(this);
     this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
     this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -96,6 +97,27 @@ handleChange(event) {
     console.log(this.state)
 }
 
+handlePhoneChange(event) {
+    let value = event.target.value.replace(/[^\d]/g, "")
+    let phone =""
+
+    if (value.length < 4) {
+        phone = value 
+    }
+    else if (value.length < 7) {
+        phone = value.slice(0, 3) + "-" + value.slice(3)
+    }
+    else {
+        phone = value.slice(0,3) + "-" + value.slice(3,6) + "-" +
+            value.slice(6)
+    }
+    
+    this.setState({
+        'phone': phone
+    });
+    console.log(this.state)
+}
+
 handleSubmit = (event) => {
     event.preventDefault();
     this.driverService.updateDriver(this.state);
@@ -141,8 +163,9 @@ render() {
                 <Row>
                     <Form.Group as={Col} className="mb-3" controlId="formGridPhone">
                         <Form.Label>Phone Number</Form.Label>
-                        <Form.Control  onChange={this.handleChange} name="phone"
-                            value={this.state.phone}/>
+                        <Form.Control  type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        onChange={this.handlePhoneChange} value={this.state.phone}
+                        required placeholder="402-345-6789" name="phone"/>
                     </Form.Group>
 
                     <Form.Group as={Col} className="mb-3" controlId="formGridStatus">
