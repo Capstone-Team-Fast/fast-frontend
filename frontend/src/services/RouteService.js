@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = 'http://localhost:8000';
+const API_URL = 'http://3.144.105.249:8000';
 
 export default class RouteService{
 
@@ -12,7 +12,7 @@ export default class RouteService{
     }
 
     getRoute(pk) {
-        const url = `${API_URL}/api/routes/${pk}`;
+        const url = `${API_URL}/api/routes/${pk}/`;
         return axios.get(url).then(response => response.data);
     }
 
