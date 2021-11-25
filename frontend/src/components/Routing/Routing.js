@@ -26,16 +26,15 @@ constructor(props) {
      super(props);
      this.state  = {
          locations: [],
-         drivers:[],
+         drivers: [],
          recipients:[],
+         deliveryLimit: '', 
+         duration: ''
      };
 
      this.getCenter = this.getCenter.bind(this);
      this.handleDriverCallback = this.handleDriverCallback.bind(this)
 }
-
-//     this.handleDriverDelete  =  this.handleDriverDelete.bind(this);
-// }
 
 componentDidMount() {
      var  self  =  this;
@@ -63,12 +62,10 @@ handleRecipientCallback = (id, deselect) =>{
     this.setState({recipients: this.state.recipients.filter(function(r) { 
       return r !== id; 
     })});
-    console.log("69", this.state.drivers);
   }
   else{
     const newRecipients = this.state.recipients.concat({ id });
     this.setState({recipients : newRecipients});
-    console.log("74", this.state.recipients);
   }
 }
 
