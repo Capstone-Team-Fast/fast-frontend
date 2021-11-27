@@ -27,6 +27,7 @@ constructor(props) {
     this.handleChange = this.handleChange.bind(this);
     this.handleObjectChange = this.handleObjectChange.bind(this);
     this.handleLanguageChange = this.handleLanguageChange.bind(this);
+    this.handlePhoneChange = this.handlePhoneChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getEventValues = this.getEventValues.bind(this);
     this.getEventIDValue = this.getEventIDValue.bind(this);
@@ -69,6 +70,28 @@ handleObjectChange(event) {
     ));
     console.log(JSON.stringify(this.state))
 }
+
+handlePhoneChange(event) {
+    let value = event.target.value.replace(/[^\d]/g, "")
+    let phone =""
+
+    if (value.length < 4) {
+        phone = value 
+    }
+    else if (value.length < 7) {
+        phone = value.slice(0, 3) + "-" + value.slice(3)
+    }
+    else {
+        phone = value.slice(0,3) + "-" + value.slice(3,6) + "-" +
+            value.slice(6)
+    }
+    
+    this.setState({
+        'phone': phone
+    });
+    console.log(this.state)
+}
+
 
 handleLanguageChange(event) {
     let id = this.getEventIDValue(event);
@@ -136,11 +159,13 @@ render() {
                 </Row>
 
                 <Row className="mb-3">
-                <Form.Group as={Col} className="mb-3" controlId="formGridPhone">
-                    <Form.Label>Phone Number</Form.Label>
-                    <Form.Control  onChange={this.handleChange} name="phone"
-                                    value={this.state.phone}/>
-                </Form.Group>
+                    <Form.Group as={Col} className="mb-3" controlId="formGridPhone">
+                        <Form.Label>Phone Number</Form.Label>
+                        
+                        <Form.Control  type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        onChange={this.handlePhoneChange} value={this.state.phone}
+                        required placeholder="402-345-6789" name="phone" maxlength="12"/>
+                    </Form.Group>
 
                 <Form.Group as={Col}>
                         <Form.Label htmlFor="quantity">Quantity</Form.Label> 
