@@ -165,7 +165,7 @@ render() {
                         <Form.Label>Phone Number</Form.Label>
                         <Form.Control  type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                         onChange={this.handlePhoneChange} value={this.state.phone}
-                        required placeholder="402-345-6789" name="phone"/>
+                        required placeholder="402-345-6789" name="phone" maxlength="12"/>
                     </Form.Group>
 
                     <Form.Group as={Col} className="mb-3" controlId="formGridStatus">

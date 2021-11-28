@@ -85,8 +85,8 @@ constructor(props) {
 
 componentDidMount() {
     console.log("mounting")
-    //let route = routeService.getRoute(this.state.route.id)
-    //console.log(route)
+    let route = routeService.getRoute(this.state.route.id)
+    console.log(route)
 }
 
 render() {
@@ -94,7 +94,7 @@ render() {
     return (
         <Container>
             <Card border="dark" className="mb-4 mt-4">
-            <Card.Title className="card-header border-dark">
+            <Card.Title className="card-header border-dark bg-grey">
                 <Col>
                     <Row >
                         <Col sm={8} className="title">
@@ -104,8 +104,8 @@ render() {
                     </Row>
                 </Col>
             </Card.Title>
-            <Card.Header className="pt-1 pl-1 pr-1 pb-1 border-dark">
-            <Table className="hover table table-bordered table-striped mb-0">
+            <Card.Header className="pt-1 pl-1 pr-1 pb-1 border-dark bg-grey">
+            <Table className="hover table mb-0">
                     <thead>
                         <tr>
                             <th>Capacity</th>
@@ -130,7 +130,7 @@ render() {
                 Delivery List
             </Card.Subtitle>
             <Card.Body className="card-body pl-1 pr-1 pt-1">
-                <Table className="hover table table-bordered table-striped mb-0">
+                <Table className="hover table mb-0">
                     <thead>
                         <tr>
                             <th>Address</th>
