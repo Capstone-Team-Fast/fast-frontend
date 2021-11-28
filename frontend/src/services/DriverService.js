@@ -3,9 +3,6 @@ const API_URL = 'http://3.144.105.249:8000';
 
 export default class DriverService{
 
-    constructor(){}
-
-
     getDrivers() {
         const url = `${API_URL}/api/drivers/`;
         //const url = `${API_URL}/drivers/`;
@@ -34,13 +31,19 @@ export default class DriverService{
     createDrivers(drivers) {
         const url = `${API_URL}/api/drivers/`;
         //const url = `${API_URL}/drivers/`;
-        return axios.post(url, drivers).then(response => response.data);
+        return axios.post(url, drivers).then(
+            (response) => {
+                // response.data;
+                console.log(response.data);
+            });
     }
 
     createDriver(driver){
         const url = `${API_URL}/api/drivers/`;
         //const url = `${API_URL}/drivers/`;
-        return axios.post(url,driver).then(response => response.data);
+        return axios.post(url,driver).then(response => {
+            console.log(response.data);
+        });
     }
 
     updateDriver(driver){

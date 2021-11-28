@@ -14,12 +14,13 @@ class  AddDriver  extends  Component {
 
 constructor(props) {
     super(props);
-    this.state = {'user': '', 'first_name': '', 'last_name': '', 
-                    'phone': '', 'availability': {'sunday': false,
-                    'monday': false, 'tuesday': false, 'wednesday': false, 
-                    'thursday': false, 'friday': false, 'saturday': false}, 
-                    'employee_status': '', 'capacity': '', 'languages': []
-                };
+    this.state = {
+        'user': '', 'first_name': '', 'last_name': '', 
+        'phone': '', 'availability': {'sunday': false,
+        'monday': false, 'tuesday': false, 'wednesday': false, 
+        'thursday': false, 'friday': false, 'saturday': false}, 
+        'employee_status': '', 'capacity': '', 'languages': []
+    };
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
                         'Hindi', 'Russian', 'Portugese', 'Other'];
     this.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 

@@ -1,7 +1,5 @@
 export default class SearchService{
 
-    constructor(){}
-
     findDrivers(event, drivers) {
         let currentList = drivers;
         let newList = []
@@ -54,8 +52,4 @@ export default class SearchService{
         }
         return newList;
     }
-    
-
-
-
 }

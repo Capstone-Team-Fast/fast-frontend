@@ -53,7 +53,7 @@ showAvailability() {
         }
         if (key !== "id" && this.state.availability[key] === false)
         {
-            availability.push("NotAvailable");
+            availability.push("Not Available");
         }
     }
     return availability
