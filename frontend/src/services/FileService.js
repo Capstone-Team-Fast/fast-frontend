@@ -1,8 +1,6 @@
 import * as XLSX from 'xlsx'
 import axios from 'axios';
 
-const API_URL = 'http://3.144.105.249:8000';
-
 export default class FileService{
 
     convertFileFromExcel(fileText) {
@@ -10,20 +8,6 @@ export default class FileService{
     }
 
     convertFileToExcel(file) {
-    }
-
-    saveFile(drivers){
-        const url = `${API_URL}/api/drivers/bulk/`;
-        if (drivers.length > 0) {
-            console.log('Saving File to ' + url);
-            console.log(drivers);
-            // return axios.post(url, drivers).then(response => response.data);
-            return axios({
-                method: 'post',
-                url: url,
-                data: drivers
-            }).then((response) => {console.log(response.data); console.log(response.status)})
-        }
     }
 
     readFile(file) {

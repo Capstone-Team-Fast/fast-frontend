@@ -26,12 +26,13 @@ export default class RecipientService{
         return axios.delete(url);
     }
 
-    // Do we need a method on the backend to handle the creation of 
-    // multiple recipients at one time?
-    createRecipients(recipients) {
-        const url = `${API_URL}/api/clients/`;
-        //const url = `${API_URL}/clients/`;
-        return axios.post(url, recipients).then(response => response.data);
+    uploadRecipients(recipients){
+        const url = `${API_URL}/api/clients/bulk/`;
+        if (recipients.length > 0) {
+            console.log('Saving File to ' + url);
+            console.log(recipients);
+            return axios.post(url, recipients).then(response => response.data);
+        }
     }
 
     createRecipient(recipient){

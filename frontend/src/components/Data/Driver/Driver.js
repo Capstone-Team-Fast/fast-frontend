@@ -36,7 +36,7 @@ class Driver extends Component {
         this.handleDriverDelete = this.handleDriverDelete.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.readFile = this.readFile.bind(this);
-        this.handleBulkUpload = this.handleBulkUpload.bind(this)
+        this.refreshDrivers = this.refreshDrivers.bind(this);
     }
 
     componentDidMount() {
@@ -73,15 +73,6 @@ class Driver extends Component {
         });
     }
 
-    handleBulkUpload(e) {
-        /*
-        let drivers = fileService.convertFileFromExcel(this.state.fileText)
-        driverService.createDrivers(drivers)
-        window.location.reload()
-        */
-
-    }
-
     get_availability(availability_list) {
         let availability_template = {'sunday': false, 'monday': false, 'tuesday': false, 'wednesday': false, 
             'thursday': false, 'friday': false, 'saturday': false };
@@ -89,8 +80,20 @@ class Driver extends Component {
             let day = availability_list[index].trim().toLowerCase();
             availability_template[day] = true;
         }
-        availability_template.id = Math.floor(Math.random() * 128);
         return availability_template;
+    }
+
+    get_phone(phone) {
+        if (phone.length > 0) {
+            phone = phone.trim();
+            phone = phone.replaceAll(/['\D']/g, '');
+            if (phone.length == 10) {
+                phone = phone.slice(0, 3) + '-' + phone.slice(3, 6) + '-' + phone.slice(6);
+            } else {
+                phone = '';
+            }
+        }
+        return phone
     }
 
     capitalize(str) {
@@ -127,7 +130,7 @@ class Driver extends Component {
         throw new Error('Expected ' + typeof('string') + ' but got ' + typeof(str));
     }
 
-    async readFile(event) {
+    readFile(event) {
         const file = event.target.files[0];
         const promise = fileService.readFile(file);
         let drivers = [];
@@ -150,9 +153,9 @@ class Driver extends Component {
                     delete driver_data[key];
                     driver_data[key.toLowerCase()] = value;
                 }
-                driver_template.first_name = driver_data.firstname;
-                driver_template.last_name = driver_data.lastname;
-                let employee_status = driver_data.role.toLowerCase();
+                driver_template.first_name = driver_data.firstname.trim();
+                driver_template.last_name = driver_data.lastname.trim();
+                let employee_status = driver_data.role.toLowerCase().trim();
                 if (employee_status === 'volunteer') {
                     driver_template.employee_status = 'Volunteer';
                 } else {
@@ -160,7 +163,7 @@ class Driver extends Component {
                 }
                 driver_template.availability = this.get_availability(driver_data.availability.split(','));
                 driver_template.languages = this.get_languages(driver_data.language.split(','));
-                driver_template.phone = driver_data.phone;
+                driver_template.phone = this.get_phone(driver_data.phone.trim());
                 drivers.push(driver_template);
             }
             this.setState({
@@ -247,12 +250,12 @@ class Driver extends Component {
                                     <Button className="mx-1">Preview</Button>
                                 </Link>
                                 <Button className="mx-1" onClick={() => {
-                                    fileService.saveFile(this.state.new_drivers);
+                                    driverService.uploadDrivers(this.state.new_drivers);
                                     this.setState({
                                         new_drivers: [],
                                     });
                                     this.fileInput.current.value = '';
-                                    // this.refreshDrivers();
+                                    this.refreshDrivers();
                                 }}>Add Drivers</Button>
                             </Col>
                         </Row>
@@ -260,26 +263,6 @@ class Driver extends Component {
                 </Row>
             </Container>
         );
-
-
-
-        /*{<b-container>
-            <div className="input-group">
-                    <div className="form-outline">
-                        <input id="search-input" type="search" id="form1" className="form-control"/>
-                    {// <label className="form-label" htmlFor="form1">Search</label>
-                        }
-                    </div>
-                    <button id="search-button" type="button" className="btn btn-primary">
-                        Search
-                        <i className="fas fa-search"></i>
-                    </button>
-                </div>
-
-        </b-container>
-                    }*/
-
-
     }
 }
 export default Driver;

@@ -28,22 +28,19 @@ export default class DriverService{
 
     // Do we need a method on the backend to handle the creation of 
     // multiple drivers at one time?
-    createDrivers(drivers) {
-        const url = `${API_URL}/api/drivers/`;
-        //const url = `${API_URL}/drivers/`;
-        return axios.post(url, drivers).then(
-            (response) => {
-                // response.data;
-                console.log(response.data);
-            });
+    uploadDrivers(drivers){
+        const url = `${API_URL}/api/drivers/bulk/`;
+        if (drivers.length > 0) {
+            console.log('Saving File to ' + url);
+            console.log(drivers);
+            // return axios.post(url, drivers).then(response => response.data);
+        }
     }
 
     createDriver(driver){
         const url = `${API_URL}/api/drivers/`;
         //const url = `${API_URL}/drivers/`;
-        return axios.post(url,driver).then(response => {
-            console.log(response.data);
-        });
+        return axios.post(url,driver).then(response => response.data);
     }
 
     updateDriver(driver){
