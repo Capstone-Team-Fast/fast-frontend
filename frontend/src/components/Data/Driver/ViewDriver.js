@@ -67,7 +67,7 @@ render() {
             <Row className="card-header">
                 <Col>
                     <Row>
-                        <Col sm={8} className="h2">Driver Detail</Col>
+                        <Col sm={10} className="h2">Driver Detail</Col>
                         <Col sm={2}> 
                             <Button href="/">Return</Button>
                         </Col>
