@@ -15,6 +15,8 @@ import ViewDriver from './components/Data/Driver/ViewDriver';
 import Routing from './components/Routing/Routing';
 import UploadDriversList from './components/Data/Driver/UploadDriversList'
 import PreviewDrivers from './components/Data/Driver/PreviewDrivers'
+import RouteResults from './components/Route_Results/RouteResults';
+import DriverRoute from './components/Route_Results/DriverRoute';
 
 import './App.css';
 
@@ -26,6 +28,7 @@ const BaseLayout = () => (
       <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon"></span>
       </button>
+<<<<<<< HEAD
       <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div className="navbar-nav">
           <a className="nav-item nav-link" href="/">ADD DATA</a>
@@ -34,12 +37,24 @@ const BaseLayout = () => (
         </div>
       </div>
     </nav>
+=======
+  <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div className="navbar-nav">
+      <a className="nav-item nav-link" href="/">ADD DATA</a>
+      <a className="nav-item nav-link" href="/routing">CREATE ROUTE</a>
+
+    </div>
+  </div>
+</nav>
+>>>>>>> develop
 
     <div className="content">
       <Route path="/" exact component={Driver} />
       <br/>
       <Route path="/" exact component={Recipient} />
       <Route path="/routing" exact component={Routing} />
+      <Route path="/routeResults/" exact component={RouteResults} />
+      <Route path="/routeResults/driverRoute/:routeId" exact component={DriverRoute} />
       <Route path="/addDriver" exact component={AddDriver} />
       <Route path="/addRecipient" exact component={AddRecipient} />
       <Route path="/updateDriver/:id" exact component={UpdateDriver} />
