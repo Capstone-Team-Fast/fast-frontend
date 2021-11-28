@@ -28,16 +28,6 @@ const BaseLayout = () => (
       <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon"></span>
       </button>
-<<<<<<< HEAD
-      <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div className="navbar-nav">
-          <a className="nav-item nav-link" href="/">ADD DATA</a>
-          <a className="nav-item nav-link" href="/routing">CREATE ROUTE</a>
-          <a className="nav-item nav-link" href="/customer">ROUTE HISTORY</a>
-        </div>
-      </div>
-    </nav>
-=======
   <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div className="navbar-nav">
       <a className="nav-item nav-link" href="/">ADD DATA</a>
@@ -46,7 +36,6 @@ const BaseLayout = () => (
     </div>
   </div>
 </nav>
->>>>>>> develop
 
     <div className="content">
       <Route path="/" exact component={Driver} />
