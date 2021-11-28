@@ -30,8 +30,8 @@ constructor(props) {
             'total_duration': 11.3,
             'assigned_to': {
                 'id': 1,
-                'first_name': 'First_1',
-                'last_name': 'Last_1',
+                'first_name': 'Lee',
+                'last_name': 'Corso',
                 'capacity': 50,
                 'employee_status': 'P',
                 'availability': [
@@ -94,8 +94,8 @@ constructor(props) {
             'total_duration': 11.3,
             'assigned_to': {
                 'id': 2,
-                'first_name': 'First_2',
-                'last_name': 'Last_2',
+                'first_name': 'Kirk',
+                'last_name': 'Herbstreit',
                 'capacity': 10,
                 'employee_status': 'P',
                 'availability': [
@@ -164,7 +164,7 @@ render() {
         <Container>
             {this.fakeRoute.routes.map(r =>
             <Card border="dark" className="mb-4 mt-4">
-            <Card.Title className="card-header border-dark">
+            <Card.Title className="card-header border-dark bg-grey">
                 <Col>
                     <Row >
                         <Col sm={8} className="title">
@@ -177,8 +177,8 @@ render() {
                     </Row>
                 </Col>
             </Card.Title>
-            <Card.Header className="pt-1 pl-1 pr-1 pb-1 border-dark">
-            <Table className="hover table table-bordered table-striped mb-0">
+            <Card.Header className="pt-1 pl-1 pr-1 pb-1 border-dark bg-grey">
+            <Table className="hover table  mb-0">
                     <thead>
                         <tr>
                             <th>Capacity</th>
@@ -203,7 +203,7 @@ render() {
                 Delivery List
             </Card.Subtitle>
             <Card.Body className="card-body pl-1 pr-1 pt-1">
-                <Table className="hover table table-bordered table-striped mb-0">
+                <Table className="hover table mb-0">
                     <thead>
                         <tr>
                             <th>Address</th>
