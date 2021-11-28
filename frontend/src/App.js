@@ -30,7 +30,6 @@ const BaseLayout = () => (
     <div className="navbar-nav">
       <a className="nav-item nav-link" href="/">ADD DATA</a>
       <a className="nav-item nav-link" href="/routing">CREATE ROUTE</a>
-      <a className="nav-item nav-link" href="/customer">ROUTE HISTORY</a>
 
     </div>
   </div>
