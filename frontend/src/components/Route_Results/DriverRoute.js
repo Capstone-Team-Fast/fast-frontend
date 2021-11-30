@@ -97,7 +97,7 @@ render() {
             <Card.Title className="card-header border-dark bg-grey">
                 <Col>
                     <Row >
-                        <Col sm={8} className="title">
+                        <Col sm={10} className="title">
                             {this.fakeRoute.assigned_to.first_name + " " + 
                                 this.fakeRoute.assigned_to.last_name}
                         </Col>
