@@ -9,8 +9,17 @@ import RecipientService from '../../../services/RecipientService';
 
 const recipientService = new RecipientService();
 
+/**
+ * This component is used to view individual recipient information stored 
+ * in the database.
+ */
 class  ViewRecipient  extends  Component {
 
+/**
+ * The constructor method initializes the component's state object and
+ * binds the methods of the component to the current instance.
+ * @param {Object} props The properties passed to the component.
+ */
 constructor(props) { 
     super(props);
     const {id} = props.match.params
@@ -21,6 +30,9 @@ constructor(props) {
     this.showLanguages = this.showLanguages.bind(this)
 }
 
+/**
+ * Life cycle hook that is called after the component is first rendered.
+ */
 componentDidMount() {
     var self = this
     recipientService.getRecipient(self.state.id).then(function (result) {
@@ -29,6 +41,11 @@ componentDidMount() {
     
 }
 
+/**
+ * Method to map the array of language objects stored in the component's 
+ * state to a list of language names.
+ * @returns The list of language names for the recipient.
+ */
 showLanguages() {
     let languages = []
     this.state.languages.map(l => {
@@ -37,6 +54,10 @@ showLanguages() {
 }
 
 
+/**
+ * The render method used to display the component. 
+ * @returns The HTML to be rendered.
+ */
 render() {
     
     return (
