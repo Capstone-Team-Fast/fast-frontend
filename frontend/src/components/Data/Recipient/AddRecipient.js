@@ -8,8 +8,16 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import RecipientService from '../../../services/RecipientService';
 
+/**
+ * This component is used to add individual recipients to the database.
+ */
 class  AddRecipient  extends  Component {
 
+/**
+ * The constructor method initializes the component's state object and
+ * binds the methods of the component to the current instance.
+ * @param {Object} props The properties passed to the component.
+ */
 constructor(props) {
     super(props);
     this.state = {'user': '', 'first_name': '', 'last_name': '', 'quantity': '', 
@@ -30,6 +38,12 @@ constructor(props) {
     this.getEventIDValue = this.getEventIDValue.bind(this);
 }
 
+/**
+ * This method retrieves the value, name, and id properties of the 
+ * event that has been triggered.
+ * @param {Object} event The event that has been triggered.
+ * @returns The value, name, and id properties of the triggered event.
+ */
 getEventValues(event) {
     let [value, name, id] = [   event.target.value, 
                                 event.target.name, 
@@ -37,10 +51,22 @@ getEventValues(event) {
     return [value, name, id];
 }
 
+/**
+ * This method rertrieves the id property of the event that has been triggered.
+ * @param {Object} event The event that has been triggered.
+ * @returns The id property of the triggered event.
+ */
 getEventIDValue(event) {
     return event.target.id;
 }
 
+/**
+ * Generic event handler that is called to update the component's state 
+ * when the user changes the value of a form field associated with a property 
+ * of the component's state that is an object.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to a form field.
+ */
 handleObjectChange(event) {
     let [value, name, id] = this.getEventValues(event);
     if (id === "is_center") {
@@ -54,9 +80,15 @@ handleObjectChange(event) {
         }    
     }
     ));
-    console.log(this.state)
 }
 
+/**
+ * Event handler that is called to update the component's state
+ * when the user changes the value of the form field associated 
+ * with a recipient's phone number.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the phone number field in the form.
+ */
 handlePhoneChange(event) {
     let value = event.target.value.replace(/[^\d]/g, "")
     let phone =""
@@ -75,9 +107,15 @@ handlePhoneChange(event) {
     this.setState({
         'phone': phone
     });
-    console.log(this.state)
 }
 
+/**
+ * Event handler that is called to update the component's state when
+ * the user changes the values of the form fields associated with a 
+ * recipient's languages.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the language fields in the form.
+ */
 handleLanguageChange(event) {
     let id = this.getEventIDValue(event);
     if (event.target.checked) {
@@ -91,23 +129,38 @@ handleLanguageChange(event) {
         })
         this.setState({languages:  newArr});
     }
-    console.log(this.state)
 }
 
+/**
+ * Generic event handler that is called to update the component's state 
+ * when the user changes the value of a form field that does not require 
+ * special handling.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to a generic form field.
+ */
 handleChange(event) {
     let [value, name] = this.getEventValues(event);
     this.setState({
         [name]: value
     });
-    console.log(this.state)
 }
 
+/**
+ * Event handler that is called upon form submission to create a new 
+ * recipient in the database and redirect the user to the Data page.
+ * @param {Object} event The submission event that is triggered on  
+ *                          submission of the form.
+ */
 handleSubmit = (event) => {
     event.preventDefault();
     this.recipientService.createRecipient(this.state);
     this.setState({redirect: "/"});
 }
     
+/**
+ * The render method used to display the component. 
+ * @returns The HTML to be rendered.
+ */
 render() {
     if (this.state.redirect) {
         return <Redirect to={this.state.redirect} />

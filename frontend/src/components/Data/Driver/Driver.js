@@ -13,17 +13,21 @@ import SearchService from '../../../services/SearchService';
 import FileService from '../../../services/FileService';
 
 
-//import Search from 'react-bootstrap-icons/Search';
-
-
-//import Search from 'react-bootstrap-icons';
-
 const  driverService  =  new  DriverService();
 const  searchService = new SearchService();
 const  fileService = new FileService();
 
-class  Driver  extends  Component {
+/**
+ * This component is used to display driver information on the application's
+ * Data page.
+ */
+class Driver extends Component {
 
+/**
+ * The constructor method initializes the component's state object and
+ * binds the methods of the component to the current instance.
+ * @param {Object} props The properties passed to the component.
+ */
 constructor(props) {
     super(props);
     this.state  = {
@@ -38,6 +42,9 @@ constructor(props) {
     this.handleBulkUpload = this.handleBulkUpload.bind(this)
 }
 
+/**
+ * Life cycle hook that is called after the component is first rendered.
+ */
 componentDidMount() {
     var  self  =  this;
     driverService.getDrivers().then(function (result) {
@@ -45,9 +52,15 @@ componentDidMount() {
     });
 }
 
+/**
+ * Event handler used to delete a driver from the database when the 
+ * user clicks on the delete button.
+ * @param {Object} e The event triggered when the user clicks on the 
+ * q                 Delete button.
+ * @param {Object} d The driver object to be deleted.
+ */
 handleDriverDelete(e, d){
     var  self  =  this;
-    console.log(d);
 
     driverService.deleteDriver(d).then(()=>{
         var  newArr  =  self.state.drivers.filter(function(obj) {
@@ -58,6 +71,12 @@ handleDriverDelete(e, d){
     });
 }
 
+/**
+ * Event handler method called when the user enters a value into the 
+ * driver search box.
+ * @param {Object} e The event triggered when a user enters information
+ *                      into the search field.
+ */
 handleSearch(e) {
     let newList = searchService.findDrivers(e, this.state.drivers);
     this.setState({
@@ -94,6 +113,10 @@ handleBulkUpload(e) {
     
 }
 
+/**
+ * The render method used to display the component. 
+ * @returns The HTML to be rendered.
+ */
 render() {
 
     return (
@@ -136,7 +159,10 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                    {this.state.filtered.map( d  =>
+                    {this.state.filtered.
+                        sort((a,b) => (a.last_name.toLowerCase() > 
+                            b.last_name.toLowerCase() ? 1 : -1)).
+                        map( d  =>
                             <tr  key={d.id}>
                             <td>{d.first_name}</td>
                             <td>{d.last_name}</td>
@@ -173,27 +199,7 @@ render() {
             </Row>
         </Container>
 
-    );
-
-
-
-        {/*<b-container>
-            <div className="input-group">
-                    <div className="form-outline">
-                        <input id="search-input" type="search" id="form1" className="form-control"/>
-                    {// <label className="form-label" htmlFor="form1">Search</label>
-                        }
-                    </div>
-                    <button id="search-button" type="button" className="btn btn-primary">
-                        Search
-                        <i className="fas fa-search"></i>
-                    </button>
-                </div>
-
-        </b-container>
-                    */}
-      
-        
+    );        
   }
 }
 export  default  Driver;

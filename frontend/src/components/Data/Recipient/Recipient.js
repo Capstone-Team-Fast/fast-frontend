@@ -11,18 +11,23 @@ import Button from 'react-bootstrap/Button';
 import RecipientService from '../../../services/RecipientService';
 import SearchService from '../../../services/SearchService';
 import FileService from '../../../services/FileService';
-//import Search from 'react-bootstrap-icons/Search';
-
-
-//import Search from 'react-bootstrap-icons';
 
 const recipientService = new RecipientService();
 const searchService = new SearchService();
 const  fileService = new FileService();
 
 
-class  Recipient  extends  Component {
+/**
+ * This component is used to display recipient information on the application's
+ * Data page.
+ */
+class Recipient extends Component {
 
+/**
+ * The constructor method initializes the component's state object and
+ * binds the methods of the component to the current instance.
+ * @param {Object} props The properties passed to the component.
+ */
 constructor(props) {
     super(props);
     this.state  = {
@@ -37,15 +42,23 @@ constructor(props) {
     this.handleBulkUpload = this.handleBulkUpload.bind(this)
 }
 
+/**
+ * Life cycle hook that is called after the component is first rendered.
+ */
 componentDidMount() {
     var  self  =  this;
     recipientService.getRecipients().then(function (result) {
-        console.log(result);
         self.setState({ recipients:  result, filtered: result});
     });
-    console.log(this.state.filtered)
-
 }
+
+/**
+ * Event handler used to delete a recipient from the database when the 
+ * user clicks on the delete button.
+ * @param {Object} e The event triggered when the user clicks on the 
+ * q                 Delete button.
+ * @param {Object} r The recipient object to be deleted.
+ */
 handleRecipientDelete(e, r){
     var  self  =  this;
     recipientService.deleteRecipient(r).then(()=>{
@@ -57,7 +70,13 @@ handleRecipientDelete(e, r){
     });
 }
 
-handleSearch(e) {
+/**
+ * Event handler method called when the user enters a value into the 
+ * recipient search box.
+ * @param {Object} e The event triggered when a user enters information
+ *                      into the search field.
+ */
+ handleSearch(e) {
     let newList = searchService.findRecipients(e, this.state.recipients);
     this.setState({
         filtered: newList
@@ -95,8 +114,10 @@ handleBulkUpload(e) {
     */
 }
 
-
-
+/**
+ * The render method used to display the component. 
+ * @returns The HTML to be rendered.
+ */
 render() {
 
     return (
@@ -141,7 +162,10 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.filtered.map( r  =>
+                        {this.state.filtered
+                        .sort((a,b) => (a.last_name.toLowerCase() > 
+                            b.last_name.toLowerCase() ? 1 : -1))
+                            .map( r  =>
                             <tr  key={r.id}>
                             <td>{r.first_name}</td>
                             <td>{r.last_name}</td>

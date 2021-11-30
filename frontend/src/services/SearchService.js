@@ -1,5 +1,22 @@
-export default class SearchService{
+/**
+ * This class provides methods to search the lists of drivers and recipients
+ * for based on the current information entered into the search field(s) on
+ * the Data page.
+ */
+ export default class SearchService{
 
+    /**
+     * This method uses two parameters - an event object that is triggered 
+     * when the user enters information into the Driver search field and 
+     * the list of drivers stored in the database - to return a list of drivers
+     * that have relevant field values matching the value entered in the 
+     * search box.
+     * @param {Object} event The event triggered when a user enters information 
+     *                          into the Driver search field on the Data page.
+     * @param {Array} drivers The list of drivers stored in the database.
+     * @returns A list of drivers that have at least one data field matching 
+     *          the value entered into the search box.
+     */
     findDrivers(event, drivers) {
         let currentList = drivers;
         let newList = []
@@ -25,7 +42,19 @@ export default class SearchService{
         return newList;
     }
 
-    findRecipients(event, recipients) {
+    /**
+     * This method uses two parameters - an event object that is triggered 
+     * when the user enters information into the Recipient search field and 
+     * the list of recipients stored in the database - to return a list of 
+     * recipients that have relevant field values matching the value entered in the 
+     * search box.
+     * @param {Object} event The event triggered when a user enters information 
+     *                          into the Recipient search field on the Data page.
+     * @param {Array} recipients The list of recipients stored in the database.
+     * @returns A list of recipients that have at least one data field matching 
+     *          the value entered into the search box.
+     */
+     findRecipients(event, recipients) {
         let currentList = recipients;
         let newList = []
     
@@ -52,8 +81,4 @@ export default class SearchService{
         }
         return newList;
     }
-    
-
-
-
 }

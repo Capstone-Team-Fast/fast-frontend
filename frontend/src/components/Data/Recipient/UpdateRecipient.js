@@ -1,6 +1,4 @@
 import  React, { Component } from  'react';
-import { Redirect } from 'react-router';
-
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -9,9 +7,19 @@ import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import RecipientService from '../../../services/RecipientService';
+import Link from 'react-router-dom/Link'
 
-class  UpdateRecipient  extends  Component {
+/**
+ * This component is used to update individual recipient information stored 
+ * in the database.
+ */
+ class  UpdateRecipient  extends  Component {
 
+/**
+ * The constructor method initializes the component's state object and
+ * binds the methods of the component to the current instance.
+ * @param {Object} props The properties passed to the component.
+ */
 constructor(props) {
     super(props);
     const {id} = props.match.params; 
@@ -35,6 +43,9 @@ constructor(props) {
     this.getCenter = this.getCenter.bind(this)
 }
 
+/**
+ * Life cycle hook that is called after the component is first rendered.
+ */
 componentDidMount() {
     var self = this 
     self.recipientService.getRecipient(self.state.id).then(function (result) {
@@ -43,18 +54,36 @@ componentDidMount() {
     
 }
 
-getEventValues(event) {
+/**
+ * This method retrieves the value, name, and id properties of the 
+ * event that has been triggered.
+ * @param {Object} event The event that has been triggered.
+ * @returns The value, name, and id properties of the triggered event.
+ */
+ getEventValues(event) {
     let [value, name, id] = [   event.target.value, 
                                 event.target.name, 
                                 event.target.id];
     return [value, name, id];
 }
 
-getEventIDValue(event) {
+/**
+ * This method retrieves the id property of the event that has been triggered.
+ * @param {Object} event The event that has been triggered.
+ * @returns The id property of the triggered event.
+ */
+ getEventIDValue(event) {
     return event.target.id;
 }
 
 
+/**
+ * Generic event handler that is called to update the component's state 
+ * when the user changes the value of a form field associated with a property 
+ * of the component's state that is an object.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to a form field.
+ */
 handleObjectChange(event) {
     let [value, name, id] = this.getEventValues(event);
     if (id === "is_center") {
@@ -68,9 +97,15 @@ handleObjectChange(event) {
         }    
     }
     ));
-    console.log(JSON.stringify(this.state))
 }
 
+/**
+ * Event handler that is called to update the component's state
+ * when the user changes the value of the form field associated 
+ * with a recipient's phone number.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the phone number field in the form.
+ */
 handlePhoneChange(event) {
     let value = event.target.value.replace(/[^\d]/g, "")
     let phone =""
@@ -89,10 +124,16 @@ handlePhoneChange(event) {
     this.setState({
         'phone': phone
     });
-    console.log(this.state)
 }
 
 
+/**
+ * Event handler that is called to update the component's state when
+ * the user changes the values of the form fields associated with a 
+ * recipient's languages.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the language fields in the form.
+ */
 handleLanguageChange(event) {
     let id = this.getEventIDValue(event);
     if (event.target.checked) {
@@ -106,24 +147,43 @@ handleLanguageChange(event) {
         })
         this.setState({languages:  newArr});
     }
-    console.log(this.state)
 }
 
+/**
+ * Generic event handler that is called to update the component's state 
+ * when the user changes the value of a form field that does not require 
+ * special handling.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to a generic form field.
+ */
 handleChange(event) {
     let [value, name] = this.getEventValues(event);
     this.setState({
         [name]: value
     });
-    console.log(this.state)
 }
 
-handleSubmit = (event) => {
+/**
+ * Event handler that is called upon form submission to update a recipient's 
+ * information in the database and redirect the user to the Data page.
+ * @param {Object} event The submission event that is triggered on  
+ *                          submission of the form.
+ */
+ handleSubmit = (event) => {
     event.preventDefault();
     this.recipientService.updateRecipient(this.state);
-    this.setState({redirect: "/"});
-    console.log(this.state)
+    this.setState({
+        saved: true 
+    })
 }
 
+/**
+ * Method called to prepopulate the language fields of the form based on
+ * whether the language passed as a parameter is stored in the recipient's state.
+ * @param {String} language The name of a language.
+ * @returns True if the language is stored in the current recipient's state, 
+ *          false otherwise.
+ */
 checkLanguage(language) {
     for (let i = 0; i < this.state.languages.length; i++) {
         if (this.state.languages[i].name === language)
@@ -131,15 +191,21 @@ checkLanguage(language) {
     }
 }
 
+/**
+ * Method called to prepopulate the 'Central Location?' field of the form 
+ * based on the value stored in the recipient's state.
+ * @returns Yes if the recipient's location is the central departure location,
+ *          false otherwise.
+ */
 getCenter() {
     return (this.state.location.is_center) ? "Yes" : "No" ; 
 }
 
+/**
+ * The render method used to display the component. 
+ * @returns The HTML to be rendered.
+ */
 render() {
-    if (this.state.redirect) {
-        return <Redirect to={this.state.redirect} />
-    }
-
     return (
         <Container>
             <h1>Update Recipient Data</h1>
@@ -239,7 +305,14 @@ render() {
                 </InputGroup>
                 </Row>
 
-                <Button variant="primary" type="submit">Submit</Button>
+                <Button variant="primary" className="mr-4" 
+                    onClick={this.handleSubmit}>Submit</Button>
+                <Link to="/">
+                    <Button variant="primary">Return</Button>
+                </Link>
+                {this.state.saved ?
+                    <Row className='text-success h4 mb-4 mt-2'>Recipient Updated!</Row> :
+                    <Row className='mb-4'></Row> }
             </Form>
         </Container>
         );

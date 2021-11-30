@@ -1,15 +1,23 @@
-import  React, { Component, useState } from  'react';
-import { Redirect } from 'react-router';
-
+import  React, { Component } from  'react';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import DriverService from '../../../services/DriverService';
+import Link from 'react-router-dom/Link'
 
+/**
+ * This component is used to update individual driver information stored 
+ * in the database.
+ */
 class  UpdateDriver  extends  Component {
 
+/**
+ * The constructor method initializes the component's state object and
+ * binds the methods of the component to the current instance.
+ * @param {Object} props The properties passed to the component.
+ */
 constructor(props) {
     super(props);
     const {id} = props.match.params; 
@@ -38,25 +46,50 @@ constructor(props) {
     this.getAvailability = this.getAvailability.bind(this)
 }
 
+/**
+ * Life cycle hook that is called after the component is first rendered.
+ */
 componentDidMount() {
     var self = this 
     self.driverService.getDriver(self.state.id).then(function (result) {
-        self.setState(result, () => {console.log(self.state)});
+        self.setState(result);
     })     
 }
 
+/**
+ * This method retrieves the value property of the event that has been triggered.
+ * @param {Object} event The event that has been triggered.
+ * @returns The value property of the triggered event.
+ */
 getEventValue(event) {
     return event.target.value ;
 }
 
+/**
+ * This method retrieves the name property of the event that has been triggered.
+ * @param {Object} event The event that has been triggered.
+ * @returns The name property of the triggered event.
+ */
 getEventName(event) {
     return event.target.name;
 }
 
+/**
+ * This method retrieves the id property of the event that has been triggered.
+ * @param {Object} event The event that has been triggered.
+ * @returns The id property of the triggered event.
+ */
 getEventID(event) {
     return event.target.id ;
 }
 
+/**
+ * Event handler that is called to update the component's state when
+ * the user changes the values of the form fields associated with a 
+ * driver's availability.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the availability fields in the form.
+ */
 handleAvailabilityChange(event) {
     let name = this.getEventName(event);
     let id = this.getEventID(event);
@@ -68,10 +101,16 @@ handleAvailabilityChange(event) {
             }    
         }
         ));
-        console.log(this.state)
 }
 
-handleLanguageChange(event) {
+/**
+ * Event handler that is called to update the component's state when
+ * the user changes the values of the form fields associated with a 
+ * driver's languages.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the language fields in the form.
+ */
+ handleLanguageChange(event) {
     let id = this.getEventID(event);
     if (event.target.checked) {
         this.setState({
@@ -84,19 +123,30 @@ handleLanguageChange(event) {
         })
         this.setState({languages:  newArr});
     }
-
-    console.log(this.state)
 }
 
+/**
+ * Generic event handler that is called to update the component's state 
+ * when the user changes the value of a form field that does not require 
+ * special handling.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to a generic form field.
+ */
 handleChange(event) {
     let value = this.getEventValue(event);
     let name = this.getEventName(event);
     this.setState({
         [name]: value
     });
-    console.log(this.state)
 }
 
+/**
+ * Event handler that is called to update the component's state
+ * when the user changes the value of the form field associated 
+ * with a driver's phone number.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the phone number field in the form.
+ */
 handlePhoneChange(event) {
     let value = event.target.value.replace(/[^\d]/g, "")
     let phone =""
@@ -115,16 +165,29 @@ handlePhoneChange(event) {
     this.setState({
         'phone': phone
     });
-    console.log(this.state)
 }
 
-handleSubmit = (event) => {
+/**
+ * Event handler that is called upon form submission to update the 
+ * driver's in the database and redirect the user to the Data page.
+ * @param {Object} event The submission event that is triggered on  
+ *                          submission of the form.
+ */
+ handleSubmit = (event) => {
     event.preventDefault();
     this.driverService.updateDriver(this.state);
-    this.setState({redirect: "/"});
-    console.log(this.state)
+    this.setState({
+        saved: true 
+    })
 }
 
+/**
+ * Method called to prepopulate the language fields of the form based on
+ * whether the language passed as a parameter is stored in the driver's state.
+ * @param {String} language The name of a language.
+ * @returns True if the language is stored in the current driver's state, 
+ *          false otherwise.
+ */
 checkLanguage(language) {
     for (let i = 0; i < this.state.languages.length; i++) {
         if (this.state.languages[i].name === language)
@@ -132,16 +195,23 @@ checkLanguage(language) {
     }
 }
 
-getAvailability(day) {
+/**
+ * Method called to prepopulate the availability fields of the form based on
+ * whether the day passed as a parameter is stored in the driver's state.
+ * @param {String} day The name of a day.
+ * @returns True if the day is stored in the current driver's state, 
+ *          false otherwise.
+ */
+ getAvailability(day) {
     day = day.toLowerCase()
     return this.state.availability[day] ;
 }
 
+/**
+ * The render method used to display the component. 
+ * @returns The HTML to be rendered.
+ */
 render() {
-    if (this.state.redirect) {
-        return <Redirect to={this.state.redirect} />
-    }
-
     return (
         <Container>
             <h1>Update Driver Data</h1>
@@ -204,7 +274,14 @@ render() {
                         )}
                 </Form.Group>
 
-                <Button variant="primary" type="submit">Submit</Button>
+                <Button variant="primary" className="mr-4" 
+                    onClick={this.handleSubmit}>Submit</Button>
+                <Link to="/">
+                    <Button variant="primary">Return</Button>
+                </Link>
+                {this.state.saved ?
+                    <Row className='text-success h4 mt-2 mb-4'>Driver Updated!</Row> :
+                    <Row></Row> }
             </Form>
         </Container>
         );

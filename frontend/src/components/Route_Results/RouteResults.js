@@ -10,8 +10,17 @@ import RouteService from '../../services/RouteService'
 
 const  routeService  =  new  RouteService();
 
+/**
+ * This component is used to display route information for all 
+ * selected drivers with links to view individual route information.
+ */
 class  RouteResults  extends  Component {
 
+/**
+ * The constructor method initializes the component's state object and
+ * binds the methods of the component to the current instance.
+ * @param {Object} props The properties passed to the component.
+ */
 constructor(props) {
      super(props);
      const {id} = props.match.params
@@ -154,11 +163,18 @@ constructor(props) {
     }
 }
 
+/**
+ * Life cycle hook that is called after the component is first rendered.
+ */
 componentDidMount() {
     let routes = routeService.getRoutes()
     console.log(routes)
 }
 
+/**
+ * The render method used to display the component. 
+ * @returns The HTML to be rendered.
+ */
 render() {
     return (
         <Container>
