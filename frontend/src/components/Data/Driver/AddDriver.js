@@ -71,7 +71,6 @@ handleAvailabilityChange(event) {
             }    
         }
         ));
-        console.log(this.state)
 }
 
 /**
@@ -94,7 +93,6 @@ handleLanguageChange(event) {
         })
         this.setState({languages:  newArr});
     }
-    console.log(this.state)
 }
 
 /**
@@ -122,7 +120,6 @@ handlePhoneChange(event) {
     this.setState({
         'phone': phone
     });
-    console.log(this.state)
 }
 
 /**
@@ -137,7 +134,6 @@ handleChange(event) {
     this.setState({
         [name]: value
     });
-    console.log(this.state)
 }
 
 /**
@@ -150,7 +146,6 @@ handleSubmit = (event) => {
     event.preventDefault();
     this.driverService.createDriver(this.state);
     this.setState({redirect: "/"});
-    console.log(this.state)
 }
 
 /**

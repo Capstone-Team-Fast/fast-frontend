@@ -159,7 +159,10 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                    {this.state.filtered.map( d  =>
+                    {this.state.filtered.
+                        sort((a,b) => (a.last_name.toLowerCase() > 
+                            b.last_name.toLowerCase() ? 1 : -1)).
+                        map( d  =>
                             <tr  key={d.id}>
                             <td>{d.first_name}</td>
                             <td>{d.last_name}</td>

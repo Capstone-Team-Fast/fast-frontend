@@ -1,12 +1,11 @@
-import  React, { Component, useState } from  'react';
-import { Redirect } from 'react-router';
-
+import  React, { Component } from  'react';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import DriverService from '../../../services/DriverService';
+import Link from 'react-router-dom/Link'
 
 /**
  * This component is used to update individual driver information stored 
@@ -53,7 +52,7 @@ constructor(props) {
 componentDidMount() {
     var self = this 
     self.driverService.getDriver(self.state.id).then(function (result) {
-        self.setState(result, () => {console.log(self.state)});
+        self.setState(result);
     })     
 }
 
@@ -102,7 +101,6 @@ handleAvailabilityChange(event) {
             }    
         }
         ));
-        console.log(this.state)
 }
 
 /**
@@ -125,8 +123,6 @@ handleAvailabilityChange(event) {
         })
         this.setState({languages:  newArr});
     }
-
-    console.log(this.state)
 }
 
 /**
@@ -142,7 +138,6 @@ handleChange(event) {
     this.setState({
         [name]: value
     });
-    console.log(this.state)
 }
 
 /**
@@ -170,7 +165,6 @@ handlePhoneChange(event) {
     this.setState({
         'phone': phone
     });
-    console.log(this.state)
 }
 
 /**
@@ -182,8 +176,9 @@ handlePhoneChange(event) {
  handleSubmit = (event) => {
     event.preventDefault();
     this.driverService.updateDriver(this.state);
-    this.setState({redirect: "/"});
-    console.log(this.state)
+    this.setState({
+        saved: true 
+    })
 }
 
 /**
@@ -217,10 +212,6 @@ checkLanguage(language) {
  * @returns The HTML to be rendered.
  */
 render() {
-    if (this.state.redirect) {
-        return <Redirect to={this.state.redirect} />
-    }
-
     return (
         <Container>
             <h1>Update Driver Data</h1>
@@ -283,7 +274,14 @@ render() {
                         )}
                 </Form.Group>
 
-                <Button variant="primary" type="submit">Submit</Button>
+                <Button variant="primary" className="mr-4" 
+                    onClick={this.handleSubmit}>Submit</Button>
+                <Link to="/">
+                    <Button variant="primary">Return</Button>
+                </Link>
+                {this.state.saved ?
+                    <Row className='text-success h4 mt-2 mb-4'>Driver Updated!</Row> :
+                    <Row></Row> }
             </Form>
         </Container>
         );

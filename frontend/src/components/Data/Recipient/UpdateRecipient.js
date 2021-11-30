@@ -1,6 +1,4 @@
 import  React, { Component } from  'react';
-import { Redirect } from 'react-router';
-
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -9,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import RecipientService from '../../../services/RecipientService';
+import Link from 'react-router-dom/Link'
 
 /**
  * This component is used to update individual recipient information stored 
@@ -98,7 +97,6 @@ handleObjectChange(event) {
         }    
     }
     ));
-    console.log(JSON.stringify(this.state))
 }
 
 /**
@@ -126,7 +124,6 @@ handlePhoneChange(event) {
     this.setState({
         'phone': phone
     });
-    console.log(this.state)
 }
 
 
@@ -150,7 +147,6 @@ handleLanguageChange(event) {
         })
         this.setState({languages:  newArr});
     }
-    console.log(this.state)
 }
 
 /**
@@ -165,7 +161,6 @@ handleChange(event) {
     this.setState({
         [name]: value
     });
-    console.log(this.state)
 }
 
 /**
@@ -177,8 +172,9 @@ handleChange(event) {
  handleSubmit = (event) => {
     event.preventDefault();
     this.recipientService.updateRecipient(this.state);
-    this.setState({redirect: "/"});
-    console.log(this.state)
+    this.setState({
+        saved: true 
+    })
 }
 
 /**
@@ -210,10 +206,6 @@ getCenter() {
  * @returns The HTML to be rendered.
  */
 render() {
-    if (this.state.redirect) {
-        return <Redirect to={this.state.redirect} />
-    }
-
     return (
         <Container>
             <h1>Update Recipient Data</h1>
@@ -313,7 +305,14 @@ render() {
                 </InputGroup>
                 </Row>
 
-                <Button variant="primary" type="submit">Submit</Button>
+                <Button variant="primary" className="mr-4" 
+                    onClick={this.handleSubmit}>Submit</Button>
+                <Link to="/">
+                    <Button variant="primary">Return</Button>
+                </Link>
+                {this.state.saved ?
+                    <Row className='text-success h4 mb-4 mt-2'>Recipient Updated!</Row> :
+                    <Row className='mb-4'></Row> }
             </Form>
         </Container>
         );

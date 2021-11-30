@@ -43,7 +43,7 @@ constructor(props) {
 componentDidMount() {
     var self = this
     driverService.getDriver(self.state.id).then(function (result) {
-        self.setState(result, () => {console.log(JSON.stringify(self.state))});
+        self.setState(result);
     })  
     
 }
@@ -76,7 +76,7 @@ showAvailability() {
         }
         if (key !== "id" && this.state.availability[key] === false)
         {
-            availability.push("NotAvailable");
+            availability.push("Not Available");
         }
     }
     return availability

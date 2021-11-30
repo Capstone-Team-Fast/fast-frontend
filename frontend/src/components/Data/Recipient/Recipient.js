@@ -48,11 +48,8 @@ constructor(props) {
 componentDidMount() {
     var  self  =  this;
     recipientService.getRecipients().then(function (result) {
-        console.log(result);
         self.setState({ recipients:  result, filtered: result});
     });
-    console.log(this.state.filtered)
-
 }
 
 /**
@@ -165,7 +162,10 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.filtered.map( r  =>
+                        {this.state.filtered
+                        .sort((a,b) => (a.last_name.toLowerCase() > 
+                            b.last_name.toLowerCase() ? 1 : -1))
+                            .map( r  =>
                             <tr  key={r.id}>
                             <td>{r.first_name}</td>
                             <td>{r.last_name}</td>
