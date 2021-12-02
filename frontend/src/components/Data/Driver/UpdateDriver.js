@@ -241,7 +241,7 @@ render() {
                     <Form.Group as={Col} className="mb-3" controlId="formGridStatus">
                         <Form.Label>Status</Form.Label>
                         <Form.Select onChange={this.handleChange} name="employee_status"
-                            required value={this.state.employee_status}>
+                            value={this.state.employee_status}>
                             <option>Employee</option>
                             <option>Volunteer</option>
                         </Form.Select>

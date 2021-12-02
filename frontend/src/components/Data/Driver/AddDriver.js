@@ -25,7 +25,7 @@ constructor(props) {
                     'phone': '', 'availability': {'sunday': false,
                     'monday': false, 'tuesday': false, 'wednesday': false, 
                     'thursday': false, 'friday': false, 'saturday': false}, 
-                    'employee_status': '', 'capacity': '', 'languages': []
+                    'employee_status': 'Employee', 'capacity': '', 'languages': []
                 };
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
                         'Hindi', 'Russian', 'Portugese', 'Other'];
@@ -186,7 +186,7 @@ render() {
 
                     <Form.Group as={Col} className="mb-3" controlId="formGridStatus">
                         <Form.Label>Status</Form.Label>
-                        <Form.Select required onChange={this.handleChange} name="employee_status">
+                        <Form.Select onChange={this.handleChange} name="employee_status">
                             <option>Employee</option>
                             <option>Volunteer</option>
                         </Form.Select>
