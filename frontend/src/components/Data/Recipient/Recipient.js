@@ -139,7 +139,7 @@ componentDidMount() {
 
             for(var row in data) {
                 let recipient_template = {
-                    'user': '', 'first_name': '', 'last_name': '', 'phone' : '', 'quantity': 0, 
+                    'user': '', 'first_name': '', 'last_name': '', 'phone' : '', 'quantity': 1, 
                     'location': {'address':'', 'city':'', 'state':'', 'room_number':'', 'zipcode':'', 
                     'is_center':false}, 'languages': []};
                 

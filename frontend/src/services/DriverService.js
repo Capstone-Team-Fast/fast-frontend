@@ -5,7 +5,7 @@ const API_URL = 'http://3.144.105.249:8000';
  * This class provides methods to connect to the backend database
  * for the creation, update, retrieval, and deletion of drivers.
  */
-export default class DriverService{
+export default class DriverService {
 
     /**
      * This method connects to the backend database to
@@ -46,7 +46,7 @@ export default class DriverService{
         if (drivers.length > 0) {
             console.log('Saving File to ' + url);
             console.log(drivers);
-            // return axios.post(url, drivers).then(response => response.data);
+            return axios.post(url, drivers).then(response => response.data);
         }
     }
 

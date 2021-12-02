@@ -149,7 +149,7 @@ handleSearch(e) {
 
             for(var row in data) {
                 let driver_template = {
-                    'user': '', 'first_name': '', 'last_name': '', 'capacity': '0', 'employee_status': '', 
+                    'user': '', 'first_name': '', 'last_name': '', 'capacity': 0, 'employee_status': '', 
                     'phone': '', 'availability': {}, 'languages': []};
                 
                 var driver_data = data[row];
@@ -255,12 +255,12 @@ handleSearch(e) {
                     <Col>
                         <Row>
                             <Col sm={2} className="d-flex flex-row">
-                                <Link to={{
+                                {/* <Link to={{
                                     pathname: "/previewDrivers",
                                     state: this.state.new_drivers
                                 }}>
                                     <Button className="mx-1">Preview</Button>
-                                </Link>
+                                </Link> */}
                                 <Button className="mx-1" onClick={() => {
                                     driverService.uploadDrivers(this.state.new_drivers);
                                     this.setState({
