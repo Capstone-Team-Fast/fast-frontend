@@ -9,8 +9,17 @@ import DriverService from '../../../services/DriverService';
 
 const driverService = new DriverService();
 
+/**
+ * This component is used to view individual driver information stored 
+ * in the database.
+ */
 class  ViewDriver  extends  Component {
 
+/**
+ * The constructor method initializes the component's state object and
+ * binds the methods of the component to the current instance.
+ * @param {Object} props The properties passed to the component.
+ */
 constructor(props) { 
     super(props);
     const {id} = props.match.params
@@ -28,14 +37,22 @@ constructor(props) {
     this.showAvailability = this.showAvailability.bind(this)
 }
 
+/**
+ * Life cycle hook that is called after the component is first rendered.
+ */
 componentDidMount() {
     var self = this
     driverService.getDriver(self.state.id).then(function (result) {
-        self.setState(result, () => {console.log(JSON.stringify(self.state))});
+        self.setState(result);
     })  
     
 }
 
+/**
+ * Method to map the array of language objects stored in the component's 
+ * state to a list of language names.
+ * @returns The list of language names for the driver.
+ */
 showLanguages() {
     let languages = []
     this.state.languages.map(l => {
@@ -43,10 +60,16 @@ showLanguages() {
     return languages
 }
 
+/**
+ * Method to map the availability object stored in the component's 
+ * state to a list of strings denoting a driver's availability for 
+ * each day of the week..
+ * @returns The list of the driver's availability for each day of the 
+ *          week.
+ */
 showAvailability() {
     let availability = []
     for (let key in this.state.availability) {
-        console.log(key)
         if (key !== "id" && this.state.availability[key] === true)
         {
             availability.push("Available");
@@ -60,6 +83,10 @@ showAvailability() {
 }
 
 
+/**
+ * The render method used to display the component. 
+ * @returns The HTML to be rendered.
+ */
 render() {
     
     return (

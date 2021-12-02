@@ -13,17 +13,22 @@ import SearchService from '../../../services/SearchService';
 import FileService from '../../../services/FileService';
 import { Link } from 'react-router-dom';
 
-//import Search from 'react-bootstrap-icons/Search';
-
-
-//import Search from 'react-bootstrap-icons';
-
 const driverService = new DriverService();
 const searchService = new SearchService();
 const fileService = new FileService();
 
+
+/**
+ * This component is used to display driver information on the application's
+ * Data page.
+ */
 class Driver extends Component {
 
+  /**
+ * The constructor method initializes the component's state object and
+ * binds the methods of the component to the current instance.
+ * @param {Object} props The properties passed to the component.
+ */
     constructor(props) {
         super(props);
         this.state = {
@@ -38,21 +43,31 @@ class Driver extends Component {
         this.readFile = this.readFile.bind(this);
         this.refreshDrivers = this.refreshDrivers.bind(this);
     }
+  
+  /**
+   * Life cycle hook that is called after the component is first rendered.
+   */
+  componentDidMount() {
+      var  self  =  this;
+      driverService.getDrivers().then(function (result) {
+          self.setState({ drivers:  result, filtered: result});
+      });
+  }
 
-    componentDidMount() {
-        var self = this;
-        driverService.getDrivers().then(function (result) {
-            self.setState({ drivers: result, filtered: result });
-        });
-    }
+  refreshDrivers(){
+      var self = this;
+      driverService.getDrivers().then(function (result) {
+          self.setState({ drivers: result, filtered: result });
+      });
+  }
 
-    refreshDrivers(){
-        var self = this;
-        driverService.getDrivers().then(function (result) {
-            self.setState({ drivers: result, filtered: result });
-        });
-    }
-
+/**
+ * Event handler used to delete a driver from the database when the 
+ * user clicks on the delete button.
+ * @param {Object} e The event triggered when the user clicks on the 
+ * q                 Delete button.
+ * @param {Object} d The driver object to be deleted.
+ */
     handleDriverDelete(e, d) {
         var self = this;
         console.log(d);
@@ -61,15 +76,7 @@ class Driver extends Component {
             var newArr = self.state.drivers.filter(function (obj) {
                 return obj.id !== d.id;
             });
-
             self.setState({ drivers: newArr, filtered: newArr })
-        });
-    }
-
-    handleSearch(e) {
-        let newList = searchService.findDrivers(e, this.state.drivers);
-        this.setState({
-            filtered: newList
         });
     }
 
@@ -82,6 +89,19 @@ class Driver extends Component {
         }
         return availability_template;
     }
+
+/**
+ * Event handler method called when the user enters a value into the 
+ * driver search box.
+ * @param {Object} e The event triggered when a user enters information
+ *                      into the search field.
+ */
+handleSearch(e) {
+    let newList = searchService.findDrivers(e, this.state.drivers);
+    this.setState({
+        filtered: newList
+    });
+}
 
     get_phone(phone) {
         if (phone.length > 0) {
@@ -115,19 +135,6 @@ class Driver extends Component {
             languages.push(language_template);
         }
         return languages;
-    }
-
-    hash_code(str) {
-        if (typeof(str) == 'string') {
-            if (str.length > 0) {
-                let h = 1;
-                for (var index in str) {
-                    h = 31 * h + str[index].charCodeAt(0);
-                }
-                return h;
-            }
-        }
-        throw new Error('Expected ' + typeof('string') + ' but got ' + typeof(str));
     }
 
     readFile(event) {
@@ -172,6 +179,10 @@ class Driver extends Component {
         });
     }
 
+  /**
+ * The render method used to display the component. 
+ * @returns The HTML to be rendered.
+ */
     render() {
         return (
             <Container className="card">
@@ -186,6 +197,7 @@ class Driver extends Component {
                                         }
                                     </InputGroup.Text>
                                     <FormControl
+
                                         type="text"
                                         placeholder="Search Drivers"
                                         id="search"
@@ -263,6 +275,6 @@ class Driver extends Component {
                 </Row>
             </Container>
         );
-    }
+    }  
 }
 export default Driver;
