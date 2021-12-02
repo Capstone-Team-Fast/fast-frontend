@@ -197,7 +197,7 @@ render() {
                     <Form.Group as={Col} controlId="formGridCapacity">
                         <Form.Label>Capacity</Form.Label>
                         <Form.Control type="number" placeholder="Vehicle Capacity"
-                        onChange={this.handleChange} name="capacity" min="0"/>
+                        required onChange={this.handleChange} name="capacity" min="0"/>
                     </Form.Group>
                 </Row>
 

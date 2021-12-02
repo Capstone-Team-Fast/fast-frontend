@@ -196,7 +196,7 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="quantity">Quantity</Form.Label> 
                         <Form.Control type="number" onChange={this.handleChange} 
-                            name="quantity" min="0"/>
+                        required name="quantity" min="0"/>
                     </Form.Group>
                 </Row>
 
