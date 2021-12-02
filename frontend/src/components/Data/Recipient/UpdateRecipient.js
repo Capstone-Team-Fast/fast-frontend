@@ -214,13 +214,13 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="first_name">First Name</Form.Label>
                         <Form.Control type="text" name="first_name" value={this.state.first_name}
-                            onChange={this.handleChange} />
+                           required onChange={this.handleChange} />
                     </Form.Group>
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="last_name">Last Name</Form.Label>
                         <Form.Control type="text" name="last_name" value={this.state.last_name}
-                        onChange={this.handleChange} />
+                        required onChange={this.handleChange} />
                     </Form.Group>
                 </Row>
 
@@ -236,14 +236,14 @@ render() {
                 <Form.Group as={Col}>
                         <Form.Label htmlFor="quantity">Quantity</Form.Label> 
                         <Form.Control type="number" onChange={this.handleChange} 
-                            name="quantity" min="0"/>
+                            required name="quantity" min="1"/>
                 </Form.Group>
                 </Row>
 
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="address">Address</Form.Label>
                     <Form.Control type="text" name="location" id="address" 
-                    value={this.state.location.address}  onChange={this.handleObjectChange} />
+                    required value={this.state.location.address}  onChange={this.handleObjectChange} />
                 </Form.Group>
 
                 <Row className="mb-3">
@@ -268,13 +268,13 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="city">City</Form.Label>
                         <Form.Control type="text" name="location" id="city" 
-                        onChange={this.handleObjectChange} value={this.state.location.city} />
+                        required onChange={this.handleObjectChange} value={this.state.location.city} />
                     </Form.Group>
 
                     <Form.Group as={Col} >
                         <Form.Label htmlFor="state">State</Form.Label>
                         <Form.Select onChange={this.handleObjectChange} value={this.state.location.state}
-                            name="location" id="state">
+                            required name="location" id="state">
                         { this.states.map( s => 
                             <option>{s}</option>
                         )}
@@ -284,7 +284,7 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="zipcode">Zip</Form.Label>
                         <Form.Control type="number" onChange={this.handleObjectChange} 
-                            name="location" id="zipcode" value={this.state.location.zipcode}/>
+                            required name="location" id="zipcode" value={this.state.location.zipcode}/>
                     </Form.Group>
                 </Row>
 

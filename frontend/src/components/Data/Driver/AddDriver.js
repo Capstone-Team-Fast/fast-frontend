@@ -186,8 +186,7 @@ render() {
 
                     <Form.Group as={Col} className="mb-3" controlId="formGridStatus">
                         <Form.Label>Status</Form.Label>
-                        <Form.Select onChange={this.handleChange} name="employee_status">
-                            <option>Choose...</option>
+                        <Form.Select required onChange={this.handleChange} name="employee_status">
                             <option>Employee</option>
                             <option>Volunteer</option>
                         </Form.Select>
@@ -196,7 +195,7 @@ render() {
                     <Form.Group as={Col} controlId="formGridCapacity">
                         <Form.Label>Capacity</Form.Label>
                         <Form.Control type="number" placeholder="Vehicle Capacity"
-                        required onChange={this.handleChange} name="capacity" min="0"/>
+                        required onChange={this.handleChange} name="capacity" min="1"/>
                     </Form.Group>
                 </Row>
 
