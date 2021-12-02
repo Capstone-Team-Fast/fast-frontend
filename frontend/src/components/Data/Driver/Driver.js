@@ -149,7 +149,7 @@ handleSearch(e) {
 
             for(var row in data) {
                 let driver_template = {
-                    'user': '', 'first_name': '', 'last_name': '', 'capacity': 0, 'employee_status': '', 
+                    'user': '', 'first_name': '', 'last_name': '', 'capacity': '1', 'employee_status': '', 
                     'phone': '', 'availability': {}, 'languages': []};
                 
                 var driver_data = data[row];
@@ -160,8 +160,10 @@ handleSearch(e) {
                     delete driver_data[key];
                     driver_data[key.toLowerCase()] = value;
                 }
+                console.log(driver_data);
                 driver_template.first_name = driver_data.firstname.trim();
                 driver_template.last_name = driver_data.lastname.trim();
+                driver_template.capacity = String(driver_data.capacity);
                 let employee_status = driver_data.role.toLowerCase().trim();
                 if (employee_status === 'volunteer') {
                     driver_template.employee_status = 'Volunteer';
@@ -173,6 +175,7 @@ handleSearch(e) {
                 driver_template.phone = this.get_phone(driver_data.phone.trim());
                 drivers.push(driver_template);
             }
+            console.log(drivers);
             this.setState({
                 new_drivers: JSON.stringify(drivers)
             });

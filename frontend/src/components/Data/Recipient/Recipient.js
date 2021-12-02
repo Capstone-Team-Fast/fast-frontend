@@ -117,7 +117,7 @@ componentDidMount() {
         if (phone.length > 0) {
             phone = phone.trim();
             phone = phone.replaceAll(/['\D']/g, '');
-            if (phone.length == 10) {
+            if (phone.length === 10) {
                 phone = phone.slice(0, 3) + '-' + phone.slice(3, 6) + '-' + phone.slice(6);
             } else {
                 phone = '';
@@ -151,23 +151,34 @@ componentDidMount() {
                     delete recipient_data[key];
                     recipient_data[key.toLowerCase()] = value;
                 }
-                recipient_template.first_name = recipient_data.firstname;
-                recipient_template.last_name = recipient_data.lastname;
+                if ('firstname' in keys) {
+                    recipient_template.first_name = recipient_data.firstname;
+                } else {
+                    recipient_template.first_name = " ";
+                }
+                
+                if ('lastname' in keys) {
+                    recipient_template.last_name = recipient_data.lastname;
+                } else {
+                    recipient_template.last_name = " ";
+                }
+
                 recipient_template.languages = this.get_languages(recipient_data.language.split(','));
                 recipient_template.phone = this.get_phone(recipient_data.phone);
                 recipient_template.location.address = recipient_data.address.trim();
-                if ('room_number' in Object.keys(recipient_data)) {
+                if ('room_number' in keys) {
                     recipient_template.location.room_number = recipient_data.room_number.trim();
                 }
                 recipient_template.location.city = this.capitalize(recipient_data.city.trim());
                 recipient_template.location.state = this.capitalize(recipient_data.state.trim());
                 recipient_template.location.zipcode = this.capitalize(recipient_data.zipcode);
-                if (recipient_data.center == 1) {
+                recipient_template.quantity = String(recipient_data.quantity);
+                if (recipient_data.center === 1) {
                     recipient_template.location.is_center = true;
                 }
                 recipients.push(recipient_template);
-            console.log(recipients);
             }
+            console.log(recipients);
             this.setState({
                 new_recipients: JSON.stringify(recipients)
             });
