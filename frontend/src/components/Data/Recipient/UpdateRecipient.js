@@ -94,7 +94,8 @@ handleObjectChange(event) {
         [name]: {
              ...prevState[name],
             [id]: value
-        }    
+        }, 
+        saved: false    
     }
     ));
 }
@@ -122,7 +123,8 @@ handlePhoneChange(event) {
     }
     
     this.setState({
-        'phone': phone
+        'phone': phone,
+        saved: false
     });
 }
 
@@ -138,14 +140,15 @@ handleLanguageChange(event) {
     let id = this.getEventIDValue(event);
     if (event.target.checked) {
         this.setState({
-            languages: this.state.languages.concat({'name': id})
+            languages: this.state.languages.concat({'name': id}),
+            saved: false
         });
     }
     else {
         var newArr = this.state.languages.filter( l => {
             return l.name !== id
         })
-        this.setState({languages:  newArr});
+        this.setState({languages:  newArr, saved: false});
     }
 }
 
@@ -159,7 +162,8 @@ handleLanguageChange(event) {
 handleChange(event) {
     let [value, name] = this.getEventValues(event);
     this.setState({
-        [name]: value
+        [name]: value,
+        saved: false
     });
 }
 
@@ -171,10 +175,17 @@ handleChange(event) {
  */
  handleSubmit = (event) => {
     event.preventDefault();
-    this.recipientService.updateRecipient(this.state);
-    this.setState({
-        saved: true 
-    })
+    this.recipientService.updateRecipient(this.state).then(result => {
+            if (result.data.id == this.state.id) {
+                this.setState({
+                    saved: true 
+                })
+            }
+            else {
+                this.setState({
+                    saved: false 
+                })
+            }});
 }
 
 /**
@@ -301,6 +312,7 @@ render() {
                 <InputGroup>
                     <InputGroup.Text>Comments</InputGroup.Text>
                     <FormControl as="textarea" aria-label="With textarea" 
+                    value={this.state.comments}
                                 name="comments" onChange={this.handleChange}/>
                 </InputGroup>
                 </Row>

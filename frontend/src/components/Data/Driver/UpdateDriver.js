@@ -98,7 +98,8 @@ handleAvailabilityChange(event) {
             [name]: {
                  ...prevState[name],
                 [id.toLowerCase()]: checked
-            }    
+            },
+            saved: false    
         }
         ));
 }
@@ -114,14 +115,15 @@ handleAvailabilityChange(event) {
     let id = this.getEventID(event);
     if (event.target.checked) {
         this.setState({
-            languages: this.state.languages.concat({'name': id})
+            languages: this.state.languages.concat({'name': id}),
+            saved: false
         });
     }
     else {
         var newArr = this.state.languages.filter( l => {
             return l.name !== id;
         })
-        this.setState({languages:  newArr});
+        this.setState({languages:  newArr, saved: false});
     }
 }
 
@@ -136,7 +138,8 @@ handleChange(event) {
     let value = this.getEventValue(event);
     let name = this.getEventName(event);
     this.setState({
-        [name]: value
+        [name]: value,
+        saved: false
     });
 }
 
@@ -163,7 +166,8 @@ handlePhoneChange(event) {
     }
     
     this.setState({
-        'phone': phone
+        'phone': phone,
+        saved: false
     });
 }
 
@@ -175,10 +179,17 @@ handlePhoneChange(event) {
  */
  handleSubmit = (event) => {
     event.preventDefault();
-    this.driverService.updateDriver(this.state);
-    this.setState({
-        saved: true 
-    })
+    this.driverService.updateDriver(this.state).then(result => {
+        if (result.data.id == this.state.id) {
+            this.setState({
+                saved: true 
+            })
+        }
+        else {
+            this.setState({
+                saved: false 
+            })
+        }});
 }
 
 /**
