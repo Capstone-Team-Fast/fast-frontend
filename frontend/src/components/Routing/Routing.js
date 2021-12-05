@@ -215,6 +215,7 @@ render() {
                   if (this.getCenter(l)) {
                     return <option>{this.getCenter(l)}</option>
                   }
+                  return ""
                 }
                 
           )}

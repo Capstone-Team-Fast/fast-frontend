@@ -30,6 +30,7 @@ constructor(props) {
 componentDidMount() {
     var  self  =  this;
     driverService.getDrivers().then(function (result) {
+        result.map(d => d.full_name = d.first_name + " " + d.last_name)
         self.setState({ drivers:  result});
     });
 }
@@ -69,7 +70,7 @@ render() {
                                  <Multiselect
                                     options={this.state.drivers} // Options to display in the dropdown
                                     onSelect={this.onSelect} // Function will trigger on select 
-                                    displayValue="first_name" // Property name to display in the dropdown options
+                                    displayValue="full_name" // Property name to display in the dropdown options
                                     onRemove={this.onDeselect} // Function will trigger on remove events
                                     // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
                                 />
