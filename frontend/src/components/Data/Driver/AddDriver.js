@@ -188,7 +188,6 @@ render() {
                     <Form.Group as={Col} className="mb-3" controlId="formGridStatus">
                         <Form.Label>Status</Form.Label>
                         <Form.Select onChange={this.handleChange} name="employee_status">
-                            <option>Choose...</option>
                             <option>Employee</option>
                             <option>Volunteer</option>
                         </Form.Select>

@@ -94,7 +94,8 @@ handleObjectChange(event) {
         [name]: {
              ...prevState[name],
             [id]: value
-        }    
+        }, 
+        saved: false    
     }
     ));
 }
@@ -122,7 +123,8 @@ handlePhoneChange(event) {
     }
     
     this.setState({
-        'phone': phone
+        'phone': phone,
+        saved: false
     });
 }
 
@@ -138,14 +140,15 @@ handleLanguageChange(event) {
     let id = this.getEventIDValue(event);
     if (event.target.checked) {
         this.setState({
-            languages: this.state.languages.concat({'name': id})
+            languages: this.state.languages.concat({'name': id}),
+            saved: false
         });
     }
     else {
         var newArr = this.state.languages.filter( l => {
             return l.name !== id
         })
-        this.setState({languages:  newArr});
+        this.setState({languages:  newArr, saved: false});
     }
 }
 
@@ -159,7 +162,8 @@ handleLanguageChange(event) {
 handleChange(event) {
     let [value, name] = this.getEventValues(event);
     this.setState({
-        [name]: value
+        [name]: value,
+        saved: false
     });
 }
 
@@ -171,10 +175,17 @@ handleChange(event) {
  */
  handleSubmit = (event) => {
     event.preventDefault();
-    this.recipientService.updateRecipient(this.state);
-    this.setState({
-        saved: true 
-    })
+    this.recipientService.updateRecipient(this.state).then(result => {
+            if (result.data.id == this.state.id) {
+                this.setState({
+                    saved: true 
+                })
+            }
+            else {
+                this.setState({
+                    saved: false 
+                })
+            }});
 }
 
 /**
@@ -214,13 +225,13 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="first_name">First Name</Form.Label>
                         <Form.Control type="text" name="first_name" value={this.state.first_name}
-                            onChange={this.handleChange} />
+                           required onChange={this.handleChange} />
                     </Form.Group>
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="last_name">Last Name</Form.Label>
                         <Form.Control type="text" name="last_name" value={this.state.last_name}
-                        onChange={this.handleChange} />
+                        required onChange={this.handleChange} />
                     </Form.Group>
                 </Row>
 
@@ -236,14 +247,14 @@ render() {
                 <Form.Group as={Col}>
                         <Form.Label htmlFor="quantity">Quantity</Form.Label> 
                         <Form.Control type="number" onChange={this.handleChange} 
-                            name="quantity" min="0"/>
+                            required name="quantity" min="1"/>
                 </Form.Group>
                 </Row>
 
                 <Form.Group className="mb-3">
                     <Form.Label htmlFor="address">Address</Form.Label>
                     <Form.Control type="text" name="location" id="address" 
-                    value={this.state.location.address}  onChange={this.handleObjectChange} />
+                    required value={this.state.location.address}  onChange={this.handleObjectChange} />
                 </Form.Group>
 
                 <Row className="mb-3">
@@ -268,13 +279,13 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="city">City</Form.Label>
                         <Form.Control type="text" name="location" id="city" 
-                        onChange={this.handleObjectChange} value={this.state.location.city} />
+                        required onChange={this.handleObjectChange} value={this.state.location.city} />
                     </Form.Group>
 
                     <Form.Group as={Col} >
                         <Form.Label htmlFor="state">State</Form.Label>
                         <Form.Select onChange={this.handleObjectChange} value={this.state.location.state}
-                            name="location" id="state">
+                            required name="location" id="state">
                         { this.states.map( s => 
                             <option>{s}</option>
                         )}
@@ -284,7 +295,7 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="zipcode">Zip</Form.Label>
                         <Form.Control type="number" onChange={this.handleObjectChange} 
-                            name="location" id="zipcode" value={this.state.location.zipcode}/>
+                            required name="location" id="zipcode" value={this.state.location.zipcode}/>
                     </Form.Group>
                 </Row>
 
@@ -301,6 +312,7 @@ render() {
                 <InputGroup>
                     <InputGroup.Text>Comments</InputGroup.Text>
                     <FormControl as="textarea" aria-label="With textarea" 
+                    value={this.state.comments}
                                 name="comments" onChange={this.handleChange}/>
                 </InputGroup>
                 </Row>

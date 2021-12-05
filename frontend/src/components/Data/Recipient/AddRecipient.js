@@ -196,7 +196,7 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="quantity">Quantity</Form.Label> 
                         <Form.Control type="number" onChange={this.handleChange} 
-                        required name="quantity" min="0"/>
+                        required name="quantity" min="1"/>
                     </Form.Group>
                 </Row>
 
@@ -235,7 +235,7 @@ render() {
                     <Form.Group as={Col} >
                         <Form.Label htmlFor="state">State</Form.Label>
                         <Form.Select onChange={this.handleObjectChange}
-                            name="location" id="state">
+                           required name="location" id="state">
                         { this.states.map( s => 
                             <option>{s}</option>
                         )}
@@ -245,7 +245,7 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="zipcode">Zip</Form.Label>
                         <Form.Control type="number" onChange={this.handleObjectChange} 
-                            name="location" id="zipcode" min="0"/>
+                            required name="location" id="zipcode" min="0"/>
                     </Form.Group>
                 </Row>
 

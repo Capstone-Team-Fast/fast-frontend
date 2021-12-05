@@ -100,7 +100,8 @@ handleAvailabilityChange(event) {
             [name]: {
                  ...prevState[name],
                 [id.toLowerCase()]: checked
-            }    
+            },
+            saved: false    
         }
         ));
 }
@@ -116,14 +117,15 @@ handleAvailabilityChange(event) {
     let id = this.getEventID(event);
     if (event.target.checked) {
         this.setState({
-            languages: this.state.languages.concat({'name': id})
+            languages: this.state.languages.concat({'name': id}),
+            saved: false
         });
     }
     else {
         var newArr = this.state.languages.filter( l => {
             return l.name !== id;
         })
-        this.setState({languages:  newArr});
+        this.setState({languages:  newArr, saved: false});
     }
 }
 
@@ -138,7 +140,8 @@ handleChange(event) {
     let value = this.getEventValue(event);
     let name = this.getEventName(event);
     this.setState({
-        [name]: value
+        [name]: value,
+        saved: false
     });
 }
 
@@ -165,7 +168,8 @@ handlePhoneChange(event) {
     }
     
     this.setState({
-        'phone': phone
+        'phone': phone,
+        saved: false
     });
 }
 
@@ -177,10 +181,17 @@ handlePhoneChange(event) {
  */
  handleSubmit = (event) => {
     event.preventDefault();
-    this.driverService.updateDriver(this.state);
-    this.setState({
-        saved: true 
-    })
+    this.driverService.updateDriver(this.state).then(result => {
+        if (result.data.id == this.state.id) {
+            this.setState({
+                saved: true 
+            })
+        }
+        else {
+            this.setState({
+                saved: false 
+            })
+        }});
 }
 
 /**
@@ -222,13 +233,13 @@ render() {
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="first_name">First Name</Form.Label>
                         <Form.Control type="text" name="first_name" value={this.state.first_name}
-                            onChange={this.handleChange} />
+                            required onChange={this.handleChange} />
                     </Form.Group>
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="last_name">Last Name</Form.Label>
                         <Form.Control type="text" name="last_name" value={this.state.last_name}
-                        onChange={this.handleChange}  />
+                        required onChange={this.handleChange}  />
                     </Form.Group>
                 </Row>
 
@@ -244,7 +255,6 @@ render() {
                         <Form.Label>Status</Form.Label>
                         <Form.Select onChange={this.handleChange} name="employee_status"
                             value={this.state.employee_status}>
-                            <option>Choose...</option>
                             <option>Employee</option>
                             <option>Volunteer</option>
                         </Form.Select>
@@ -253,7 +263,7 @@ render() {
                     <Form.Group as={Col} controlId="formGridCapacity">
                         <Form.Label>Capacity</Form.Label>
                         <Form.Control type="number" value={this.state.capacity}
-                        onChange={this.handleChange} name="capacity" min="0"/>
+                        required onChange={this.handleChange} name="capacity" min="0"/>
                     </Form.Group>
                 </Row>
 
