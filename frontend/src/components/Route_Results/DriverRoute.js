@@ -6,7 +6,9 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 import RouteService from '../../services/RouteService'
+import RecipientService from '../../services/RecipientService'
 
+const  recipientService  =  new  RecipientService();
 const  routeService  =  new  RouteService();
 
 /**
@@ -24,8 +26,14 @@ constructor(props) {
      super(props);
      const {id} = props.match.params
      this.state  = {
-         route: {id: id}
+         route: {id: id},
+         recipients: []
      };
+
+     this.getFirstName = this.getFirstName.bind(this)
+     this.getLastName = this.getLastName.bind(this)
+     this.getPhone = this.getPhone.bind(this)
+
      this.fakeRoute = {
         'id': 1,
         'created_on': '2021-10-19T20:44:43.125437Z',
@@ -34,8 +42,8 @@ constructor(props) {
         'total_duration': 11.3,
         'assigned_to': {
             'id': 1,
-            'first_name': 'First_1',
-            'last_name': 'Last_1',
+            'first_name': 'Lee',
+            'last_name': 'Corso',
             'capacity': 50,
             'employee_status': 'P',
             'availability': [
@@ -48,7 +56,7 @@ constructor(props) {
         },
         'itinerary': [
             {
-                'id': 1,
+                'id': 7,
                 'is_center': true,
                 'address': {
                     'id': 1,
@@ -60,7 +68,7 @@ constructor(props) {
                 }
             },
             {
-                'id': 2,
+                'id': 13,
                 'is_center': true,
                 'address': {
                     'id': 3,
@@ -77,7 +85,7 @@ constructor(props) {
                 ]
             },
             {
-                'id': 1,
+                'id': 14,
                 'is_center': true,
                 'address': {
                     'id': 1,
@@ -96,9 +104,59 @@ constructor(props) {
  * Life cycle hook that is called after the component is first rendered.
  */
 componentDidMount() {
-    console.log("mounting")
+    recipientService.getRecipients().then(result => {
+        this.setState({
+            recipients: result
+        })
+    })
+    
     let route = routeService.getRoute(this.state.route.id)
     console.log(route)
+}
+
+/**
+ * Function to return first name for individual recipients. Called 
+ * for each client in the itinerary for the driver's route.
+ * @param {Object} recipient Recipient object from the route.
+ * @returns Client's first name.
+ */
+getFirstName(recipient) {
+    let clients = this.state.recipients
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].id === recipient.id) {
+            return clients[i].first_name
+        }
+    }
+}
+
+/**
+ * Function to return last name for individual recipients. Called 
+ * for each client in the itinerary for the driver's route.
+ * @param {Object} recipient Recipient object from the route.
+ * @returns Client's last name.
+ */
+getLastName(recipient) {
+    let clients = this.state.recipients
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].id === recipient.id) {
+            return clients[i].last_name
+        }
+    }
+}
+
+/**
+ * Function to return phone number for individual recipients. Called 
+ * for each client in the itinerary for the driver's route.
+ * @param {Object} recipient Recipient object from the route.
+ * @returns Client's phone number.
+ */
+getPhone(recipient) {
+    let clients = this.state.recipients
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].id === recipient.id) {
+            return clients[i].phone
+        }
+    }
 }
 
 /**
@@ -106,7 +164,6 @@ componentDidMount() {
  * @returns The HTML to be rendered.
  */
 render() {
-    console.log("rendering")
     return (
         <Container>
             <Card border="dark" className="mb-4 mt-4">
@@ -149,20 +206,26 @@ render() {
                 <Table className="hover table mb-0">
                     <thead>
                         <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Address</th>
                             <th>City</th>
                             <th>State</th>
                             <th>Zip Code</th>
+                            <th>Phone Number</th>
                             <th>Quantity</th>
                         </tr>
                     </thead>
                     <tbody>
                 {this.fakeRoute.itinerary.map( l =>                     
                         <tr>
+                            <td>{this.getFirstName(l)}</td>
+                            <td>{this.getLastName(l)}</td>
                             <td>{l.address.address}</td>
                             <td>{l.address.city}</td>
                             <td>{l.address.state}</td>
                             <td>{l.address.zipcode}</td>
+                            <td>{this.getPhone(l)}</td>
                             <td>{l.demand}</td>
                         </tr>
                     )}

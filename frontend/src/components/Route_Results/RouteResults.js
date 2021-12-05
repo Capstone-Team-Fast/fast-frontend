@@ -7,8 +7,10 @@ import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import RouteService from '../../services/RouteService'
+import RecipientService from '../../services/RecipientService'
 
 const  routeService  =  new  RouteService();
+const  recipientService  =  new  RecipientService();
 
 /**
  * This component is used to display route information for all 
@@ -27,8 +29,13 @@ constructor(props) {
      this.state  = {
          drivers: ["Bob", "Fred", "Ted", "Ned"],
          route: {id: id},
-         counter: 0
+         recipients: []
      };
+     
+
+     this.getFirstName = this.getFirstName.bind(this)
+     this.getLastName = this.getLastName.bind(this)
+     this.getPhone = this.getPhone.bind(this)
 
      this.fakeRoute =  {'routes': [
         {
@@ -53,7 +60,7 @@ constructor(props) {
             },
             'itinerary': [
                 {
-                    'id': 1,
+                    'id': 7,
                     'is_center': true,
                     'address': {
                         'id': 1,
@@ -65,7 +72,7 @@ constructor(props) {
                     }
                 },
                 {
-                    'id': 2,
+                    'id': 13,
                     'is_center': true,
                     'address': {
                         'id': 3,
@@ -82,7 +89,7 @@ constructor(props) {
                     ]
                 },
                 {
-                    'id': 1,
+                    'id': 14,
                     'is_center': true,
                     'address': {
                         'id': 1,
@@ -129,7 +136,7 @@ constructor(props) {
                     }
                 },
                 {
-                    'id': 2,
+                    'id': 10,
                     'is_center': false,
                     'address': {
                         'id': 3,
@@ -146,7 +153,7 @@ constructor(props) {
                     ]
                 },
                 {
-                    'id': 1,
+                    'id': 12,
                     'is_center': true,
                     'address': {
                         'id': 1,
@@ -167,8 +174,59 @@ constructor(props) {
  * Life cycle hook that is called after the component is first rendered.
  */
 componentDidMount() {
-    let routes = routeService.getRoutes()
-    console.log(routes)
+    recipientService.getRecipients().then(result => {
+        this.setState({
+            recipients: result
+        })
+    })
+    
+    // let routes = routeService.getRoutes()
+    // console.log(routes)
+}
+
+/**
+ * Function to return first name for individual recipients. Called 
+ * for each client in the itinerary for each driver's route.
+ * @param {Object} recipient Recipient object from the route.
+ * @returns Client's first name.
+ */
+getFirstName(recipient) {
+    let clients = this.state.recipients
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].id === recipient.id) {
+            return clients[i].first_name
+        }
+    }
+}
+
+/**
+ * Function to return last name for individual recipients. Called 
+ * for each client in the itinerary for each driver's route.
+ * @param {Object} recipient Recipient object from the route.
+ * @returns Client's last name.
+ */
+getLastName(recipient) {
+    let clients = this.state.recipients
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].id === recipient.id) {
+            return clients[i].last_name
+        }
+    }
+}
+
+/**
+ * Function to return phone number for individual recipients. Called 
+ * for each client in the itinerary for each driver's route.
+ * @param {Object} recipient Recipient object from the route.
+ * @returns Client's phone number.
+ */
+getPhone(recipient) {
+    let clients = this.state.recipients
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].id === recipient.id) {
+            return clients[i].phone
+        }
+    }
 }
 
 /**
@@ -222,20 +280,26 @@ render() {
                 <Table className="hover table mb-0">
                     <thead>
                         <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Address</th>
                             <th>City</th>
                             <th>State</th>
                             <th>Zip Code</th>
+                            <th>Phone Number</th>
                             <th>Quantity</th>
                         </tr>
                     </thead>
                     <tbody>
                 {r.itinerary.map( l =>                     
                         <tr>
+                            <td>{this.getFirstName(l)}</td>
+                            <td>{this.getLastName(l)}</td>
                             <td>{l.address.address}</td>
                             <td>{l.address.city}</td>
                             <td>{l.address.state}</td>
                             <td>{l.address.zipcode}</td>
+                            <td>{this.getPhone(l)}</td>
                             <td>{l.demand}</td>
                         </tr>
                     )}
