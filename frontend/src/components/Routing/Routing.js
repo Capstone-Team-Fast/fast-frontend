@@ -66,7 +66,7 @@ handleDriverCallback = (id, deselect) =>{
   else{
     if (this.state.route.driver_ids != null)
     {
-      const newDrivers = this.state.route.driver_ids.concat({ id });
+      const newDrivers = this.state.route.driver_ids.concat(id);
       this.setState(prevState => ({
         route : {
         ...prevState.route,
@@ -95,7 +95,7 @@ handleRecipientCallback = (id, deselect) =>{
   }
   else{
     if(this.state.route.client_ids != null){
-        const newRecipients = this.state.route.client_ids.concat({ id });
+        const newRecipients = this.state.route.client_ids.concat(id);
         this.setState(prevState => ({
           route : {
           ...prevState.route,
