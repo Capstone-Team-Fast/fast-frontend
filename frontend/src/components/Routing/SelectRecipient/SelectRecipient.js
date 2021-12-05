@@ -29,7 +29,8 @@ constructor(props) {
 componentDidMount() {
     var  self  =  this;
     recipientService.getRecipients().then(function (result) {
-        console.log(result);
+        result.map(r => r.display_info = r.first_name + " " 
+                        + r.last_name + " (Quantity: " + r.quantity + ")")
         self.setState({ recipients:  result});
     })
 }
@@ -72,7 +73,7 @@ render() {
                                     // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
                                     onSelect={this.onSelect} // Function will trigger on select event
                                     onRemove={this.onDeselect} // Function will trigger on remove event
-                                    displayValue="first_name"
+                                    displayValue="display_info"
                                 />
                             </Form>
                         </Col>

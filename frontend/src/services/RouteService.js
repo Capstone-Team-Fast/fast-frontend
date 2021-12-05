@@ -9,12 +9,23 @@ export default class RouteService{
 
     /**
      * This method connects to the backend database to
-     * retrieve a list of all routes stored in the database.
+     * retrieve routes stored in the database.
      * @returns The list of routes, as JSON objects, stored in the
      *          database.
      */
      getRoutes() {
         const url = `${API_URL}/api/routes/`;
+        return axios.get(url).then(response => response.data);
+    }
+
+    /**
+     * This method connects to the backend database to
+     * retrieve a list of all routes stored in the database.
+     * @returns The list of routes, as JSON objects, stored in the
+     *          database.
+     */
+    getRouteList(pk) {
+        const url = `${API_URL}/api/routeList/${pk}/`;
         return axios.get(url).then(response => response.data);
     }
 

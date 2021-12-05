@@ -180,6 +180,7 @@ getCenter(location) {
   if (location.is_center) {
     return location.address;
   }
+  return 
 }
 
 handleSubmit = (event) => {
@@ -210,9 +211,14 @@ render() {
         <Form.Group as={Col} controlId="formGridDeparture">
           <Form.Label className="title">Departure Location</Form.Label>
           <Form.Select onChange={this.handleDeparture} name="departure_location">
-          { this.state.locations.map( l => 
-                <option>{this.getCenter(l)}</option>
-            )}
+          { this.state.locations.map( l => {
+                  if (this.getCenter(l)) {
+                    return <option>{this.getCenter(l)}</option>
+                  }
+                  return ""
+                }
+                
+          )}
 
           </Form.Select>
         </Form.Group>
