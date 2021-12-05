@@ -32,8 +32,8 @@ constructor(props) {
           delivery_limit: '',
           departure: {
             location: {},
-          }
-          // duration_limit: '',
+          },
+          duration_limit: '',
          }
      };
 
@@ -148,13 +148,19 @@ handleDuration(event){
 }
 
 handleDeparture(event){
+  console.log(event.target);
   let [value, name] = this.getEventValues(event);
+
+  let full_location = this.state.locations.filter(function(l){
+    return l.address == value;
+  });
+
   this.setState(prevState => ({
     route : {
     ...prevState.route,
     departure: {
       ...prevState.route.departure,
-      location: value
+      location: full_location[0]
     }
     }}));
 }
