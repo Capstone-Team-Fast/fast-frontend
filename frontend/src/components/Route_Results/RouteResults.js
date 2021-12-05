@@ -8,9 +8,11 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import RouteService from '../../services/RouteService'
 import RecipientService from '../../services/RecipientService'
+import DriverService from '../../services/DriverService'
 
 const  routeService  =  new  RouteService();
 const  recipientService  =  new  RecipientService();
+const  driverService  =  new  DriverService();
 
 /**
  * This component is used to display route information for all 
@@ -27,147 +29,16 @@ constructor(props) {
      super(props);
      const {id} = props.match.params
      this.state  = {
-         drivers: ["Bob", "Fred", "Ted", "Ned"],
-         route: {id: id},
-         recipients: []
+         routeList: {id: id, routes:[]},
+         recipients: [],
+         drivers: []
      };
-     
 
-     this.getFirstName = this.getFirstName.bind(this)
-     this.getLastName = this.getLastName.bind(this)
+     this.getRecipientName = this.getRecipientName.bind(this)
      this.getPhone = this.getPhone.bind(this)
-
-     this.fakeRoute =  {'routes': [
-        {
-            'id': 1,
-            'created_on': '2021-10-19T20:44:43.125437Z',
-            'total_quantity': 9,
-            'total_distance': 10.2,
-            'total_duration': 11.3,
-            'assigned_to': {
-                'id': 1,
-                'first_name': 'Lee',
-                'last_name': 'Corso',
-                'capacity': 50,
-                'employee_status': 'P',
-                'availability': [
-                    {'id': 1, 'day': 'Sunday'}, {'id': 2, 'day': 'Monday'}, {'id': 3, 'day': 'Tuesday'}
-                ],
-                'languages': [
-                    {'id': 1, 'language': 'English'}, {'id': 2, 'language': 'French'},
-                    {'id': 3, 'language': 'Spanish'}
-                ],
-            },
-            'itinerary': [
-                {
-                    'id': 7,
-                    'is_center': true,
-                    'address': {
-                        'id': 1,
-                        'address': 'Center',
-                        'city': 'Omaha',
-                        'state': 'NE',
-                        'zipcode': 68111,
-                        'coordinates': {'latitude': 98.23, 'longitude': -23.23}
-                    }
-                },
-                {
-                    'id': 13,
-                    'is_center': true,
-                    'address': {
-                        'id': 3,
-                        'address': 'Customer_1',
-                        'city': 'Omaha',
-                        'state': 'NE',
-                        'zipcode': 68123,
-                        'coordinates': {'latitude': 98.23, 'longitude': -23.23}
-                    },
-                    'demand': 9,
-                    'languages': [
-                        {'id': 1, 'language': 'English'}, {'id': 2, 'language': 'French'},
-                        {'id': 3, 'language': 'Spanish'}
-                    ]
-                },
-                {
-                    'id': 14,
-                    'is_center': true,
-                    'address': {
-                        'id': 1,
-                        'address': 'Center',
-                        'city': 'Omaha',
-                        'state': 'NE',
-                        'zipcode': 68111,
-                        'coordinates': {'latitude': 98.23, 'longitude': -23.23}
-                    }
-                },
-            ],
-        },
-        {
-            'id': 2,
-            'created_on': '2021-10-19T20:44:43.125437Z',
-            'total_quantity': 9,
-            'total_distance': 10.2,
-            'total_duration': 11.3,
-            'assigned_to': {
-                'id': 2,
-                'first_name': 'Kirk',
-                'last_name': 'Herbstreit',
-                'capacity': 10,
-                'employee_status': 'P',
-                'availability': [
-                    {'id': 1, 'day': 'Sunday'}, {'id': 2, 'day': 'Monday'}, {'id': 3, 'day': 'Tuesday'}
-                ],
-                'languages': [
-                    {'id': 1, 'language': 'English'}, {'id': 2, 'language': 'French'},
-                    {'id': 3, 'language': 'Spanish'}
-                ],
-            },
-            'itinerary': [
-                {
-                    'id': 1,
-                    'is_center': true,
-                    'address': {
-                        'id': 1,
-                        'address': 'Center',
-                        'city': 'Omaha',
-                        'state': 'NE',
-                        'zipcode': 68111,
-                        'coordinates': {'latitude': 98.23, 'longitude': -23.23}
-                    }
-                },
-                {
-                    'id': 10,
-                    'is_center': false,
-                    'address': {
-                        'id': 3,
-                        'address': 'Customer_1',
-                        'city': 'Omaha',
-                        'state': 'NE',
-                        'zipcode': 68123,
-                        'coordinates': {'latitude': 98.23, 'longitude': -23.23}
-                    },
-                    'demand': 9,
-                    'languages': [
-                        {'id': 1, 'language': 'English'}, {'id': 2, 'language': 'French'},
-                        {'id': 3, 'language': 'Spanish'}
-                    ]
-                },
-                {
-                    'id': 12,
-                    'is_center': true,
-                    'address': {
-                        'id': 1,
-                        'address': 'Center',
-                        'city': 'Omaha',
-                        'state': 'NE',
-                        'zipcode': 68111,
-                        'coordinates': {'latitude': 98.23, 'longitude': -23.23}
-                    }
-                },
-            ],
-        }
-    ]
-    }
+     this.getDriverName = this.getDriverName.bind(this)
+     this.getCapacity = this.getCapacity.bind(this)
+     this.getEmployeeStatus = this.getEmployeeStatus.bind(this)
 }
 
 /**
@@ -179,37 +50,31 @@ componentDidMount() {
             recipients: result
         })
     })
-    
-    // let routes = routeService.getRoutes()
-    // console.log(routes)
+
+    driverService.getDrivers().then(result => {
+        this.setState({
+            drivers: result
+        })
+    })
+
+    routeService.getRouteList(this.state.routeList.id).then(result => {
+        this.setState({
+            routeList: result
+        })
+    })
 }
 
 /**
- * Function to return first name for individual recipients. Called 
+ * Function to return full name for individual recipients. Called 
  * for each client in the itinerary for each driver's route.
  * @param {Object} recipient Recipient object from the route.
- * @returns Client's first name.
+ * @returns Client's full name.
  */
-getFirstName(recipient) {
+getRecipientName(recipient) {
     let clients = this.state.recipients
     for (let i = 0; i < clients.length; i++) {
         if (clients[i].id === recipient.id) {
-            return clients[i].first_name
-        }
-    }
-}
-
-/**
- * Function to return last name for individual recipients. Called 
- * for each client in the itinerary for each driver's route.
- * @param {Object} recipient Recipient object from the route.
- * @returns Client's last name.
- */
-getLastName(recipient) {
-    let clients = this.state.recipients
-    for (let i = 0; i < clients.length; i++) {
-        if (clients[i].id === recipient.id) {
-            return clients[i].last_name
+            return clients[i].first_name + " " + clients[i].last_name
         }
     }
 }
@@ -230,22 +95,73 @@ getPhone(recipient) {
 }
 
 /**
+ * Function to return full name for individual drivers. Called 
+ * for each driver in the route list.
+ * @param {Object} route Route object from the route list.
+ * @returns Driver's full name.
+ */
+getDriverName(route) {
+    let drivers = this.state.drivers
+    for (let i = 0; i < drivers.length; i++) {
+        if (drivers[i].id === route.assigned_to) {
+            return drivers[i].first_name + " " + drivers[i].last_name
+        }
+    }
+    return ""
+}
+
+/**
+ * Function to return capacity for individual drivers. Called 
+ * for each driver in the route list.
+ * @param {Object} route Route object from the route list.
+ * @returns Driver's capacity.
+ */
+getCapacity(route) {
+    let drivers = this.state.drivers
+    for (let i = 0; i < drivers.length; i++) {
+        if (drivers[i].id === route.assigned_to) {
+            return drivers[i].capacity
+        }
+    }
+    return ""
+}
+
+/**
+ * Function to return employee staus for individual drivers. Called 
+ * for each driver in the route list.
+ * @param {Object} route Route object from the route list.
+ * @returns Driver's employee status.
+ */
+getEmployeeStatus(route) {
+    let drivers = this.state.drivers
+    for (let i = 0; i < drivers.length; i++) {
+        if (drivers[i].id === route.assigned_to) {
+            return drivers[i].employee_status
+        }
+    }
+    return ""
+}
+
+
+/**
  * The render method used to display the component. 
  * @returns The HTML to be rendered.
  */
 render() {
+    console.log("rendering")
     return (
         <Container>
-            {this.fakeRoute.routes.map(r =>
+            {this.state.routeList.routes.map(r =>
             <Card border="dark" className="mb-4 mt-4">
             <Card.Title className="card-header border-dark bg-grey">
                 <Col>
                     <Row >
                         <Col sm={8} className="title">
-                            {r.assigned_to.first_name + " " + r.assigned_to.last_name}
+                            {this.getDriverName(r)}
                         </Col>
                         <Col sm={4}> 
-                            <Button href={"/routeResults/driverRoute/" + r.id} 
+                            <Button href={"/routeResults/driverRoute/" 
+                                + r.id + "/" + r.assigned_to} 
                                 target="_blank">Print</Button>
                         </Col>   
                     </Row>
@@ -264,11 +180,11 @@ render() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{r.assigned_to.capacity}</td>
+                            <td>{this.getCapacity(r)}</td>
                             <td>{r.total_quantity}</td>
-                            <td>{r.total_distance}</td>
-                            <td>{r.total_duration}</td>
-                            <td>{r.assigned_to.employee_status}</td>
+                            <td>{Math.round(r.total_distance)}</td>
+                            <td>{Math.round(r.total_duration)}</td>
+                            <td>{this.getEmployeeStatus(r)}</td>
                         </tr>
                     </tbody>
                 </Table>
@@ -280,8 +196,7 @@ render() {
                 <Table className="hover table mb-0">
                     <thead>
                         <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
+                            <th>Name</th>
                             <th>Address</th>
                             <th>City</th>
                             <th>State</th>
@@ -293,8 +208,7 @@ render() {
                     <tbody>
                 {r.itinerary.map( l =>                     
                         <tr>
-                            <td>{this.getFirstName(l)}</td>
-                            <td>{this.getLastName(l)}</td>
+                            <td>{this.getRecipientName(l)}</td>
                             <td>{l.address.address}</td>
                             <td>{l.address.city}</td>
                             <td>{l.address.state}</td>

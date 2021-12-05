@@ -7,9 +7,12 @@ import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 import RouteService from '../../services/RouteService'
 import RecipientService from '../../services/RecipientService'
+import DriverService from '../../services/DriverService'
 
 const  recipientService  =  new  RecipientService();
 const  routeService  =  new  RouteService();
+const  driverService  =  new  DriverService();
+
 
 /**
  * This component is used to display route information for an 
@@ -24,122 +27,53 @@ class  DriverRoute  extends  Component {
  */
 constructor(props) {
      super(props);
-     const {id} = props.match.params
      this.state  = {
-         route: {id: id},
-         recipients: []
+         route: {itinerary: [], total_distance: "", total_duration: "",
+                    total_quantity: "", first_name: "", last_name: ""},
+         recipients: [],
+         driver: { capacity: "", employee_status: ""}
      };
 
-     this.getFirstName = this.getFirstName.bind(this)
-     this.getLastName = this.getLastName.bind(this)
+     this.getRecipientName = this.getRecipientName.bind(this)
      this.getPhone = this.getPhone.bind(this)
-
-     this.fakeRoute = {
-        'id': 1,
-        'created_on': '2021-10-19T20:44:43.125437Z',
-        'total_quantity': 9,
-        'total_distance': 10.2,
-        'total_duration': 11.3,
-        'assigned_to': {
-            'id': 1,
-            'first_name': 'Lee',
-            'last_name': 'Corso',
-            'capacity': 50,
-            'employee_status': 'P',
-            'availability': [
-                {'id': 1, 'day': 'Sunday'}, {'id': 2, 'day': 'Monday'}, {'id': 3, 'day': 'Tuesday'}
-            ],
-            'languages': [
-                {'id': 1, 'language': 'English'}, {'id': 2, 'language': 'French'},
-                {'id': 3, 'language': 'Spanish'}
-            ],
-        },
-        'itinerary': [
-            {
-                'id': 7,
-                'is_center': true,
-                'address': {
-                    'id': 1,
-                    'address': 'Center',
-                    'city': 'Omaha',
-                    'state': 'NE',
-                    'zipcode': 68111,
-                    'coordinates': {'latitude': 98.23, 'longitude': -23.23}
-                }
-            },
-            {
-                'id': 13,
-                'is_center': true,
-                'address': {
-                    'id': 3,
-                    'address': 'Customer_1',
-                    'city': 'Omaha',
-                    'state': 'NE',
-                    'zipcode': 68123,
-                    'coordinates': {'latitude': 98.23, 'longitude': -23.23}
-                },
-                'demand': 9,
-                'languages': [
-                    {'id': 1, 'language': 'English'}, {'id': 2, 'language': 'French'},
-                    {'id': 3, 'language': 'Spanish'}
-                ]
-            },
-            {
-                'id': 14,
-                'is_center': true,
-                'address': {
-                    'id': 1,
-                    'address': 'Center',
-                    'city': 'Omaha',
-                    'state': 'NE',
-                    'zipcode': 68111,
-                    'coordinates': {'latitude': 98.23, 'longitude': -23.23}
-                }
-            },
-        ],
-    }
 }
 
 /**
  * Life cycle hook that is called after the component is first rendered.
  */
 componentDidMount() {
+    let params = this.props.match.params 
+    
     recipientService.getRecipients().then(result => {
         this.setState({
             recipients: result
         })
+    })  
+
+    routeService.getRoute(params.routeId).then(result => {
+        this.setState({
+            route: result
+        })
     })
-    
-    let route = routeService.getRoute(this.state.route.id)
-    console.log(route)
+
+    driverService.getDriver(params.driverId).then(result => {
+        this.setState({
+            driver: result
+        })
+    })
 }
 
 /**
- * Function to return first name for individual recipients. Called 
- * for each client in the itinerary for the driver's route.
+ * Function to return full name for individual recipients. Called 
+ * for each client in the itinerary for each driver's route.
  * @param {Object} recipient Recipient object from the route.
- * @returns Client's first name.
+ * @returns Client's full name.
  */
-getFirstName(recipient) {
+ getRecipientName(recipient) {
     let clients = this.state.recipients
     for (let i = 0; i < clients.length; i++) {
         if (clients[i].id === recipient.id) {
-            return clients[i].first_name
-        }
-    }
-}
-
-/**
- * Function to return last name for individual recipients. Called 
- * for each client in the itinerary for the driver's route.
- * @param {Object} recipient Recipient object from the route.
- * @returns Client's last name.
- */
-getLastName(recipient) {
-    let clients = this.state.recipients
-    for (let i = 0; i < clients.length; i++) {
-        if (clients[i].id === recipient.id) {
-            return clients[i].last_name
+            return clients[i].first_name + " " + clients[i].last_name
         }
     }
 }
@@ -164,15 +98,16 @@ getPhone(recipient) {
  * @returns The HTML to be rendered.
  */
 render() {
-    return (
+    console.log(this.state.driver)
+    return ( 
         <Container>
             <Card border="dark" className="mb-4 mt-4">
             <Card.Title className="card-header border-dark bg-grey">
                 <Col>
                     <Row >
                         <Col sm={10} className="title">
-                            {this.fakeRoute.assigned_to.first_name + " " + 
-                                this.fakeRoute.assigned_to.last_name}
+                            {this.state.driver.first_name
+                                + " " + this.state.driver.last_name}
                         </Col>
                     </Row>
                 </Col>
@@ -190,11 +125,11 @@ render() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{this.fakeRoute.assigned_to.capacity}</td>
-                            <td>{this.fakeRoute.total_quantity}</td>
-                            <td>{this.fakeRoute.total_distance}</td>
-                            <td>{this.fakeRoute.total_duration}</td>
-                            <td>{this.fakeRoute.assigned_to.employee_status}</td>
+                            <td>{this.state.driver.capacity}</td>
+                            <td>{this.state.route.total_quantity}</td>
+                            <td>{Math.round(this.state.route.total_distance)}</td>
+                            <td>{Math.round(this.state.route.total_duration)}</td>
+                            <td>{this.state.driver.employee_status}</td>
                         </tr>
                     </tbody>
                 </Table>
@@ -206,8 +141,7 @@ render() {
                 <Table className="hover table mb-0">
                     <thead>
                         <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
+                            <th>Name</th>
                             <th>Address</th>
                             <th>City</th>
                             <th>State</th>
@@ -217,10 +151,9 @@ render() {
                         </tr>
                     </thead>
                     <tbody>
-                {this.fakeRoute.itinerary.map( l =>                     
+                {this.state.route.itinerary.map( l =>                     
                         <tr>
-                            <td>{this.getFirstName(l)}</td>
-                            <td>{this.getLastName(l)}</td>
+                            <td>{this.getRecipientName(l)}</td>
                             <td>{l.address.address}</td>
                             <td>{l.address.city}</td>
                             <td>{l.address.state}</td>
@@ -236,5 +169,4 @@ render() {
       </Container>
     );
 }
-}
-export  default  DriverRoute
+} export  default  DriverRoute
