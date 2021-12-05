@@ -29,9 +29,10 @@ constructor(props) {
      super(props);
      const {id} = props.match.params
      this.state  = {
-         routeList: {id: id, routes:[]},
+         routeList: {id: id, routes:[], others:[]},
          recipients: [],
-         drivers: []
+         drivers: [],
+         missing: false
      };
 
      this.getRecipientName = this.getRecipientName.bind(this)
@@ -39,6 +40,9 @@ constructor(props) {
      this.getDriverName = this.getDriverName.bind(this)
      this.getCapacity = this.getCapacity.bind(this)
      this.getEmployeeStatus = this.getEmployeeStatus.bind(this)
+     this.getMissingName = this.getMissingName.bind(this)
+     this.getMissingPhone = this.getMissingPhone.bind(this)
+     this.getMissingAddress = this.getMissingAddress.bind(this)
 }
 
 /**
@@ -58,8 +62,13 @@ componentDidMount() {
     })
 
     routeService.getRouteList(this.state.routeList.id).then(result => {
+        let missing = false 
+        if (this.state.routeList.others.length > 0) {
+            missing = true
+        }
         this.setState({
-            routeList: result
+            routeList: result,        
+            missing: missing
         })
     })
 }
@@ -77,6 +86,56 @@ getRecipientName(recipient) {
             return clients[i].first_name + " " + clients[i].last_name
         }
     }
+}
+
+/**
+ * Function to return full name for missing recipients. Called 
+ * for each client that is missing from the route list.
+ * @param {Number} id Recipient id from the missing list.
+ * @returns Client's full name.
+ */
+ getMissingName(id) {
+    let clients = this.state.recipients
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].id === id) {
+            return clients[i].first_name + " " + clients[i].last_name
+        }
+    }
+}
+
+/**
+ * Function to return address for missing recipients. Called 
+ * for each client that is missing from the route list.
+ * @param {Number} id Recipient id from the missing list.
+ * @returns Client's address.
+ */
+ getMissingAddress(id) {
+    let clients = this.state.recipients
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].id === id) {
+            let location = clients[i].location
+            let address = location.address + " " + location.city 
+            + " " + location.state + " " + location.zipcode
+            return address
+        }
+    }
+    return 
+}
+
+/**
+ * Function to return phone number for missing recipients. Called 
+ * for each client that is missing from the route list.
+ * @param {Number} id Recipient id from the missing list.
+ * @returns Client's phone number.
+ */
+getMissingPhone(id) {
+    let clients = this.state.recipients
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].id === id) {
+            return clients[i].phone
+        }
+    }
+
 }
 
 /**
@@ -148,9 +207,45 @@ getEmployeeStatus(route) {
  * @returns The HTML to be rendered.
  */
 render() {
-    console.log("rendering")
     return (
         <Container>
+            {
+                this.state.missing ? 
+                <Card border="dark" className="mb-4 mt-4">
+                    <Card.Title className="card-header border-dark bg-grey">
+                        <Col>
+                            <Row >
+                                <Col sm={8} className="title">
+                                   Unassigned Clients 
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Card.Title>
+                    <Card.Body className="card-body pl-1 pr-1 pt-1">
+                    <Table className="hover table mb-0">
+                        {this.state.routeList.others.map(c => 
+                                <tr>
+                                    <th>{this.getMissingName(c)}</th>
+                                    <th>{this.getMissingAddress(c)}</th>
+                                    <th>{this.getMissingPhone(c)}</th>
+                                </tr>
+                            
+                        )}
+                    </Table>
+                    </Card.Body>
+                </Card> 
+                :
+                <Card border="dark" className="mb-4 mt-4">
+                <Card.Title className="card-header border-dark bg-green">
+                    <Col>
+                        <Row >
+                            <Col sm={8} className="title text-light">
+                               {this.state.routeList.description} 
+                            </Col>
+                        </Row>
+                    </Col>
+                </Card.Title>
+            </Card>}
             {this.state.routeList.routes.map(r =>
             <Card border="dark" className="mb-4 mt-4">
             <Card.Title className="card-header border-dark bg-grey">
