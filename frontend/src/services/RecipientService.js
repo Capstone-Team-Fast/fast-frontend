@@ -43,11 +43,14 @@ export default class RecipientService{
     }
 
     uploadRecipients(recipients){
-        const url = `${API_URL}/api/clients/bulk/`;
+        const url = `${API_URL}/api/clients/`;
         if (recipients.length > 0) {
             console.log('Saving File to ' + url);
             console.log(recipients);
-            return axios.post(url, recipients).then(response => response.data);
+            for (const recipient of JSON.parse(recipients)) {
+                axios.post(url, recipient).then(response => response.data);
+            }
+            return;
         }
     }
 

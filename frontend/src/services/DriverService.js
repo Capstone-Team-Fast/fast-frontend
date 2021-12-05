@@ -42,12 +42,18 @@ export default class DriverService {
     }
 
     uploadDrivers(drivers){
-        const url = `${API_URL}/api/drivers/bulk/`;
+        const url = `${API_URL}/api/drivers/`;
         if (drivers.length > 0) {
-            console.log('Saving File to ' + url);
-            console.log(drivers);
-            return axios.post(url, drivers).then(response => response.data);
+            // console.log('Saving File to ' + url);
+            // console.log(drivers);
+            for (const driver of JSON.parse(drivers)) {
+                axios.post(url, driver).then(response => {
+                    console.log(response.status);
+                    console.log(response.data);
+                });
+            }
         }
+        return;
     }
 
     /**
@@ -59,7 +65,11 @@ export default class DriverService {
      */
     createDriver(driver){
         const url = `${API_URL}/api/drivers/`;
-        return axios.post(url,driver).then(response => response.data);
+        console.log(driver);
+        return axios.post(url,driver).then(response => {
+            console.log(response.status);
+            console.log(response.data);
+        });
     }
 
     /**

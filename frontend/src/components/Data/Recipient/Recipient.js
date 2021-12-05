@@ -113,7 +113,6 @@ componentDidMount() {
     }
 
     get_phone(phone) {
-        console.log('Received ' + phone);
         if (phone.length > 0) {
             phone = phone.trim();
             phone = phone.replaceAll(/['\D']/g, '');
@@ -123,7 +122,6 @@ componentDidMount() {
                 phone = '';
             }
         }
-        console.log('Returned ' + phone);
         return phone
     }
 
@@ -144,21 +142,22 @@ componentDidMount() {
                     'is_center':false}, 'languages': []};
                 
                 var recipient_data = data[row];
-                const keys = Object.keys(recipient_data)
+                let keys = Object.keys(recipient_data)
                 for (var index in keys) {
                     let key = keys[index];
                     let value = recipient_data[key];
                     delete recipient_data[key];
                     recipient_data[key.toLowerCase()] = value;
                 }
-                if ('firstname' in keys) {
-                    recipient_template.first_name = recipient_data.firstname;
+                keys = Object.keys(recipient_data);
+                if (keys.includes('firstname')) {
+                    recipient_template.first_name = recipient_data.firstname.trim();
                 } else {
                     recipient_template.first_name = " ";
                 }
                 
-                if ('lastname' in keys) {
-                    recipient_template.last_name = recipient_data.lastname;
+                if (keys.includes('lastname')) {
+                    recipient_template.last_name = recipient_data.lastname.trim();
                 } else {
                     recipient_template.last_name = " ";
                 }
@@ -166,11 +165,11 @@ componentDidMount() {
                 recipient_template.languages = this.get_languages(recipient_data.language.split(','));
                 recipient_template.phone = this.get_phone(recipient_data.phone);
                 recipient_template.location.address = recipient_data.address.trim();
-                if ('room_number' in keys) {
-                    recipient_template.location.room_number = recipient_data.room_number.trim();
+                if (keys.includes('room_number')) {
+                    recipient_template.location.room_number = recipient_data.room_number;
                 }
                 recipient_template.location.city = this.capitalize(recipient_data.city.trim());
-                recipient_template.location.state = this.capitalize(recipient_data.state.trim());
+                recipient_template.location.state = recipient_data.state.trim().toUpperCase();
                 recipient_template.location.zipcode = this.capitalize(recipient_data.zipcode);
                 recipient_template.quantity = String(recipient_data.quantity);
                 if (recipient_data.center === 1) {

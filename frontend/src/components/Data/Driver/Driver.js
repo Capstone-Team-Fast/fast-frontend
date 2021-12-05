@@ -11,7 +11,6 @@ import Form from 'react-bootstrap/Form';
 import DriverService from '../../../services/DriverService';
 import SearchService from '../../../services/SearchService';
 import FileService from '../../../services/FileService';
-import { Link } from 'react-router-dom';
 
 const driverService = new DriverService();
 const searchService = new SearchService();
@@ -29,37 +28,37 @@ class Driver extends Component {
  * binds the methods of the component to the current instance.
  * @param {Object} props The properties passed to the component.
  */
-    constructor(props) {
-        super(props);
-        this.state = {
-            drivers: [],
-            filtered: [],
-            fileContent: [],
-            new_drivers: []
-        };
-        this.fileInput = React.createRef();
-        this.handleDriverDelete = this.handleDriverDelete.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
-        this.readFile = this.readFile.bind(this);
-        this.refreshDrivers = this.refreshDrivers.bind(this);
-    }
+constructor(props) {
+    super(props);
+    this.state = {
+        drivers: [],
+        filtered: [],
+        fileContent: [],
+        new_drivers: []
+    };
+    this.fileInput = React.createRef();
+    this.handleDriverDelete = this.handleDriverDelete.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.readFile = this.readFile.bind(this);
+    this.refreshDrivers = this.refreshDrivers.bind(this);
+}
   
-  /**
-   * Life cycle hook that is called after the component is first rendered.
-   */
-  componentDidMount() {
-      var  self  =  this;
-      driverService.getDrivers().then(function (result) {
-          self.setState({ drivers:  result, filtered: result});
-      });
-  }
+/**
+ * Life cycle hook that is called after the component is first rendered.
+ */
+componentDidMount() {
+    var  self  =  this;
+    driverService.getDrivers().then(function (result) {
+        self.setState({ drivers:  result, filtered: result});
+    });
+}
 
-  refreshDrivers(){
-      var self = this;
-      driverService.getDrivers().then(function (result) {
-          self.setState({ drivers: result, filtered: result });
-      });
-  }
+refreshDrivers(){
+    var self = this;
+    driverService.getDrivers().then(function (result) {
+        self.setState({ drivers: result, filtered: result });
+    });
+}
 
 /**
  * Event handler used to delete a driver from the database when the 
@@ -68,27 +67,27 @@ class Driver extends Component {
  * q                 Delete button.
  * @param {Object} d The driver object to be deleted.
  */
-    handleDriverDelete(e, d) {
-        var self = this;
-        console.log(d);
+handleDriverDelete(e, d) {
+    var self = this;
+    console.log(d);
 
-        driverService.deleteDriver(d).then(() => {
-            var newArr = self.state.drivers.filter(function (obj) {
-                return obj.id !== d.id;
-            });
-            self.setState({ drivers: newArr, filtered: newArr })
+    driverService.deleteDriver(d).then(() => {
+        var newArr = self.state.drivers.filter(function (obj) {
+            return obj.id !== d.id;
         });
-    }
+        self.setState({ drivers: newArr, filtered: newArr })
+    });
+}
 
-    get_availability(availability_list) {
-        let availability_template = {'sunday': false, 'monday': false, 'tuesday': false, 'wednesday': false, 
-            'thursday': false, 'friday': false, 'saturday': false };
-        for (var index in availability_list) {
-            let day = availability_list[index].trim().toLowerCase();
-            availability_template[day] = true;
-        }
-        return availability_template;
+get_availability(availability_list) {
+    let availability_template = {'sunday': false, 'monday': false, 'tuesday': false, 'wednesday': false, 
+        'thursday': false, 'friday': false, 'saturday': false };
+    for (var index in availability_list) {
+        let day = availability_list[index].trim().toLowerCase();
+        availability_template[day] = true;
     }
+    return availability_template;
+}
 
 /**
  * Event handler method called when the user enters a value into the 
@@ -103,84 +102,94 @@ handleSearch(e) {
     });
 }
 
-    get_phone(phone) {
-        if (phone.length > 0) {
-            phone = phone.trim();
-            phone = phone.replaceAll(/['\D']/g, '');
-            if (phone.length == 10) {
-                phone = phone.slice(0, 3) + '-' + phone.slice(3, 6) + '-' + phone.slice(6);
-            } else {
-                phone = '';
-            }
+get_phone(phone) {
+    if (phone.length > 0) {
+        phone = phone.trim();
+        phone = phone.replaceAll(/['\D']/g, '');
+        if (phone.length == 10) {
+            phone = phone.slice(0, 3) + '-' + phone.slice(3, 6) + '-' + phone.slice(6);
+        } else {
+            phone = '';
         }
-        return phone
     }
+    return phone
+}
 
-    capitalize(str) {
-        if (typeof(str) == 'string') {
-            if (str.length > 0) {
-                str = str.toLowerCase();
-                str = str.charAt(0).toUpperCase() + str.slice(1);
-            }
+capitalize(str) {
+    if (typeof(str) == 'string') {
+        if (str.length > 0) {
+            str = str.toLowerCase();
+            str = str.charAt(0).toUpperCase() + str.slice(1);
         }
-        return str;
     }
+    return str;
+}
 
-    get_languages(languages_list) {
-        var languages = [];
-        for (var index in languages_list) {
-            let language_template = {};
-            let language = this.capitalize(languages_list[index].trim());
-            language_template.name = language;
-            languages.push(language_template);
-        }
-        return languages;
+get_languages(languages_list) {
+    var languages = [];
+    for (var index in languages_list) {
+        let language_template = {};
+        let language = this.capitalize(languages_list[index].trim());
+        language_template.name = language;
+        languages.push(language_template);
     }
+    return languages;
+}
 
-    readFile(event) {
-        const file = event.target.files[0];
-        const promise = fileService.readFile(file);
-        let drivers = [];
+readFile(event) {
+    const file = event.target.files[0];
+    const promise = fileService.readFile(file);
+    let drivers = [];
 
-        promise.then((data) => {
-            this.setState({
-                fileContent: data
-            });
-
-            for(var row in data) {
-                let driver_template = {
-                    'user': '', 'first_name': '', 'last_name': '', 'capacity': '1', 'employee_status': '', 
-                    'phone': '', 'availability': {}, 'languages': []};
-                
-                var driver_data = data[row];
-                const keys = Object.keys(driver_data)
-                for (var index in keys) {
-                    let key = keys[index];
-                    let value = driver_data[key];
-                    delete driver_data[key];
-                    driver_data[key.toLowerCase()] = value;
-                }
-                console.log(driver_data);
-                driver_template.first_name = driver_data.firstname.trim();
-                driver_template.last_name = driver_data.lastname.trim();
-                driver_template.capacity = String(driver_data.capacity);
-                let employee_status = driver_data.role.toLowerCase().trim();
-                if (employee_status === 'volunteer') {
-                    driver_template.employee_status = 'Volunteer';
-                } else {
-                    driver_template.employee_status = 'Employee';
-                }
-                driver_template.availability = this.get_availability(driver_data.availability.split(','));
-                driver_template.languages = this.get_languages(driver_data.language.split(','));
-                driver_template.phone = this.get_phone(driver_data.phone.trim());
-                drivers.push(driver_template);
-            }
-            console.log(drivers);
-            this.setState({
-                new_drivers: JSON.stringify(drivers)
-            });
+    promise.then((data) => {
+        this.setState({
+            fileContent: data
         });
-    }
+
+        for(var row in data) {
+            let driver_template = {
+                'user': '', 'first_name': '', 'last_name': '', 'capacity': '1', 'employee_status': '', 
+                'phone': '', 'availability': {}, 'languages': []};
+            
+            var driver_data = data[row];
+            let keys = Object.keys(driver_data)
+            for (var index in keys) {
+                let key = keys[index];
+                let value = driver_data[key];
+                delete driver_data[key];
+                driver_data[key.toLowerCase()] = value;
+            }
+            console.log(driver_data);
+            keys = Object.keys(driver_data);
+            if (keys.includes('firstname')) {
+                driver_template.first_name = driver_data.firstname.trim();
+            } else {
+                driver_template.first_name = " ";
+            }
+            
+            if (keys.includes('lastname')) {
+                driver_template.last_name = driver_data.lastname.trim();
+            } else {
+                driver_template.last_name = " ";
+            }
+            driver_template.capacity = String(driver_data.capacity);
+            let employee_status = driver_data.role.toLowerCase().trim();
+            if (employee_status === 'volunteer') {
+                driver_template.employee_status = 'Volunteer';
+            } else {
+                driver_template.employee_status = 'Employee';
+            }
+            driver_template.availability = this.get_availability(driver_data.availability.split(','));
+            driver_template.languages = this.get_languages(driver_data.language.split(','));
+            driver_template.phone = this.get_phone(driver_data.phone.trim());
+            drivers.push(driver_template);
+        }
+        console.log(drivers);
+        this.setState({
+            new_drivers: JSON.stringify(drivers)
+        });
+    });
+}
 
   /**
  * The render method used to display the component. 
@@ -258,12 +267,6 @@ handleSearch(e) {
                     <Col>
                         <Row>
                             <Col sm={2} className="d-flex flex-row">
-                                {/* <Link to={{
-                                    pathname: "/previewDrivers",
-                                    state: this.state.new_drivers
-                                }}>
-                                    <Button className="mx-1">Preview</Button>
-                                </Link> */}
                                 <Button className="mx-1" onClick={() => {
                                     driverService.uploadDrivers(this.state.new_drivers);
                                     this.setState({
