@@ -9,6 +9,7 @@ import SelectDriver from './SelectDriver/SelectDriver.js';
 import SelectRecipient from './SelectRecipient/SelectRecipient.js';
 import LocationService from '../../services/LocationService'
 import RouteService from '../../services/RouteService'
+import { Redirect } from 'react-router';
 
 
 
@@ -186,13 +187,16 @@ getCenter(location) {
 handleSubmit = (event) => {
   event.preventDefault();
   console.log(this.state.route);
-  routeService.createRoute(this.state.route);
-  
-  //#TODO: how to redirect to view route??
-  //this.setState({redirect: "/"});
+  routeService.createRoute(this.state.route).then(result => {
+    let redirect = "/routeResults/" + result.id 
+    this.setState({redirect: redirect})
+  });
 }
 
 render() {
+  if (this.state.redirect) {
+    window.open(this.state.redirect, "_blank")
+  }
 
     return (
       <Container>

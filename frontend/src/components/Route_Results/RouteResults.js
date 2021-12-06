@@ -212,6 +212,16 @@ render() {
             {
                 this.state.missing ? 
                 <Card border="dark" className="mb-4 mt-4">
+                    <Card.Title className="card-header border-dark bg-green">
+                    <Col>
+                        <Row >
+                            <Col sm={8} className="title text-light">
+                               {this.state.routeList.description} 
+                            </Col>
+                        </Row>
+                    </Col>
+                </Card.Title>
+                
                     <Card.Title className="card-header border-dark bg-grey">
                         <Col>
                             <Row >
