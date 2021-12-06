@@ -63,7 +63,7 @@ componentDidMount() {
 
     routeService.getRouteList(this.state.routeList.id).then(result => {
         let missing = false 
-        if (this.state.routeList.others.length > 0) {
+        if (result.others.length > 0) {
             missing = true
         }
         this.setState({
@@ -209,10 +209,11 @@ getEmployeeStatus(route) {
 render() {
     return (
         <Container>
+            {console.log(this.state.missing)}
             {
                 this.state.missing ? 
                 <Card border="dark" className="mb-4 mt-4">
-                    <Card.Title className="card-header border-dark bg-green">
+                    <Card.Title className="card-header border-dark bg-red">
                     <Col>
                         <Row >
                             <Col sm={8} className="title text-light">
@@ -221,7 +222,7 @@ render() {
                         </Row>
                     </Col>
                 </Card.Title>
-                
+
                     <Card.Title className="card-header border-dark bg-grey">
                         <Col>
                             <Row >

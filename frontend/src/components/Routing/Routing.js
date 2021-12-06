@@ -9,7 +9,6 @@ import SelectDriver from './SelectDriver/SelectDriver.js';
 import SelectRecipient from './SelectRecipient/SelectRecipient.js';
 import LocationService from '../../services/LocationService'
 import RouteService from '../../services/RouteService'
-import { Redirect } from 'react-router';
 
 
 
@@ -189,14 +188,11 @@ handleSubmit = (event) => {
   console.log(this.state.route);
   routeService.createRoute(this.state.route).then(result => {
     let redirect = "/routeResults/" + result.id 
-    this.setState({redirect: redirect})
+    window.open(redirect, "_blank")
   });
 }
 
 render() {
-  if (this.state.redirect) {
-    window.open(this.state.redirect, "_blank")
-  }
 
     return (
       <Container>
