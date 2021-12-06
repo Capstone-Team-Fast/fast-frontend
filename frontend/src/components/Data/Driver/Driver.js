@@ -200,7 +200,7 @@ readFile(event) {
             <Container className="card">
                 <Row className="card-header">
                     <Col>
-                        <Row >
+                        <Row className="d-flex flex-row">
                             <Col sm={2} className="table-title title">Drivers</Col>
                             <Col sm={8} class="mt-3">
                                 <InputGroup class="mb-2">
@@ -220,7 +220,7 @@ readFile(event) {
                                     ></FormControl>
                                 </InputGroup>
                             </Col>
-                            <Col sm={2}>
+                            <Col sm={2} className="justify-content-end d-flex flex-row">
                                 <Button href="/addDriver">Add New</Button>
                             </Col>
                         </Row>

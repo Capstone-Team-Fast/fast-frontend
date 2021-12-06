@@ -227,7 +227,7 @@ checkLanguage(language) {
 render() {
     return (
         <Container>
-            <h1>Update Driver Data</h1>
+            <h1 className="h2">Update Driver Data</h1>
             <Form onSubmit={this.handleSubmit}>
                 <Row className="mb-3">
                     <Form.Group as={Col}>
@@ -289,7 +289,7 @@ render() {
                 <Button variant="primary" className="mr-4" 
                     onClick={this.handleSubmit}>Submit</Button>
                 <Link to="/">
-                    <Button variant="primary">Return</Button>
+                    <Button variant="secondary">Cancel</Button>
                 </Link>
                 {this.state.saved ?
                     <Row className='text-success h4 mt-2 mb-4'>Driver Updated!</Row> :

@@ -26,10 +26,6 @@ export default class PreviewDrivers extends Component {
         this.state = this.props.location.state || { data: template };
     }
 
-    // componentDidMount(){
-    //     this.setState({data: this.props.location.state})
-    // }
-
     render() {
         console.log(this.props.location);
         return (

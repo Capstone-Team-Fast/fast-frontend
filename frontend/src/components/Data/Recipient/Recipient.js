@@ -194,7 +194,7 @@ componentDidMount() {
             <Container className="card mt-2 mb-4">
                 <Row className="card-header">
                     <Col>
-                        <Row>
+                        <Row className="d-flex flex-row">
                             <Col sm={2} className="table-title title">Recipients</Col>
                             <Col sm={8} class="mt-3"> 
                                 <InputGroup class="mb-2">
@@ -214,7 +214,7 @@ componentDidMount() {
                                     ></FormControl>
                                 </InputGroup>
                             </Col>
-                            <Col sm={2}> 
+                            <Col sm={2} className="justify-content-end d-flex flex-row">
                                 <Button href="/addRecipient">Add New</Button>
                             </Col>
                         </Row>

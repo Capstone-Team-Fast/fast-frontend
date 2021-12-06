@@ -64,9 +64,9 @@ render() {
         <Container className="card mt-2">
             <Row className="card-header">
                 <Col>
-                    <Row>
+                    <Row className="d-flex flex-row">
                         <Col sm={8} className="h2">Recipient Detail</Col>
-                        <Col sm={2}> 
+                        <Col sm={4} className="justify-content-end btn-sm d-flex flex-row">
                             <Button href="/">Return</Button>
                         </Col>
                     </Row>
