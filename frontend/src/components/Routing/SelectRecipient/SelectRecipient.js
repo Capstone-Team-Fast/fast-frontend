@@ -37,6 +37,7 @@ componentDidMount() {
 
 getEventValues(event) {
     var  self  =  this;
+    console.log(event);
     return event[self.state.selectedNumber].id;
     
 }
