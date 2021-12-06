@@ -42,8 +42,8 @@ const BaseLayout = () => (
       <br/>
       <Route path="/" exact component={Recipient} />
       <Route path="/routing" exact component={Routing} />
-      <Route path="/routeResults/" exact component={RouteResults} />
-      <Route path="/routeResults/driverRoute/:routeId" exact component={DriverRoute} />
+      <Route path="/routeResults/:id" exact component={RouteResults} />
+      <Route path="/routeResults/driverRoute/:routeId/:driverId" exact component={DriverRoute} />
       <Route path="/addDriver" exact component={AddDriver} />
       <Route path="/addRecipient" exact component={AddRecipient} />
       <Route path="/updateDriver/:id" exact component={UpdateDriver} />
