@@ -98,7 +98,6 @@ getPhone(recipient) {
  * @returns The HTML to be rendered.
  */
 render() {
-    console.log(this.state.driver)
     return ( 
         <Container>
             <Card border="dark" className="mb-4 mt-4">

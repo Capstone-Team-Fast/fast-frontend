@@ -186,10 +186,10 @@ getCenter(location) {
 handleSubmit = (event) => {
   event.preventDefault();
   console.log(this.state.route);
-  routeService.createRoute(this.state.route);
-  
-  //#TODO: how to redirect to view route??
-  //this.setState({redirect: "/"});
+  routeService.createRoute(this.state.route).then(result => {
+    let redirect = "/routeResults/" + result.id 
+    window.open(redirect, "_blank")
+  });
 }
 
 render() {
