@@ -31,7 +31,17 @@ constructor(props) {
           client_ids:[],
           delivery_limit: '',
           departure: {
-            location: {},
+            location: {
+                  "id": 34,
+                  "address": "5545 Center St",
+                  "room_number": null,
+                  "city": "Omaha",
+                  "state": "NE",
+                  "zipcode": 68106,
+                  "latitude": null,
+                  "longitude": null,
+                  "is_center": true
+            },
           },
           duration_limit: '',
          }
@@ -210,7 +220,8 @@ render() {
         </Form.Group>
         <Form.Group as={Col} controlId="formGridDeparture">
           <Form.Label className="title">Departure Location</Form.Label>
-          <Form.Select onChange={this.handleDeparture} name="departure_location">
+          <Form.Select value={this.state.route.departure.location.address} 
+            onChange={this.handleDeparture} name="departure_location">
           { this.state.locations.map( l => {
                   if (this.getCenter(l)) {
                     return <option>{this.getCenter(l)}</option>

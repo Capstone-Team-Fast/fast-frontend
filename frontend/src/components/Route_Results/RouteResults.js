@@ -64,7 +64,7 @@ componentDidMount() {
     routeService.getRouteList(this.state.routeList.id).then(result => {
         console.log(this.state.routeList)
         let missing = false 
-        if (result.solver_status !== 1) {
+        if (result.solver_status !== "1") {
             missing = true
         }
         this.setState({
