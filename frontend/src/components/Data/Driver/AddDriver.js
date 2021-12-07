@@ -30,7 +30,7 @@ constructor(props) {
         'employee_status': '', 'capacity': '', 'languages': []
     };
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
-                        'Hindi', 'Russian', 'Portugese', 'Other'];
+                        'Hindi', 'Russian', 'Portuguese', 'Other'];
     this.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 
                     'Friday', 'Saturday']
     
