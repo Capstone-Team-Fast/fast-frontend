@@ -29,7 +29,7 @@ constructor(props) {
                 };
     this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
-                        'Hindi', 'Russian', 'Portugese', 'Other'];
+                        'Hindi', 'Russian', 'Portuguese', 'Other'];
     
     this.recipientService = new RecipientService();
     this.handleChange = this.handleChange.bind(this);
@@ -321,7 +321,7 @@ render() {
                     onClick={this.handleSubmit}>Submit
                 </Button>
                 <Link to="/">
-                    <Button variant="secondary">Cancel</Button>
+                    <Button variant="secondary">Return</Button>
                 </Link>
                 {this.state.saved ?
                     <Row className='text-success h4 mb-4 mt-2'>Recipient Updated!</Row> :

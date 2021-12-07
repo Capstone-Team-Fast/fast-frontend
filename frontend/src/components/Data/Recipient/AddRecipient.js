@@ -27,7 +27,7 @@ constructor(props) {
                 };
     this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
-                        'Hindi', 'Russian', 'Portugese', 'Other'];
+                        'Hindi', 'Russian', 'Portuguese', 'Other'];
     
     this.recipientService = new RecipientService();
     this.handleChange = this.handleChange.bind(this);

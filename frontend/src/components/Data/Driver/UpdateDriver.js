@@ -31,7 +31,7 @@ constructor(props) {
                     'employee_status': '', 'capacity': '', 'languages': []
                 };
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
-                        'Hindi', 'Russian', 'Portugese', 'Other'];
+                        'Hindi', 'Russian', 'Portuguese', 'Other'];
     this.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 
                     'Friday', 'Saturday']
     
@@ -289,7 +289,7 @@ render() {
                 <Button variant="primary" className="mr-4" 
                     onClick={this.handleSubmit}>Submit</Button>
                 <Link to="/">
-                    <Button variant="secondary">Cancel</Button>
+                    <Button variant="secondary">Return</Button>
                 </Link>
                 {this.state.saved ?
                     <Row className='text-success h4 mt-2 mb-4'>Driver Updated!</Row> :
