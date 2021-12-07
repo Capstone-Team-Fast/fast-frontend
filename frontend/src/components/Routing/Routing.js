@@ -201,12 +201,12 @@ render() {
         <Form.Group as={Col} controlId="formGridDeliveryLimit">
           <Form.Label className="title">Delivery Limit</Form.Label>
           <Form.Control type="number" placeholder="Driver Delivery Limit"
-                        onChange={this.handleDeliveryLimit} name="delivery_limit" min="1"/>
+                        required onChange={this.handleDeliveryLimit} name="delivery_limit" min="1"/>
         </Form.Group>
         <Form.Group as={Col} controlId="formGridDurationLimit">
           <Form.Label className="title">Duration</Form.Label>
           <Form.Control type="number" placeholder="Duration Limit in Hours"
-                        onChange={this.handleDuration} name="duration_limit" min="1"/>
+                        required onChange={this.handleDuration} name="duration_limit" min="1"/>
         </Form.Group>
         <Form.Group as={Col} controlId="formGridDeparture">
           <Form.Label className="title">Departure Location</Form.Label>
