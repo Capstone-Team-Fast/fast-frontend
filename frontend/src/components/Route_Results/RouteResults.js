@@ -236,9 +236,9 @@ render() {
                     <Table className="hover table mb-0">
                         {this.state.routeList.others.map(c => 
                                 <tr>
-                                    <th>{this.getMissingName(c)}</th>
-                                    <th>{this.getMissingAddress(c)}</th>
-                                    <th>{this.getMissingPhone(c)}</th>
+                                    <td>{this.getMissingName(c)}</td>
+                                    <td>{this.getMissingAddress(c)}</td>
+                                    <td>{this.getMissingPhone(c)}</td>
                                 </tr>
                             
                         )}
