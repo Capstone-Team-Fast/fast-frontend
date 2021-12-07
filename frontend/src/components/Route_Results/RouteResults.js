@@ -62,8 +62,9 @@ componentDidMount() {
     })
 
     routeService.getRouteList(this.state.routeList.id).then(result => {
+        console.log(this.state.routeList)
         let missing = false 
-        if (result.others.length > 0) {
+        if (result.solver_status !== 1) {
             missing = true
         }
         this.setState({
@@ -86,6 +87,7 @@ getRecipientName(recipient) {
             return clients[i].first_name + " " + clients[i].last_name
         }
     }
+    console.log(this.state)
 }
 
 /**
@@ -212,12 +214,22 @@ render() {
             {console.log(this.state.missing)}
             {
                 this.state.missing ? 
-                <Card border="dark" className="mb-4 mt-4">
+                <Card className="mb-4 mt-4">
                     <Card.Title className="card-header border-dark bg-red">
                     <Col>
                         <Row >
                             <Col sm={8} className="title text-light">
-                               {this.state.routeList.description} 
+                               {this.state.routeList.description}
+                            </Col>
+                        </Row>
+                    </Col>
+                </Card.Title>
+
+                <Card.Title className="card-header border-dark mt-4 mb-4 bg-red">
+                    <Col>
+                        <Row >
+                            <Col sm={8} className="title text-light">
+                               {this.state.routeList.message}
                             </Col>
                         </Row>
                     </Col>
