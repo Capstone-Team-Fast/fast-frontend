@@ -5,7 +5,7 @@ const API_URL = 'http://3.144.105.249:8000';
  * This class provides methods to connect to the backend database
  * for the creation, update, retrieval, and deletion of drivers.
  */
-export default class DriverService{
+export default class DriverService {
 
     /**
      * This method connects to the backend database to
@@ -41,6 +41,21 @@ export default class DriverService{
         return axios.delete(url);
     }
 
+    uploadDrivers(drivers){
+        const url = `${API_URL}/api/drivers/`;
+        if (drivers.length > 0) {
+            // console.log('Saving File to ' + url);
+            // console.log(drivers);
+            for (const driver of JSON.parse(drivers)) {
+                axios.post(url, driver).then(response => {
+                    console.log(response.status);
+                    console.log(response.data);
+                });
+            }
+        }
+        return;
+    }
+
     /**
      * This method creates a new driver in the backend database.
      * @param {Object} driver A JSON driver object used to create a new driver
@@ -50,7 +65,11 @@ export default class DriverService{
      */
     createDriver(driver){
         const url = `${API_URL}/api/drivers/`;
-        return axios.post(url,driver).then(response => response.data);
+        console.log(driver);
+        return axios.post(url,driver).then(response => {
+            console.log(response.status);
+            console.log(response.data);
+        });
     }
 
     /**

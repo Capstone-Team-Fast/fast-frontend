@@ -261,11 +261,11 @@ render() {
             <Card border="dark" className="mb-4 mt-4">
             <Card.Title className="card-header border-dark bg-grey">
                 <Col>
-                    <Row >
+                    <Row className="d-flex flex-row">
                         <Col sm={8} className="title">
                             {this.getDriverName(r)}
                         </Col>
-                        <Col sm={4}> 
+                        <Col sm={4} className="justify-content-end d-flex flex-row">
                             <Button href={"/routeResults/driverRoute/" 
                                 + r.id + "/" + r.assigned_to} 
                                 target="_blank">Print</Button>
@@ -279,8 +279,8 @@ render() {
                         <tr>
                             <th>Capacity</th>
                             <th>Total Quantity</th>
-                            <th>Total Distance</th>
-                            <th>Total Duration (minutes)</th>
+                            <th>Expected Distance Traveled (in Miles)</th>
+                            <th>Expected Duration (in Minutes)</th>
                             <th>Employee Status</th>
                         </tr>
                     </thead>

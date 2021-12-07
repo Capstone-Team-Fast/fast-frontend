@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom'
-import { Route, Link } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
 //import CustomersList from './example/CustomersList'
 
@@ -13,6 +13,8 @@ import UpdateRecipient from './components/Data/Recipient/UpdateRecipient';
 import ViewRecipient from './components/Data/Recipient/ViewRecipient';
 import ViewDriver from './components/Data/Driver/ViewDriver';
 import Routing from './components/Routing/Routing';
+import UploadDriversList from './components/Data/Driver/UploadDriversList'
+import PreviewDrivers from './components/Data/Driver/PreviewDrivers'
 import RouteResults from './components/Route_Results/RouteResults';
 import DriverRoute from './components/Route_Results/DriverRoute';
 
@@ -36,7 +38,6 @@ const BaseLayout = () => (
 </nav>
 
     <div className="content">
-      
       <Route path="/" exact component={Driver} />
       <br/>
       <Route path="/" exact component={Recipient} />
@@ -49,6 +50,8 @@ const BaseLayout = () => (
       <Route path="/updateRecipient/:id" exact component={UpdateRecipient} />
       <Route path="/recipientDetail/:id" exact component={ViewRecipient} />
       <Route path="/driverDetail/:id" exact component={ViewDriver} />
+      <Route path="/uploadDriversList" exact component={UploadDriversList}/>
+      <Route path="/previewDrivers" exact component={PreviewDrivers}/>
     </div>
   </div>
   

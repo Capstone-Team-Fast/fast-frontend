@@ -7,6 +7,7 @@ import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import RecipientService from '../../../services/RecipientService';
+import Link from 'react-router-dom/Link';
 
 /**
  * This component is used to add individual recipients to the database.
@@ -168,7 +169,7 @@ render() {
 
     return (
         <Container>
-            <h1>Add a New Recipient</h1>
+            <h1 className="h2">Recipient's Details</h1>
             <Form onSubmit={this.handleSubmit}>
                 <Row className="mb-3">
                     <Form.Group as={Col}>
@@ -253,11 +254,14 @@ render() {
                     <Row><Form.Label>Languages</Form.Label></Row>
                         { this.languages.map( l => 
                             <Form.Check type="checkbox" inline label={l} id={l}
-                                name="language" onChange={this.handleLanguageChange} />
+                                name="language" onChange={this.handleLanguageChange}  />
                         )}
                 </Form.Group>
 
-                <Button variant="primary" type="submit">Submit</Button>
+                <Button variant="primary" className="mr-4" type="submit">Submit</Button>
+                <Link to="/">
+                    <Button variant="secondary">Cancel</Button>
+                </Link>
             </Form>
         </Container>
         );
