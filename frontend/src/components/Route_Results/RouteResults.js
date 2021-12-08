@@ -9,8 +9,10 @@ import Button from 'react-bootstrap/Button';
 import RouteService from '../../services/RouteService'
 import RecipientService from '../../services/RecipientService'
 import DriverService from '../../services/DriverService'
+import LocationService from '../../services/LocationService'
 
 const  routeService  =  new  RouteService();
+const  locationService  =  new  LocationService();
 const  recipientService  =  new  RecipientService();
 const  driverService  =  new  DriverService();
 
@@ -32,7 +34,8 @@ constructor(props) {
          routeList: {id: id, routes:[], others:[]},
          recipients: [],
          drivers: [],
-         missing: false
+         status: "1",
+         locations: []
      };
 
      this.getRecipientName = this.getRecipientName.bind(this)
@@ -62,15 +65,16 @@ componentDidMount() {
     })
 
     routeService.getRouteList(this.state.routeList.id).then(result => {
-        console.log(this.state.routeList)
-        let missing = false 
-        if (result.solver_status !== "1") {
-            missing = true
-        }
         this.setState({
             routeList: result,        
-            missing: missing
+            status: result.solver_status
         })
+    
+    locationService.getLocations().then(result => {
+        this.setState({
+            locations: result,
+        })
+    })
     })
 }
 
@@ -87,7 +91,6 @@ getRecipientName(recipient) {
             return clients[i].first_name + " " + clients[i].last_name
         }
     }
-    console.log(this.state)
 }
 
 /**
@@ -113,11 +116,19 @@ getRecipientName(recipient) {
  */
  getMissingAddress(id) {
     let clients = this.state.recipients
+    let addresses = this.state.locations 
     for (let i = 0; i < clients.length; i++) {
         if (clients[i].id === id) {
             let location = clients[i].location
             let address = location.address + " " + location.city 
             + " " + location.state + " " + location.zipcode
+            return address
+        }
+    }
+    for (let i = 0; i < addresses.length; i++) {
+        if (addresses[i].id === id) {
+            let address = addresses[i].address + " " + addresses[i].city 
+            + " " + addresses[i].state + " " + addresses[i].zipcode
             return address
         }
     }
@@ -137,7 +148,6 @@ getMissingPhone(id) {
             return clients[i].phone
         }
     }
-
 }
 
 /**
@@ -211,35 +221,26 @@ getEmployeeStatus(route) {
 render() {
     return (
         <Container>
-            {console.log(this.state.missing)}
             {
-                this.state.missing ? 
+                this.state.status !== "1" ? 
                 <Card className="mb-4 mt-4">
                     <Card.Title className="card-header border-dark bg-red">
-                    <Col>
-                        <Row >
-                            <Col sm={8} className="title text-light">
-                               {this.state.routeList.description}
-                            </Col>
-                        </Row>
-                    </Col>
-                </Card.Title>
+                        <Col>
+                            <Row >
+                                <Col sm={8} className="title text-light">
+                                    {this.state.routeList.description}
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Card.Title>
 
-                <Card.Title className="card-header border-dark mt-4 mb-4 bg-red">
-                    <Col>
-                        <Row >
-                            <Col sm={8} className="title text-light">
-                               {this.state.routeList.message}
-                            </Col>
-                        </Row>
-                    </Col>
-                </Card.Title>
 
+                
                     <Card.Title className="card-header border-dark bg-grey">
                         <Col>
                             <Row >
                                 <Col sm={8} className="title">
-                                   Unassigned Clients 
+                                   Unassigned Locations 
                                 </Col>
                             </Row>
                         </Col>
@@ -256,7 +257,7 @@ render() {
                         )}
                     </Table>
                     </Card.Body>
-                </Card> 
+                    </Card>                    
                 :
                 <Card border="dark" className="mb-4 mt-4">
                 <Card.Title className="card-header border-dark bg-green">
@@ -327,7 +328,7 @@ render() {
                 {r.itinerary.map( l =>                     
                         <tr>
                             <td>{this.getRecipientName(l)}</td>
-                            <td>{l.address.address}</td>
+                            <td>{l.address.address + " " + l.address.room_number}</td>
                             <td>{l.address.city}</td>
                             <td>{l.address.state}</td>
                             <td>{l.address.zipcode}</td>
