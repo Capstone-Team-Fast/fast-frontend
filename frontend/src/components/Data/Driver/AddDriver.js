@@ -8,6 +8,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import PhoneInput from 'react-phone-number-input'
 import DriverService from '../../../services/DriverService';
+import Link from 'react-router-dom/Link';
 
 /**
  * This component is used to add individual drivers to the database.
@@ -21,14 +22,15 @@ class  AddDriver  extends  Component {
  */
 constructor(props) {
     super(props);
-    this.state = {'user': '', 'first_name': '', 'last_name': '', 
-                    'phone': '', 'availability': {'sunday': false,
-                    'monday': false, 'tuesday': false, 'wednesday': false, 
-                    'thursday': false, 'friday': false, 'saturday': false}, 
-                    'employee_status': 'Employee', 'capacity': '', 'languages': []
-                };
+    this.state = {
+        'user': '', 'first_name': '', 'last_name': '', 
+        'phone': '', 'availability': {'sunday': false,
+        'monday': false, 'tuesday': false, 'wednesday': false, 
+        'thursday': false, 'friday': false, 'saturday': false}, 
+        'employee_status': '', 'capacity': '', 'languages': []
+    };
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
-                        'Hindi', 'Russian', 'Portugese', 'Other'];
+                        'Hindi', 'Russian', 'Portuguese', 'Other'];
     this.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 
                     'Friday', 'Saturday']
     
@@ -145,7 +147,7 @@ handleChange(event) {
 handleSubmit = (event) => {
     event.preventDefault();
     this.driverService.createDriver(this.state);
-    this.setState({redirect: "/"});
+    // this.setState({redirect: "/"});
 }
 
 /**
@@ -159,7 +161,7 @@ render() {
 
     return (
         <Container>
-            <h1>Add a New Driver</h1>
+            <h1 className="h2">Driver's Details</h1>
             <Form onSubmit={this.handleSubmit}>
                 <Row className="mb-3">
                     <Form.Group as={Col}>
@@ -216,7 +218,10 @@ render() {
                         )}
                 </Form.Group>
 
-                <Button variant="primary" type="submit">Submit</Button>
+                <Button variant="primary" className="mr-4" type="submit">Submit</Button>
+                <Link to="/">
+                    <Button variant="secondary">Cancel</Button>
+                </Link>
             </Form>
         </Container>
         );

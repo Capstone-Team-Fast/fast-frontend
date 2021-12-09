@@ -1,4 +1,6 @@
 import  React, { Component } from  'react';
+import { Redirect } from 'react-router';
+
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -29,7 +31,7 @@ constructor(props) {
                     'employee_status': '', 'capacity': '', 'languages': []
                 };
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
-                        'Hindi', 'Russian', 'Portugese', 'Other'];
+                        'Hindi', 'Russian', 'Portuguese', 'Other'];
     this.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 
                     'Friday', 'Saturday']
     
@@ -225,7 +227,7 @@ checkLanguage(language) {
 render() {
     return (
         <Container>
-            <h1>Update Driver Data</h1>
+            <h1 className="h2">Update Driver Data</h1>
             <Form onSubmit={this.handleSubmit}>
                 <Row className="mb-3">
                     <Form.Group as={Col}>
@@ -287,7 +289,7 @@ render() {
                 <Button variant="primary" className="mr-4" 
                     onClick={this.handleSubmit}>Submit</Button>
                 <Link to="/">
-                    <Button variant="primary">Return</Button>
+                    <Button variant="secondary">Return</Button>
                 </Link>
                 {this.state.saved ?
                     <Row className='text-success h4 mt-2 mb-4'>Driver Updated!</Row> :

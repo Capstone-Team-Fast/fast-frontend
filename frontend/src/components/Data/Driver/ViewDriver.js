@@ -93,9 +93,9 @@ render() {
         <Container className="card mt-2">
             <Row className="card-header">
                 <Col>
-                    <Row>
-                        <Col sm={10} className="h2">Driver Detail</Col>
-                        <Col sm={2}> 
+                    <Row className="d-flex flex-row">
+                        <Col sm={8} className="h2">Driver Detail</Col>
+                        <Col sm={4} className="justify-content-end btn-sm d-flex flex-row">
                             <Button href="/">Return</Button>
                         </Col>
                     </Row>
@@ -133,7 +133,7 @@ render() {
                     <thead>
                         <tr>
                             {this.days.map(d => 
-                                <td>{d}</td>)}
+                                <th>{d}</th>)}
                         </tr>
                     </thead>
                     <tbody>

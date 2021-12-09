@@ -42,6 +42,18 @@ export default class RecipientService{
         return axios.delete(url);
     }
 
+    uploadRecipients(recipients){
+        const url = `${API_URL}/api/clients/`;
+        if (recipients.length > 0) {
+            console.log('Saving File to ' + url);
+            console.log(recipients);
+            for (const recipient of JSON.parse(recipients)) {
+                axios.post(url, recipient).then(response => response.data);
+            }
+            return;
+        }
+    }
+
     /**
      * This method creates a new recipient in the backend database.
      * @param {Object} recipient A JSON driver object used to create a new

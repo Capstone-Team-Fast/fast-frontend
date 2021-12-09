@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import RecipientService from '../../../services/RecipientService';
-import Link from 'react-router-dom/Link'
+import Link from 'react-router-dom/Link';
 
 /**
  * This component is used to update individual recipient information stored 
@@ -29,7 +29,7 @@ constructor(props) {
                 };
     this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
     this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
-                        'Hindi', 'Russian', 'Portugese', 'Other'];
+                        'Hindi', 'Russian', 'Portuguese', 'Other'];
     
     this.recipientService = new RecipientService();
     this.handleChange = this.handleChange.bind(this);
@@ -219,7 +219,7 @@ getCenter() {
 render() {
     return (
         <Container>
-            <h1>Update Recipient Data</h1>
+            <h1 className="h2">Update Recipient Data</h1>
             <Form onSubmit={this.handleSubmit}>
                 <Row className="mb-3">
                     <Form.Group as={Col}>
@@ -318,9 +318,10 @@ render() {
                 </Row>
 
                 <Button variant="primary" className="mr-4" 
-                    onClick={this.handleSubmit}>Submit</Button>
+                    onClick={this.handleSubmit}>Submit
+                </Button>
                 <Link to="/">
-                    <Button variant="primary">Return</Button>
+                    <Button variant="secondary">Return</Button>
                 </Link>
                 {this.state.saved ?
                     <Row className='text-success h4 mb-4 mt-2'>Recipient Updated!</Row> :

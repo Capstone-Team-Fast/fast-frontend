@@ -69,11 +69,13 @@
                 let address = item.location.address.toLowerCase()
                 let city = item.location.city.toLowerCase() 
                 let zip = item.location.zipcode.toString()
+                let isCenter = item.location.is_center
                 const filter = event.target.value.toLowerCase();
-                return recipientId.includes(filter) | fullName.includes(filter) 
+                return (recipientId.includes(filter) | fullName.includes(filter) 
                         | formalName.includes(filter) | phone.includes(filter) 
                         | address.includes(filter) 
-                        | city.includes(filter) | zip.includes(filter);
+                        | city.includes(filter) | zip.includes(filter)) && 
+                        !(isCenter);
             });
         }
         else {
