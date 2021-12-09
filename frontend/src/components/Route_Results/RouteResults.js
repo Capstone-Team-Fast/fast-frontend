@@ -12,7 +12,6 @@ import DriverService from '../../services/DriverService'
 import LocationService from '../../services/LocationService'
 
 const  routeService  =  new  RouteService();
-const  locationService  =  new  LocationService();
 const  recipientService  =  new  RecipientService();
 const  driverService  =  new  DriverService();
 
@@ -35,7 +34,6 @@ constructor(props) {
          recipients: [],
          drivers: [],
          status: "1",
-         locations: []
      };
 
      this.getRecipientName = this.getRecipientName.bind(this)
@@ -65,16 +63,12 @@ componentDidMount() {
     })
 
     routeService.getRouteList(this.state.routeList.id).then(result => {
+        console.log(result)
         this.setState({
             routeList: result,        
             status: result.solver_status
         })
     
-    locationService.getLocations().then(result => {
-        this.setState({
-            locations: result,
-        })
-    })
     })
 }
 
@@ -116,19 +110,12 @@ getRecipientName(recipient) {
  */
  getMissingAddress(id) {
     let clients = this.state.recipients
-    let addresses = this.state.locations 
+    
     for (let i = 0; i < clients.length; i++) {
         if (clients[i].id === id) {
             let location = clients[i].location
             let address = location.address + " " + location.city 
             + " " + location.state + " " + location.zipcode
-            return address
-        }
-    }
-    for (let i = 0; i < addresses.length; i++) {
-        if (addresses[i].id === id) {
-            let address = addresses[i].address + " " + addresses[i].city 
-            + " " + addresses[i].state + " " + addresses[i].zipcode
             return address
         }
     }
