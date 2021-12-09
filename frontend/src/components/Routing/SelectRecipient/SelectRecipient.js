@@ -18,7 +18,8 @@ class  SelectRecipient  extends  Component {
 constructor(props) {
     super(props);
     this.state  = {
-        selectedNumber: 0
+        selectedNumber: 0,
+        selectedValues: []
     };
 
     this.onSelect  =  this.onSelect.bind(this);
@@ -35,26 +36,28 @@ componentDidMount() {
     })
 }
 
-getEventValues(event) {
+getEventValues(event, select) {
     var  self  =  this;
     return event[self.state.selectedNumber].id;
-    
+
 }
 
 onSelect(event){
-    var self = this;
-    let id = this.getEventValues(event);
-    self.setState({selectedNumber: (self.state.selectedNumber + 1) });
-    //passing driver id to parent component in Routing.js
-    self.props.parentCallback(id, false);
+    // var self = this;
+    // let id = this.getEventValues(event, true);
+    // self.setState({selectedNumber: (self.state.selectedNumber + 1) });
+    // //passing driver id to parent component in Routing.js
+    // self.props.parentCallback(id, false);
 }
 
 onDeselect(event){
-    var self = this;
-    let id = self.getEventValues(event);
-    self.setState({selectedNumber: (self.state.selectedNumber - 1) });
-    //passing driver id to parent component in Routing.js
-    self.props.parentCallback(id, true);
+    // var self = this;
+  
+    // let id = self.getEventValues(event, false);
+    // //self.setState({selectedNumber: (self.state.selectedNumber - 1) });
+    
+    // //passing driver id to parent component in Routing.js
+    // self.props.parentCallback(id, true);
 }
 
 
@@ -70,7 +73,7 @@ render() {
                             <Form>
                                 <Multiselect
                                     options={this.state.recipients} // Options to display in the dropdown
-                                    // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
+                                    selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
                                     onSelect={this.onSelect} // Function will trigger on select event
                                     onRemove={this.onDeselect} // Function will trigger on remove event
                                     displayValue="display_info"
