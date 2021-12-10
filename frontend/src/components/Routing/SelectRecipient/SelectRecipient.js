@@ -43,11 +43,11 @@ getEventValues(event, select) {
 }
 
 onSelect(event){
-    // var self = this;
-    // let id = this.getEventValues(event, true);
+    var self = this;
+    let id = this.getEventValues(event, true);
     // self.setState({selectedNumber: (self.state.selectedNumber + 1) });
     // //passing driver id to parent component in Routing.js
-    // self.props.parentCallback(id, false);
+    self.props.parentCallback(id, false);
 }
 
 onDeselect(event){
@@ -57,7 +57,7 @@ onDeselect(event){
     // //self.setState({selectedNumber: (self.state.selectedNumber - 1) });
     
     // //passing driver id to parent component in Routing.js
-    // self.props.parentCallback(id, true);
+    self.props.parentCallback(id, true);
 }
 
 
