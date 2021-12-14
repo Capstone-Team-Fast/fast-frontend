@@ -74,8 +74,7 @@
                 return (recipientId.includes(filter) | fullName.includes(filter) 
                         | formalName.includes(filter) | phone.includes(filter) 
                         | address.includes(filter) 
-                        | city.includes(filter) | zip.includes(filter)) && 
-                        !(isCenter);
+                        | city.includes(filter) | zip.includes(filter));
             });
         }
         else {
