@@ -31,17 +31,7 @@ constructor(props) {
           client_ids:[],
           delivery_limit: '',
           departure: {
-            location: {
-                  "id": 34,
-                  "address": "5545 Center St",
-                  "room_number": null,
-                  "city": "Omaha",
-                  "state": "NE",
-                  "zipcode": 68106,
-                  "latitude": null,
-                  "longitude": null,
-                  "is_center": true
-            },
+            location: {},
           },
           duration_limit: '',
          }
@@ -60,8 +50,22 @@ constructor(props) {
 componentDidMount() {
   var  self  =  this;
   locationService.getLocations().then(function (result) {
-      self.setState({ locations:  result});
-  });
+      let defaultLocation = {}
+      for (let i = 0; i < result.length; i++) {
+        if (result[i].is_center) {
+          defaultLocation = result[i];
+          break;
+        }
+      }
+      
+      self.setState(prevState => ({ 
+          locations:  result,
+          route: {                // object that we want to update
+          ...prevState.route,     // keep all other key-value pairs
+          departure: {
+            location: defaultLocation
+        }}})              
+  )});
 }
 
 handleDriverCallback = (id, deselect) =>{
@@ -158,7 +162,6 @@ handleDuration(event){
 }
 
 handleDeparture(event){
-  console.log(event.target);
   let [value, name] = this.getEventValues(event);
 
   let full_location = this.state.locations.filter(function(l){
@@ -195,7 +198,6 @@ getCenter(location) {
 
 handleSubmit = (event) => {
   event.preventDefault();
-  console.log(this.state.route);
   routeService.createRoute(this.state.route).then(result => {
     let redirect = "/routeResults/" + result.id 
     window.open(redirect, "_blank")
@@ -255,4 +257,3 @@ render() {
   }
 }
 export  default  Routing;
-    
