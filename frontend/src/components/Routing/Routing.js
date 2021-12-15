@@ -52,7 +52,8 @@ componentDidMount() {
   locationService.getLocations().then(function (result) {
       let defaultLocation = {}
       for (let i = 0; i < result.length; i++) {
-        if (result[i].is_center) {
+        // Set ISC as default address
+        if (result[i].is_center && result[i].address.includes("5545")) {
           defaultLocation = result[i];
           break;
         }
