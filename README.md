@@ -20,6 +20,9 @@ Our original goal for milestone 1 was to complete the Data component page. That 
 - Deselect button is not working on Routing page
 - Pressing enter while selecting user on Routing page causes page to submit
 
+### Next features:
+- Add a confirmation dialog when deleting a data entry
+
 #Installation
 
 - Install latest version of [Nodejs](https://nodejs.org/en/download/) and [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
