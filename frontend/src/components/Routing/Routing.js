@@ -69,8 +69,7 @@ componentDidMount() {
   )});
 }
 
-handleDriverCallback = (event, deselect) =>{
-  if (deselect){
+handleDriverCallback = (event) =>{
     const newDrivers = event.map( e => e.id)
     this.setState(prevState => ({
           route: {               // object that we want to update
@@ -78,57 +77,16 @@ handleDriverCallback = (event, deselect) =>{
           driver_ids : newDrivers
           }}));
           console.log(this.state)
-  }
-  else{
-    if (this.state.route.driver_ids != null)
-    {
-      const newDrivers = event.map( e => e.id);
-
-      this.setState(prevState => ({
-        route : {
-        ...prevState.route,
-        driver_ids: newDrivers}
-      }));
-    }
-    else{
-      this.setState(prevState => ({
-        route : {
-        ...prevState.route,
-        driver_ids: event[event.length - 1].id}
-      }));
-    }
-    
-  }
 }
 
-handleRecipientCallback = (event, deselect) =>{
+handleRecipientCallback = (event) =>{
   const newRecipients = event.map(e => e.id)
-  if (deselect){
     this.setState(prevState => ({
       route: {               // object that we want to update
       ...prevState.route,    // keep all other key-value pairs
       client_ids : newRecipients
       }}));
-      console.log(this.state)
-  }
-  else{
-    if(this.state.route.client_ids != null){
-        const newRecipients = event.map(e => e.id)
-        this.setState(prevState => ({
-          route : {
-          ...prevState.route,
-          client_ids: newRecipients}
-        }));
-    }
-    else{
-      this.setState(prevState => ({
-        route : {
-        ...prevState.route,
-        client_ids: event[event.length - 1].id}
-      }));
-    }
-    
-  }
+      console.log(this.state)  
 }
 
 /**

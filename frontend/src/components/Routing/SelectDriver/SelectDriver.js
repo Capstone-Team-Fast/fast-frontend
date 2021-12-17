@@ -34,12 +34,12 @@ componentDidMount() {
 
 onSelect(event){
     //passing driver id to parent component in Routing.js
-    this.props.parentCallback(event, false);
+    this.props.parentCallback(event);
 }
 
 onDeselect(event){
     //passing driver id to parent component in Routing.js
-    this.props.parentCallback(event, true);
+    this.props.parentCallback(event);
 }
 
 render() {
