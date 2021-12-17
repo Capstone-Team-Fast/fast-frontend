@@ -69,19 +69,21 @@ componentDidMount() {
   )});
 }
 
-handleDriverCallback = (id, deselect) =>{
+handleDriverCallback = (event, deselect) =>{
   if (deselect){
+    const newDrivers = event.map( e => e.id)
     this.setState(prevState => ({
           route: {               // object that we want to update
           ...prevState.route,    // keep all other key-value pairs
-          driver_ids : this.state.route.driver_ids.filter(function(d) { 
-            return d !== id; 
-          })}}));
+          driver_ids : newDrivers
+          }}));
+          console.log(this.state)
   }
   else{
     if (this.state.route.driver_ids != null)
     {
-      const newDrivers = this.state.route.driver_ids.concat(id);
+      const newDrivers = event.map( e => e.id);
+
       this.setState(prevState => ({
         route : {
         ...prevState.route,
@@ -92,25 +94,26 @@ handleDriverCallback = (id, deselect) =>{
       this.setState(prevState => ({
         route : {
         ...prevState.route,
-        driver_ids: id}
+        driver_ids: event[event.length - 1].id}
       }));
     }
     
   }
 }
 
-handleRecipientCallback = (id, deselect) =>{
+handleRecipientCallback = (event, deselect) =>{
+  const newRecipients = event.map(e => e.id)
   if (deselect){
     this.setState(prevState => ({
       route: {               // object that we want to update
       ...prevState.route,    // keep all other key-value pairs
-      client_ids : this.state.route.client_ids.filter(function(r) { 
-        return r !== id; 
-      })}}));
+      client_ids : newRecipients
+      }}));
+      console.log(this.state)
   }
   else{
     if(this.state.route.client_ids != null){
-        const newRecipients = this.state.route.client_ids.concat(id);
+        const newRecipients = event.map(e => e.id)
         this.setState(prevState => ({
           route : {
           ...prevState.route,
@@ -121,7 +124,7 @@ handleRecipientCallback = (id, deselect) =>{
       this.setState(prevState => ({
         route : {
         ...prevState.route,
-        client_ids: id}
+        client_ids: event[event.length - 1].id}
       }));
     }
     
