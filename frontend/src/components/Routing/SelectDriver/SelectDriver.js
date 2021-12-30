@@ -6,14 +6,7 @@ import Col from 'react-bootstrap/Col';
 import DriverService from '../../../services/DriverService';
 import Multiselect from 'multiselect-react-dropdown';
 
-
-//import Search from 'react-bootstrap-icons/Search';
-
-
-//import Search from 'react-bootstrap-icons';
-
 const  driverService  =  new  DriverService();
-
 class  SelectDriver  extends  Component {
 
 constructor(props) {
@@ -30,7 +23,7 @@ constructor(props) {
 componentDidMount() {
     var  self  =  this;
     driverService.getDrivers().then(function (result) {
-        result.map(d => d.full_name = d.first_name + " " + d.last_name)
+        result.map(d => d.full_name = `${d.first_name} ${d.last_name} (Capacity: ${d.capacity})`)
         self.setState({ drivers:  result});
     });
 }
@@ -38,7 +31,6 @@ componentDidMount() {
 getEventValues(event) {
     var  self  =  this;
     return event[self.state.selectedNumber].id;
-    
 }
 
 onSelect(event){
@@ -68,6 +60,7 @@ render() {
                         <Col sm={10} class="mt-3">
                             <Row className="mb-3">
                                  <Multiselect
+                                    required
                                     options={this.state.drivers} // Options to display in the dropdown
                                     onSelect={this.onSelect} // Function will trigger on select 
                                     displayValue="full_name" // Property name to display in the dropdown options

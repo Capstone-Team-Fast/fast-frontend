@@ -56,7 +56,8 @@ componentDidMount() {
 showLanguages() {
     let languages = []
     this.state.languages.map(l => {
-        languages.push(l.name)});
+        languages.push(l.name)
+    });
     return languages
 }
 

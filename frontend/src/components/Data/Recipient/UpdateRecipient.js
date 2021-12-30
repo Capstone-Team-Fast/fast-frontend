@@ -176,7 +176,7 @@ handleChange(event) {
  handleSubmit = (event) => {
     event.preventDefault();
     this.recipientService.updateRecipient(this.state).then(result => {
-            if (result.data.id == this.state.id) {
+            if (result.data.id === this.state.id) {
                 this.setState({
                     saved: true 
                 })

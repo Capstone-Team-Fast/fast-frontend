@@ -9,6 +9,9 @@
 /.pnp
 .pnp.js
 
+# documentation
+.././doxygen_config
+
 # testing
 /coverage
 

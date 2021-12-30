@@ -10,13 +10,6 @@ import SelectRecipient from './SelectRecipient/SelectRecipient.js';
 import LocationService from '../../services/LocationService'
 import RouteService from '../../services/RouteService'
 
-
-
-//import Search from 'react-bootstrap-icons/Search';
-
-
-//import Search from 'react-bootstrap-icons';
-
 const  locationService  =  new  LocationService();
 const  routeService  =  new  RouteService();
 
@@ -166,7 +159,7 @@ handleDeparture(event){
   let [value, name] = this.getEventValues(event);
 
   let full_location = this.state.locations.filter(function(l){
-    return l.address == value;
+    return l.address === value;
   });
 
   this.setState(prevState => ({
@@ -224,7 +217,7 @@ render() {
         <Form.Group as={Col} controlId="formGridDeparture">
           <Form.Label className="title">Departure Location</Form.Label>
           <Form.Select value={this.state.route.departure.location.address} 
-            onChange={this.handleDeparture} name="departure_location">
+            onChange={this.handleDeparture} name="departure_location" required>
           { this.state.locations.map( l => {
                   if (this.getCenter(l)) {
                     return <option>{this.getCenter(l)}</option>
@@ -239,22 +232,13 @@ render() {
         </Row>   
           
         <br/>
-        <SelectDriver parentCallback = {this.handleDriverCallback}></SelectDriver>
-        <SelectRecipient parentCallback = {this.handleRecipientCallback}></SelectRecipient>
+        <SelectDriver parentCallback = {this.handleDriverCallback}/>
+        <SelectRecipient parentCallback = {this.handleRecipientCallback} />
        
-        
-        <Button className="mr-2 mt-4 btn" variant="primary" type="submit" >Create Route</Button>
+        <Button className="mr-2 mt-4 btn" variant="primary" onClick={this.handleSubmit}>Create Route</Button>
         </Form> 
       </Container>
-    
-    
-   
-
     );
-
-
-      
-        
   }
 }
 export  default  Routing;

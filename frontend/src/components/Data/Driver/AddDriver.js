@@ -6,7 +6,6 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import PhoneInput from 'react-phone-number-input'
 import DriverService from '../../../services/DriverService';
 import Link from 'react-router-dom/Link';
 
@@ -146,7 +145,7 @@ handleChange(event) {
  */
 handleSubmit = (event) => {
     event.preventDefault();
-    this.driverService.createDriver(this.state).then( result => {
+    this.driverService.createDriver(this.state).then( () => {
         this.setState({redirect: "/"});
     });
 }
