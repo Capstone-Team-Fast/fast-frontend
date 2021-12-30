@@ -62,63 +62,24 @@ componentDidMount() {
   )});
 }
 
-handleDriverCallback = (id, deselect) =>{
-  if (deselect){
+handleDriverCallback = (event) =>{
+    const newDrivers = event.map( e => e.id)
     this.setState(prevState => ({
           route: {               // object that we want to update
           ...prevState.route,    // keep all other key-value pairs
-          driver_ids : this.state.route.driver_ids.filter(function(d) { 
-            return d !== id; 
-          })}}));
-  }
-  else{
-    if (this.state.route.driver_ids != null)
-    {
-      const newDrivers = this.state.route.driver_ids.concat(id);
-      this.setState(prevState => ({
-        route : {
-        ...prevState.route,
-        driver_ids: newDrivers}
-      }));
-    }
-    else{
-      this.setState(prevState => ({
-        route : {
-        ...prevState.route,
-        driver_ids: id}
-      }));
-    }
-    
-  }
+          driver_ids : newDrivers
+          }}));
+          console.log(this.state)
 }
 
-handleRecipientCallback = (id, deselect) =>{
-  if (deselect){
+handleRecipientCallback = (event) =>{
+  const newRecipients = event.map(e => e.id)
     this.setState(prevState => ({
       route: {               // object that we want to update
       ...prevState.route,    // keep all other key-value pairs
-      client_ids : this.state.route.client_ids.filter(function(r) { 
-        return r !== id; 
-      })}}));
-  }
-  else{
-    if(this.state.route.client_ids != null){
-        const newRecipients = this.state.route.client_ids.concat(id);
-        this.setState(prevState => ({
-          route : {
-          ...prevState.route,
-          client_ids: newRecipients}
-        }));
-    }
-    else{
-      this.setState(prevState => ({
-        route : {
-        ...prevState.route,
-        client_ids: id}
-      }));
-    }
-    
-  }
+      client_ids : newRecipients
+      }}));
+      console.log(this.state)  
 }
 
 /**

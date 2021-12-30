@@ -11,13 +11,10 @@ class  SelectDriver  extends  Component {
 
 constructor(props) {
     super(props);
-    this.state  = {
-        selectedNumber: 0
-    };
+    this.state  = { };
 
     this.onSelect  =  this.onSelect.bind(this);
     this.onDeselect  =  this.onDeselect.bind(this);
-    this.getEventValues  =  this.getEventValues.bind(this);
 }
 
 componentDidMount() {
@@ -34,19 +31,13 @@ getEventValues(event) {
 }
 
 onSelect(event){
-    var self = this;
-    let id = this.getEventValues(event);
-    self.setState({selectedNumber: (self.state.selectedNumber + 1) });
     //passing driver id to parent component in Routing.js
-    this.props.parentCallback(id, false);
+    this.props.parentCallback(event);
 }
 
 onDeselect(event){
-    var self = this;
-    let id = this.getEventValues(event);
-    self.setState({selectedNumber: (self.state.selectedNumber - 1) });
     //passing driver id to parent component in Routing.js
-    this.props.parentCallback(id, true);
+    this.props.parentCallback(event);
 }
 
 render() {

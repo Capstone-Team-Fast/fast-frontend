@@ -37,6 +37,7 @@ componentDidMount() {
     var self = this
     recipientService.getRecipient(self.state.id).then(function (result) {
         self.setState(result);
+        console.log(result)
     })  
     
 }
