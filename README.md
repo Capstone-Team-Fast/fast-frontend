@@ -17,8 +17,7 @@ Our original goal for milestone 1 was to complete the Data component page. That 
 
 ## Milestone 5 Release Notes: We have our routing page finished and connected to the backend. Our bulk file upload is also functional.  
 ### Known Issues:
-- Deselect button is not working on Routing page
-- Pressing enter while selecting user on Routing page causes page to submit
+- None
 
 ### Next features:
 - Add a confirmation dialog when deleting a data entry
