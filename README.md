@@ -8,14 +8,23 @@ All of our frontend pages are still in development. Currently, we have the file 
 
 Our original goal for milestone 1 was to complete the Data component page. That goal turned out to be impractical as our frontend team scrambled to implement a tool (REACT) that they had just learned. To stay productive, our frontend team decided to implement an example component which is working locally. Our team will reference that example as we create our Data component. We plan to have our Data component complete by 10/10. 
 
-## Milestone 2 Release Notes: All of our frontend pages are still in development. Currently, we have the outline of our Data page started. Our Data page consists of the Driver component and the Recipient component. These components are not interactive yet. Internally, our milestone 2 will be completed on October 31st. By October 31st, we hope to have the Driver and REcipient Components interactive, and the Routing page complete. 
+## Milestone 2 Release Notes: 
 
-## Milestone 3 Release Notes: We have our Data page finished. We just need to test its connection to the backend.  We are behind on our routing page. As we get more people moved to the frontend, that will allow us to pick up the pace on the routing page and our other pages. 
+All of our frontend pages are still in development. Currently, we have the outline of our Data page started. Our Data page consists of the Driver component and the Recipient component. These components are not interactive yet. Internally, our milestone 2 will be completed on October 31st. By October 31st, we hope to have the Driver and REcipient Components interactive, and the Routing page complete. 
+
+## Milestone 3 Release Notes: 
+
+We have our Data page finished. We just need to test its connection to the backend.  We are behind on our routing page. As we get more people moved to the frontend, that will allow us to pick up the pace on the routing page and our other pages. 
 
 
-## Milestone 4 Release Notes: We have our Data page finished and connected to the backend.  We have the frontend of the routing page finished. We need to connect the routing page to the backend.  
+## Milestone 4 Release Notes: 
 
-## Milestone 5 Release Notes: We have our routing page finished and connected to the backend. Our bulk file upload is also functional.  
+We have our Data page finished and connected to the backend.  We have the frontend of the routing page finished. We need to connect the routing page to the backend.  
+
+## Milestone 5 Release Notes: 
+
+We have our routing page finished and connected to the backend. Our bulk file upload is also functional.  
+
 ### Known Issues:
 - None
 
