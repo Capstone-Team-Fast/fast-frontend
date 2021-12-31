@@ -39,8 +39,8 @@ constructor(props) {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getEventValues = this.getEventValues.bind(this);
     this.getEventIDValue = this.getEventIDValue.bind(this);
-    this.checkLanguage = this.checkLanguage.bind(this)
-    this.getCenter = this.getCenter.bind(this)
+    this.checkLanguage = this.checkLanguage.bind(this);
+    this.getCenter = this.getCenter.bind(this);
 }
 
 /**

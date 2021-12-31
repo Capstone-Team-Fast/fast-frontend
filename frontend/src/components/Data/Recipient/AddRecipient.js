@@ -24,7 +24,11 @@ class  AddRecipient  extends  Component {
 constructor(props) {
     super(props);
     this.state = {'user': '', 'first_name': '', 'last_name': '', 'quantity': '', 
+<<<<<<< HEAD
+                    'phone': '', 'languages': [{'name': 'English'}], 'location': { 'is_center': false,
+=======
                     'phone': '', 'languages': [], 'comments': '', 'location': { 'is_center': false,
+>>>>>>> develop
                     'latitude': '','longitude': ''}  
                 };
     this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
