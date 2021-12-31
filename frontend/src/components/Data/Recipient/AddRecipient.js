@@ -39,6 +39,7 @@ constructor(props) {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getEventValues = this.getEventValues.bind(this);
     this.getEventIDValue = this.getEventIDValue.bind(this);
+    this.checkLanguage = this.checkLanguage.bind(this);
 }
 
 /**
@@ -147,6 +148,21 @@ handleChange(event) {
         [name]: value
     });
 }
+
+/**
+ * Method called to prepopulate the language fields of the form based on
+ * whether the language passed as a parameter is stored in the recipient's state.
+ * @param {String} language The name of a language.
+ * @returns True if the language is stored in the current recipient's state, 
+ *          false otherwise.
+ */
+ checkLanguage(language) {
+    for (let i = 0; i < this.state.languages.length; i++) {
+        if (this.state.languages[i].name === language)
+            return true 
+    }
+}
+
 
 /**
  * Event handler that is called upon form submission to create a new 
@@ -266,7 +282,8 @@ render() {
                     <Row><Form.Label>Languages</Form.Label></Row>
                         { this.languages.map( l => 
                             <Form.Check type="checkbox" inline label={l} id={l}
-                                name="language" onChange={this.handleLanguageChange}  />
+                                 name="language" onChange={this.handleLanguageChange}  
+                                 checked={this.checkLanguage(l)} />
                         )}
                 </Form.Group>
 
