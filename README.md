@@ -13,6 +13,15 @@ Our original goal for milestone 1 was to complete the Data component page. That 
 ## Milestone 3 Release Notes: We have our Data page finished. We just need to test its connection to the backend.  We are behind on our routing page. As we get more people moved to the frontend, that will allow us to pick up the pace on the routing page and our other pages. 
 
 
+## Milestone 4 Release Notes: We have our Data page finished and connected to the backend.  We have the frontend of the routing page finished. We need to connect the routing page to the backend.  
+
+## Milestone 5 Release Notes: We have our routing page finished and connected to the backend. Our bulk file upload is also functional.  
+### Known Issues:
+- None
+
+### Next features:
+- Add a confirmation dialog when deleting a data entry
+
 #Installation
 
 - Install latest version of [Nodejs](https://nodejs.org/en/download/) and [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)

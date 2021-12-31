@@ -9,6 +9,9 @@
 /.pnp
 .pnp.js
 
+# documentation
+.././doxygen_config
+
 # testing
 /coverage
 
@@ -22,6 +25,7 @@
 .env.test.local
 .env.production.local
 ../.idea
+../doxygen_config
 
 
 npm-debug.log*

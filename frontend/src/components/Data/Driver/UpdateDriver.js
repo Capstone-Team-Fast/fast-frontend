@@ -1,5 +1,4 @@
 import  React, { Component } from  'react';
-import { Redirect } from 'react-router';
 
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -182,7 +181,7 @@ handlePhoneChange(event) {
  handleSubmit = (event) => {
     event.preventDefault();
     this.driverService.updateDriver(this.state).then(result => {
-        if (result.data.id == this.state.id) {
+        if (result.data.id === this.state.id) {
             this.setState({
                 saved: true 
             })

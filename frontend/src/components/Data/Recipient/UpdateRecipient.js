@@ -24,7 +24,7 @@ constructor(props) {
     super(props);
     const {id} = props.match.params; 
     this.state = {'id': id, 'first_name': '', 'last_name': '', 'quantity': '', 
-                    'phone': '', 'languages': [], 'location': { 'is_center': false,
+                    'phone': '', 'comments': '', 'languages': [], 'location': { 'is_center': false,
                     'latitude': '','longitude': ''}
                 };
     this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
@@ -176,7 +176,7 @@ handleChange(event) {
  handleSubmit = (event) => {
     event.preventDefault();
     this.recipientService.updateRecipient(this.state).then(result => {
-            if (result.data.id == this.state.id) {
+            if (result.data.id === this.state.id) {
                 this.setState({
                     saved: true 
                 })

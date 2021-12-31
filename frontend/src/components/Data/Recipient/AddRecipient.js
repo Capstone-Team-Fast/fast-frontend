@@ -2,11 +2,13 @@ import  React, { Component } from  'react';
 import { Redirect } from 'react-router';
 
 import Container from 'react-bootstrap/Container';
+import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import RecipientService from '../../../services/RecipientService';
+import FormControl from 'react-bootstrap/FormControl';
 import Link from 'react-router-dom/Link';
 
 /**
@@ -22,7 +24,11 @@ class  AddRecipient  extends  Component {
 constructor(props) {
     super(props);
     this.state = {'user': '', 'first_name': '', 'last_name': '', 'quantity': '', 
+<<<<<<< HEAD
                     'phone': '', 'languages': [{'name': 'English'}], 'location': { 'is_center': false,
+=======
+                    'phone': '', 'languages': [], 'comments': '', 'location': { 'is_center': false,
+>>>>>>> develop
                     'latitude': '','longitude': ''}  
                 };
     this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
@@ -170,8 +176,9 @@ handleChange(event) {
  */
 handleSubmit = (event) => {
     event.preventDefault();
-    this.recipientService.createRecipient(this.state);
-    this.setState({redirect: "/"});
+    this.recipientService.createRecipient(this.state).then( result => {
+        this.setState({redirect: "/"});
+    });
 }
     
 /**
@@ -264,6 +271,15 @@ render() {
                         <Form.Control type="number" onChange={this.handleObjectChange} 
                             required name="location" id="zipcode" min="0"/>
                     </Form.Group>
+                </Row>
+
+                <Row className="mb-3">
+                <InputGroup>
+                    <InputGroup.Text>Comments</InputGroup.Text>
+                    <FormControl as="textarea" aria-label="With textarea" 
+                    value={this.state.comments}
+                                name="comments" onChange={this.handleChange}/>
+                </InputGroup>
                 </Row>
 
                 <Form.Group className="mb-3" id="formGridCheckbox">

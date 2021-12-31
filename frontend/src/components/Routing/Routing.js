@@ -10,13 +10,6 @@ import SelectRecipient from './SelectRecipient/SelectRecipient.js';
 import LocationService from '../../services/LocationService'
 import RouteService from '../../services/RouteService'
 
-
-
-//import Search from 'react-bootstrap-icons/Search';
-
-
-//import Search from 'react-bootstrap-icons';
-
 const  locationService  =  new  LocationService();
 const  routeService  =  new  RouteService();
 
@@ -31,17 +24,7 @@ constructor(props) {
           client_ids:[],
           delivery_limit: '',
           departure: {
-            location: {
-                  "id": 34,
-                  "address": "5545 Center St",
-                  "room_number": null,
-                  "city": "Omaha",
-                  "state": "NE",
-                  "zipcode": 68106,
-                  "latitude": null,
-                  "longitude": null,
-                  "is_center": true
-            },
+            location: {},
           },
           duration_limit: '',
          }
@@ -60,67 +43,43 @@ constructor(props) {
 componentDidMount() {
   var  self  =  this;
   locationService.getLocations().then(function (result) {
-      self.setState({ locations:  result});
-  });
+      let defaultLocation = {}
+      for (let i = 0; i < result.length; i++) {
+        // Set ISC as default address
+        if (result[i].is_center && result[i].address.includes("5545")) {
+          defaultLocation = result[i];
+          break;
+        }
+      }
+      
+      self.setState(prevState => ({ 
+          locations:  result,
+          route: {                // object that we want to update
+          ...prevState.route,     // keep all other key-value pairs
+          departure: {
+            location: defaultLocation
+        }}})              
+  )});
 }
 
-handleDriverCallback = (id, deselect) =>{
-  if (deselect){
+handleDriverCallback = (event) =>{
+    const newDrivers = event.map( e => e.id)
     this.setState(prevState => ({
           route: {               // object that we want to update
           ...prevState.route,    // keep all other key-value pairs
-          driver_ids : this.state.route.driver_ids.filter(function(d) { 
-            return d !== id; 
-          })}}));
-  }
-  else{
-    if (this.state.route.driver_ids != null)
-    {
-      const newDrivers = this.state.route.driver_ids.concat(id);
-      this.setState(prevState => ({
-        route : {
-        ...prevState.route,
-        driver_ids: newDrivers}
-      }));
-    }
-    else{
-      this.setState(prevState => ({
-        route : {
-        ...prevState.route,
-        driver_ids: id}
-      }));
-    }
-    
-  }
+          driver_ids : newDrivers
+          }}));
+          console.log(this.state)
 }
 
-handleRecipientCallback = (id, deselect) =>{
-  if (deselect){
+handleRecipientCallback = (event) =>{
+  const newRecipients = event.map(e => e.id)
     this.setState(prevState => ({
       route: {               // object that we want to update
       ...prevState.route,    // keep all other key-value pairs
-      client_ids : this.state.route.client_ids.filter(function(r) { 
-        return r !== id; 
-      })}}));
-  }
-  else{
-    if(this.state.route.client_ids != null){
-        const newRecipients = this.state.route.client_ids.concat(id);
-        this.setState(prevState => ({
-          route : {
-          ...prevState.route,
-          client_ids: newRecipients}
-        }));
-    }
-    else{
-      this.setState(prevState => ({
-        route : {
-        ...prevState.route,
-        client_ids: id}
-      }));
-    }
-    
-  }
+      client_ids : newRecipients
+      }}));
+      console.log(this.state)  
 }
 
 /**
@@ -158,11 +117,10 @@ handleDuration(event){
 }
 
 handleDeparture(event){
-  console.log(event.target);
   let [value, name] = this.getEventValues(event);
 
   let full_location = this.state.locations.filter(function(l){
-    return l.address == value;
+    return l.address === value;
   });
 
   this.setState(prevState => ({
@@ -195,7 +153,6 @@ getCenter(location) {
 
 handleSubmit = (event) => {
   event.preventDefault();
-  console.log(this.state.route);
   routeService.createRoute(this.state.route).then(result => {
     let redirect = "/routeResults/" + result.id 
     window.open(redirect, "_blank")
@@ -221,7 +178,7 @@ render() {
         <Form.Group as={Col} controlId="formGridDeparture">
           <Form.Label className="title">Departure Location</Form.Label>
           <Form.Select value={this.state.route.departure.location.address} 
-            onChange={this.handleDeparture} name="departure_location">
+            onChange={this.handleDeparture} name="departure_location" required>
           { this.state.locations.map( l => {
                   if (this.getCenter(l)) {
                     return <option>{this.getCenter(l)}</option>
@@ -236,23 +193,13 @@ render() {
         </Row>   
           
         <br/>
-        <SelectDriver parentCallback = {this.handleDriverCallback}></SelectDriver>
-        <SelectRecipient parentCallback = {this.handleRecipientCallback}></SelectRecipient>
+        <SelectDriver parentCallback = {this.handleDriverCallback}/>
+        <SelectRecipient parentCallback = {this.handleRecipientCallback} />
        
-        
-        <Button className="mr-2 mt-4 btn" variant="primary" type="submit" >Create Route</Button>
+        <Button className="mr-2 mt-4 btn" variant="primary" onClick={this.handleSubmit}>Create Route</Button>
         </Form> 
       </Container>
-    
-    
-   
-
     );
-
-
-      
-        
   }
 }
 export  default  Routing;
-    

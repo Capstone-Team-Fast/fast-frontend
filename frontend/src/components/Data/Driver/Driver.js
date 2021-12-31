@@ -106,7 +106,7 @@ get_phone(phone) {
     if (phone.length > 0) {
         phone = phone.trim();
         phone = phone.replaceAll(/['\D']/g, '');
-        if (phone.length == 10) {
+        if (phone.length === 10) {
             phone = phone.slice(0, 3) + '-' + phone.slice(3, 6) + '-' + phone.slice(6);
         } else {
             phone = '';
