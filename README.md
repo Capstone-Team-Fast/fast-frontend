@@ -29,7 +29,7 @@ We have our routing page finished and connected to the backend. Our bulk file up
 - None
 
 ### Next features:
-- Add a confirmation dialog when deleting a data entry
+- Make data fields sortable.
 
 #Installation
 
