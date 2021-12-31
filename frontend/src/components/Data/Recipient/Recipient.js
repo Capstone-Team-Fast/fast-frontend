@@ -11,6 +11,7 @@ import Button from 'react-bootstrap/Button';
 import RecipientService from '../../../services/RecipientService';
 import SearchService from '../../../services/SearchService';
 import FileService from '../../../services/FileService';
+import { DialogBox } from '../../Utils/DialogBox';
 
 const recipientService = new RecipientService();
 const searchService = new SearchService();
@@ -34,23 +35,28 @@ class Recipient extends Component {
             recipients: [],
             filtered: [], 
             fileContent: [],
-            new_recipients: []
+            new_recipients: [],
+            show: false,
+            recipientToDelete: {}
         };
         this.fileInput = React.createRef();
         this.handleRecipientDelete = this.handleRecipientDelete.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.readFile = this.readFile.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleSave = this.handleSave.bind(this);
+        this.handleShow = this.handleShow.bind(this);
     }
 
     /**
- * Life cycle hook that is called after the component is first rendered.
- */
-componentDidMount() {
-    var  self  =  this;
-    recipientService.getRecipients().then(function (result) {
-        self.setState({ recipients:  result, filtered: result});
-    });
-}
+     * Life cycle hook that is called after the component is first rendered.
+     */
+    componentDidMount() {
+        var  self  =  this;
+        recipientService.getRecipients().then(function (result) {
+            self.setState({ recipients:  result, filtered: result});
+        });
+    }
 
     refreshRecipients(){
         var  self  =  this;
@@ -59,23 +65,36 @@ componentDidMount() {
             });
     }
 
+    handleClose() {
+        this.setState({show: false});
+    }
+    
+    handleSave() {
+        this.handleClose();
+        this.handleRecipientDelete(this.state.recipientToDelete);
+        this.setState({recipientToDelete: {}});
+    }
+    
+    handleShow(e, d) {
+        e.preventDefault();
+        this.setState({show: true, recipientToDelete: d});
+    }
+
 /**
  * Event handler used to delete a recipient from the database when the 
  * user clicks on the delete button.
- * @param {Object} e The event triggered when the user clicks on the 
- * q                 Delete button.
  * @param {Object} r The recipient object to be deleted.
  */
-    handleRecipientDelete(e, r){
-        var  self  =  this;
-        recipientService.deleteRecipient(r).then(()=>{
-            var  newArr  =  self.state.recipients.filter(function(obj) {
-                return  obj.id  !==  r.id;
-            });
-
-            self.setState({recipients:  newArr, filtered: newArr})
+handleRecipientDelete(r){
+    var  self  =  this;
+    recipientService.deleteRecipient(r).then(()=>{
+        var  newArr  =  self.state.recipients.filter(function(obj) {
+            return  obj.id  !==  r.id;
         });
-    }
+
+        self.setState({recipients:  newArr, filtered: newArr})
+    });
+}
 
 /**
  * Event handler method called when the user enters a value into the 
@@ -241,7 +260,17 @@ componentDidMount() {
                                 <td>
                                     <Button className="mr-2" href={"/recipientDetail/" + r.id}>View</Button>
                                     <Button className="mr-2" href={"/updateRecipient/" + r.id}>Edit</Button>
-                                    <Button  onClick={(e)=>  this.handleRecipientDelete(e,r) }> Delete</Button>
+                                    <Button  onClick={(e) => this.handleShow(e, r)}> Delete</Button>
+                                    <DialogBox 
+                                        show={this.state.show} 
+                                        modalTitle='Confirm Deletion'
+                                        mainMessageText='Are you sure you want to delete this entry?'
+                                        handleClose={this.handleClose}
+                                        handleSave={this.handleSave}
+                                        closeText='Cancel'
+                                        saveText='Delete'
+                                        buttonType='danger'
+                                    />
                                 </td>
                             </tr>)}
                         </tbody>

@@ -11,6 +11,7 @@ import Form from 'react-bootstrap/Form';
 import DriverService from '../../../services/DriverService';
 import SearchService from '../../../services/SearchService';
 import FileService from '../../../services/FileService';
+import { DialogBox } from '../../Utils/DialogBox';
 
 const driverService = new DriverService();
 const searchService = new SearchService();
@@ -34,13 +35,18 @@ constructor(props) {
         drivers: [],
         filtered: [],
         fileContent: [],
-        new_drivers: []
+        new_drivers: [],
+        show: false,
+        driverToDelete: {}
     };
     this.fileInput = React.createRef();
     this.handleDriverDelete = this.handleDriverDelete.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.readFile = this.readFile.bind(this);
     this.refreshDrivers = this.refreshDrivers.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleShow = this.handleShow.bind(this);
 }
   
 /**
@@ -60,17 +66,28 @@ refreshDrivers(){
     });
 }
 
+handleClose() {
+    this.setState({show: false});
+}
+
+handleSave() {
+    this.handleClose();
+    this.handleDriverDelete(this.state.driverToDelete);
+    this.setState({driverToDelete: {}});
+}
+
+handleShow(e, d) {
+    e.preventDefault();
+    this.setState({show: true, driverToDelete: d});
+}
+
 /**
  * Event handler used to delete a driver from the database when the 
  * user clicks on the delete button.
- * @param {Object} e The event triggered when the user clicks on the 
- * q                 Delete button.
  * @param {Object} d The driver object to be deleted.
  */
-handleDriverDelete(e, d) {
+handleDriverDelete(d) {
     var self = this;
-    console.log(d);
-
     driverService.deleteDriver(d).then(() => {
         var newArr = self.state.drivers.filter(function (obj) {
             return obj.id !== d.id;
@@ -204,12 +221,8 @@ readFile(event) {
                             <Col sm={2} className="table-title title">Drivers</Col>
                             <Col sm={8} class="mt-3">
                                 <InputGroup class="mb-2">
-                                    <InputGroup.Text>
-                                        {// <Search icon="search"></Search>
-                                        }
-                                    </InputGroup.Text>
+                                    <InputGroup.Text/>
                                     <FormControl
-
                                         type="text"
                                         placeholder="Search Drivers"
                                         id="search"
@@ -243,9 +256,19 @@ readFile(event) {
                                     <td>{d.last_name}</td>
                                     <td>{d.phone}</td>
                                     <td >
-                                        <Button className="mr-2" href={"/driverDetail/" + d.id}>View</Button>
-                                        <Button className="mr-2" href={"/updateDriver/" + d.id}>Edit</Button>
-                                        <Button onClick={(e) => this.handleDriverDelete(e, d)}> Delete</Button>
+                                        <Button className="mr-2" href={"/driverDetail/" + d.id} variant='primary'>View</Button>
+                                        <Button className="mr-2" href={"/updateDriver/" + d.id} variant='primary'>Edit</Button>
+                                        <Button onClick={(e) => this.handleShow(e, d)} variant='primary'> Delete</Button>
+                                        <DialogBox 
+                                            show={this.state.show} 
+                                            modalTitle='Confirm Deletion'
+                                            mainMessageText='Are you sure you want to delete this entry?'
+                                            handleClose={this.handleClose}
+                                            handleSave={this.handleSave}
+                                            closeText='Cancel'
+                                            saveText='Delete'
+                                            buttonType='danger'
+                                        />
                                     </td>
                                 </tr>)}
                         </tbody>
