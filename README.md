@@ -29,7 +29,7 @@ We have our routing page finished and connected to the backend. Our bulk file up
 - None
 
 ### Next features:
-- Make data fields sortable.
+- Add maps to visualize routes.
 
 #Installation
 
