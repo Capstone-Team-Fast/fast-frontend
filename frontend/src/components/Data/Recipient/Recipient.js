@@ -12,6 +12,7 @@ import RecipientService from '../../../services/RecipientService';
 import SearchService from '../../../services/SearchService';
 import FileService from '../../../services/FileService';
 import { DialogBox } from '../../Utils/DialogBox';
+import Stack from 'react-bootstrap/Stack';
 
 const recipientService = new RecipientService();
 const searchService = new SearchService();
@@ -37,7 +38,8 @@ class Recipient extends Component {
             fileContent: [],
             new_recipients: [],
             show: false,
-            recipientToDelete: {}
+            recipientToDelete: {},
+            sorted: false
         };
         this.fileInput = React.createRef();
         this.handleRecipientDelete = this.handleRecipientDelete.bind(this);
@@ -56,6 +58,36 @@ class Recipient extends Component {
         recipientService.getRecipients().then(function (result) {
             self.setState({ recipients:  result, filtered: result});
         });
+    }
+
+    sortColumn(key) {
+        const isSorted = this.state.sorted;
+        if (key === 'firstname') {
+            if (this.state.sorted) {
+                this.state.recipients.sort((recipient1, recipient2) => {return recipient2.first_name.localeCompare(recipient1.first_name)});
+            } else {
+                this.state.recipients.sort((recipient1, recipient2) => {return recipient1.first_name.localeCompare(recipient2.first_name)});
+            }
+        } else if (key === 'lastname') {
+            if (this.state.sorted) {
+                this.state.recipients.sort((recipient1, recipient2) => {return recipient2.last_name.localeCompare(recipient1.last_name)});
+            } else {
+                this.state.recipients.sort((recipient1, recipient2) => {return recipient1.last_name.localeCompare(recipient2.last_name)});
+            }
+        } else if (key === 'quantity') {
+            if (this.state.sorted) {
+                this.state.recipients.sort((recipient1, recipient2) => {return recipient2.quantity - recipient1.quantity});
+            } else {
+                this.state.recipients.sort((recipient1, recipient2) => {return recipient1.quantity - recipient2.quantity});
+            }
+        } else if (key == 'address') {
+            if (this.state.sorted) {
+                this.state.recipients.sort((recipient1, recipient2) => {return recipient2.location.address.localeCompare(recipient1.location.address)});
+            } else {
+                this.state.recipients.sort((recipient1, recipient2) => {return recipient1.location.address.localeCompare(recipient2.location.address)});
+            }
+        }
+        this.setState({recipients: this.state.recipients, sorted: !isSorted});
     }
 
     refreshRecipients(){
@@ -241,12 +273,56 @@ handleRecipientDelete(r){
                 </Row>
                 <Row className="card-body table-wrapper-scroll-y my-custom-scrollbar">
                     <Table className="striped bordered hover table table-bordered table-striped mb-0">
-                        <thead>
+                        <thead >
                             <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Quantity</th>
-                                <th>Address</th>
+                                <th>
+                                    <Stack direction='horizontal' gap={3}>
+                                        <div >First Name</div> 
+                                        <div className='ms-auto'>
+                                            <Button 
+                                                variant='outline-secondary' 
+                                                size='sm'
+                                                onClick={() => this.sortColumn('firstname')}
+                                                >&#8693;</Button>
+                                        </div>
+                                    </Stack>
+                                </th>
+                                <th>
+                                    <Stack direction='horizontal' gap={3}>
+                                        <div >Last Name</div> 
+                                        <div className='ms-auto'>
+                                            <Button 
+                                                variant='outline-secondary' 
+                                                size='sm'
+                                                onClick={() => this.sortColumn('lastname')}
+                                                >&#8693;</Button>
+                                        </div>
+                                    </Stack>
+                                </th>
+                                <th>
+                                    <Stack direction='horizontal' gap={3}>
+                                        <div >Quantity</div> 
+                                        <div className='ms-auto'>
+                                            <Button 
+                                                variant='outline-secondary' 
+                                                size='sm'
+                                                onClick={() => this.sortColumn('quantity')}
+                                                >&#8693;</Button>
+                                        </div>
+                                    </Stack>
+                                </th>
+                                <th>
+                                    <Stack direction='horizontal' gap={3}>
+                                        <div >Address</div> 
+                                        <div className='ms-auto'>
+                                            <Button 
+                                                variant='outline-secondary' 
+                                                size='sm'
+                                                onClick={() => this.sortColumn('address')}
+                                                >&#8693;</Button>
+                                        </div>
+                                    </Stack>
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>

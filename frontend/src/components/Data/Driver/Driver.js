@@ -12,6 +12,7 @@ import DriverService from '../../../services/DriverService';
 import SearchService from '../../../services/SearchService';
 import FileService from '../../../services/FileService';
 import { DialogBox } from '../../Utils/DialogBox';
+import Stack from 'react-bootstrap/Stack';
 
 const driverService = new DriverService();
 const searchService = new SearchService();
@@ -37,7 +38,8 @@ constructor(props) {
         fileContent: [],
         new_drivers: [],
         show: false,
-        driverToDelete: {}
+        driverToDelete: {},
+        sorted: false
     };
     this.fileInput = React.createRef();
     this.handleDriverDelete = this.handleDriverDelete.bind(this);
@@ -47,6 +49,7 @@ constructor(props) {
     this.handleClose = this.handleClose.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleShow = this.handleShow.bind(this);
+    this.sortColumn = this.sortColumn.bind(this);
 }
   
 /**
@@ -64,6 +67,30 @@ refreshDrivers(){
     driverService.getDrivers().then(function (result) {
         self.setState({ drivers: result, filtered: result });
     });
+}
+
+sortColumn(key) {
+    const isSorted = this.state.sorted;
+    if (key === 'firstname') {
+        if (this.state.sorted) {
+            this.state.drivers.sort((driver1, driver2) => {return driver2.first_name.localeCompare(driver1.first_name)});
+        } else {
+            this.state.drivers.sort((driver1, driver2) => {return driver1.first_name.localeCompare(driver2.first_name)});
+        }
+    } else if (key === 'lastname') {
+        if (this.state.sorted) {
+            this.state.drivers.sort((driver1, driver2) => {return driver2.last_name.localeCompare(driver1.last_name)});
+        } else {
+            this.state.drivers.sort((driver1, driver2) => {return driver1.last_name.localeCompare(driver2.last_name)});
+        }
+    } else if (key === 'phone') {
+        if (this.state.sorted) {
+            this.state.drivers.sort((driver1, driver2) => {return driver2.phone.localeCompare(driver1.phone)});
+        } else {
+            this.state.drivers.sort((driver1, driver2) => {return driver1.phone.localeCompare(driver2.phone)});
+        }
+    }
+    this.setState({drivers: this.state.drivers, sorted: !isSorted});
 }
 
 handleClose() {
@@ -243,9 +270,42 @@ readFile(event) {
                     <Table className="striped bordered hover table table-bordered table-striped mb-0">
                         <thead>
                             <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Phone Number</th>
+                                <th>
+                                    <Stack direction='horizontal' gap={3}>
+                                        <div >First Name</div> 
+                                        <div className='ms-auto'>
+                                            <Button 
+                                                variant='outline-secondary' 
+                                                size='sm'
+                                                onClick={() => this.sortColumn('firstname')}
+                                            >&#8693;</Button>
+                                        </div>
+                                    </Stack>
+                                </th>
+                                <th>
+                                <Stack direction='horizontal' gap={3}>
+                                        <div >Last Name</div> 
+                                        <div className='ms-auto'>
+                                            <Button 
+                                                variant='outline-secondary' 
+                                                size='sm' 
+                                                onClick={() => this.sortColumn('lastname')}
+                                                >&#8693;</Button>
+                                        </div>
+                                    </Stack>
+                                </th>
+                                <th>
+                                    <Stack direction='horizontal' gap={3}>
+                                        <div >Phone Number</div>
+                                        <div className='ms-auto'>
+                                            <Button 
+                                                variant='outline-secondary' 
+                                                size='sm'
+                                                onClick={() => this.sortColumn('phone')}
+                                                >&#8693;</Button>
+                                        </div>
+                                    </Stack>
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>
