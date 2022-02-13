@@ -14,6 +14,7 @@ import LocationService from '../../services/LocationService'
 const  routeService  =  new  RouteService();
 const  recipientService  =  new  RecipientService();
 const  driverService  =  new  DriverService();
+const BING_MAPS_API_KEY = 'AuOCdC5Cfap5amj2xF7Ww-2lXNDCH3P_YRg5hDn_v9ZH9NQf4xwbbukk1bJyXX81'
 
 /**
  * This component is used to display route information for all 
@@ -200,7 +201,6 @@ getEmployeeStatus(route) {
     return ""
 }
 
-
 /**
  * The render method used to display the component. 
  * @returns The HTML to be rendered.
@@ -296,7 +296,17 @@ render() {
                 </Table>
             </Card.Header>
             <Card.Subtitle className="pb-2 pt-4 pl-4 title">
-                Delivery List
+                <Col>
+                    <Row className="d-flex flex-row">
+                        <Col sm={8} className="title">
+                            Delivery List
+                        </Col>
+                        <Col sm={4} className="justify-content-end d-flex flex-row">
+                            <Button href={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/Routes?wp.0=5545 Center St, Omaha, NE 68106;64;0&wp.1=6001 Dodge St;64;1&wp.2=1110 S 67th St, Omaha, NE 68182;64;2&key=" + BING_MAPS_API_KEY}
+                                target="_blank">View Route Map</Button>
+                        </Col>   
+                    </Row>
+                </Col> 
             </Card.Subtitle>
             <Card.Body className="card-body pl-1 pr-1 pt-1">
                 <Table className="hover table mb-0">
@@ -315,7 +325,7 @@ render() {
                 {r.itinerary.map( l =>                     
                         <tr>
                             <td>{this.getRecipientName(l)}</td>
-                            <td>{l.address.address + " " + l.address.room_number}</td>
+                            <td>{l.address.address}</td>
                             <td>{l.address.city}</td>
                             <td>{l.address.state}</td>
                             <td>{l.address.zipcode}</td>
