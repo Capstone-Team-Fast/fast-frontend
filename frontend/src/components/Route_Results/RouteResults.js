@@ -268,7 +268,7 @@ render() {
                         <Col sm={4} className="justify-content-end d-flex flex-row">
                             <Button href={"/routeResults/driverRoute/" 
                                 + r.id + "/" + r.assigned_to} 
-                                target="_blank">Print</Button>
+                                target="_blank">Print Itinerary</Button>
                         </Col>   
                     </Row>
                 </Col>
