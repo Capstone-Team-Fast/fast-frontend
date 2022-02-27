@@ -278,8 +278,12 @@ getItineraryAddresses(route) {
 getItineraryMapURL(route) {
     let mapURL = "https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/Routes?"
     let locations = this.getItineraryLocationsForMap(route);
+    let mapSize = "1280,720";
+    let optimize = "distance";
     let pinStyleStart = 64;
     let pinStyleOnward = 66;
+    mapURL += "optimize=" + optimize + "&";
+    mapURL += "mapSize=" + mapSize + "&";
     for (let i = 0; i < locations.length; i++) {
         if (i == 0) {
             mapURL += "wp." + i + "=" + locations[i] + ";" + pinStyleStart + ";" + (i + 1) + "&";
@@ -287,8 +291,7 @@ getItineraryMapURL(route) {
             mapURL += "wp." + i + "=" + locations[i] + ";" + pinStyleOnward + ";" + (i + 1) + "&";
         }
     }
-    mapURL += "key=" + BING_MAPS_API_KEY; 
-
+    mapURL += "key=" + BING_MAPS_API_KEY;
     return mapURL;
 }
 
