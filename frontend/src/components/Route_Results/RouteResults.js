@@ -202,6 +202,97 @@ getEmployeeStatus(route) {
 }
 
 /**
+* Function which returns the array of itinerary information.
+* @returns Array of itinerary information.
+*/
+getItineraryArray(route) {
+    let itineraryArray = route.itinerary;
+    return itineraryArray;
+}
+
+/**
+ * Function which returns the array of itinerary street addresses
+ * @returns Array of itinerary street addresses
+ */
+getItineraryAddresses(route) {
+    let itineraryAddresses = [];
+    let itineraryArray = this.getItineraryArray(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryAddresses.push(itineraryArray[i].address.address);
+    }
+    return itineraryAddresses;
+}
+
+/**
+ * Function which returns the array of itinerary cities
+ * @returns Array of itinerary cities
+ */
+ getItineraryCities(route) {
+    let itineraryCities = [];
+    let itineraryArray = this.getItineraryArray(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryCities.push(itineraryArray[i].address.city);
+    }
+    return itineraryCities;
+}
+
+/**
+ * Function which returns the array of itinerary states
+ * @returns Array of itinerary states
+ */
+ getItineraryStates(route) {
+    let itineraryStates = [];
+    let itineraryArray = this.getItineraryArray(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryStates.push(itineraryArray[i].address.state);
+    }
+    return itineraryStates;
+}
+
+/**
+ * Function which returns the array of itinerary locations.
+ * Utilizes itinerary getter functions.
+ * @returns Array of itinerary locations
+ */
+ getItineraryLocationsForMap(route) {
+    let itineraryLocationsForMap = [];
+    let itineraryArray = this.getItineraryArray(route);
+    let itineraryAddresses = this.getItineraryAddresses(route);
+    let itineraryCities = this.getItineraryCities(route);
+    let itineraryStates = this.getItineraryStates(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryLocationsForMap.push(
+            itineraryAddresses[i] + "," +
+            itineraryCities[i] + "," +
+            itineraryStates[i])
+    }
+    return itineraryLocationsForMap;
+}
+
+/** Function that returns a URL string used for a static itinerary map.
+ * Utilizes the getItineraryLocationsForMap() function.
+ * Utilizes Microsoft Bing Maps API
+ * https://docs.microsoft.com/en-us/bingmaps/rest-services/imagery/get-a-static-map
+ * @returns String of static itinerary map URL
+ */
+getItineraryMapURL(route) {
+    let mapURL = "https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/Routes?"
+    let locations = this.getItineraryLocationsForMap(route);
+    let pinStyleStart = 64;
+    let pinStyleOnward = 66;
+    for (let i = 0; i < locations.length; i++) {
+        if (i == 0) {
+            mapURL += "wp." + i + "=" + locations[i] + ";" + pinStyleStart + ";" + (i + 1) + "&";
+        } else {
+            mapURL += "wp." + i + "=" + locations[i] + ";" + pinStyleOnward + ";" + (i + 1) + "&";
+        }
+    }
+    mapURL += "key=" + BING_MAPS_API_KEY; 
+
+    return mapURL;
+}
+
+/**
  * The render method used to display the component. 
  * @returns The HTML to be rendered.
  */
@@ -269,7 +360,7 @@ render() {
                             <Button href={"/routeResults/driverRoute/" 
                                 + r.id + "/" + r.assigned_to} 
                                 target="_blank">Print</Button>
-                        </Col>   
+                        </Col>
                     </Row>
                 </Col>
             </Card.Title>
@@ -302,8 +393,8 @@ render() {
                             Delivery List
                         </Col>
                         <Col sm={4} className="justify-content-end d-flex flex-row">
-                            <Button href={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/Routes?wp.0=5545 Center St, Omaha, NE 68106;64;0&wp.1=6001 Dodge St;64;1&wp.2=1110 S 67th St, Omaha, NE 68182;64;2&key=" + BING_MAPS_API_KEY}
-                                target="_blank">View Route Map</Button>
+                            {<Button href={this.getItineraryMapURL(r)}
+                                target="_blank">View Route Map</Button>}
                         </Col>   
                     </Row>
                 </Col> 
