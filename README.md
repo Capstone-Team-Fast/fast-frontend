@@ -18,3 +18,7 @@ One of our overall objectives for the project throughout the semester is to impl
 - This project uses node version v14.17.6 and npm version 7.24.0. Check your version by running:
     - node -v
     - npm -v
+
+- Go to the fast-frontend/frontend folder.
+- If the directory "node modules" does not exist, enter the command "npm install"
+- Enter "npm run start" to run the application.
