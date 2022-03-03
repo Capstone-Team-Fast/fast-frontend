@@ -14,7 +14,7 @@ import LocationService from '../../services/LocationService'
 const  routeService  =  new  RouteService();
 const  recipientService  =  new  RecipientService();
 const  driverService  =  new  DriverService();
-const BING_MAPS_API_KEY = 'AuOCdC5Cfap5amj2xF7Ww-2lXNDCH3P_YRg5hDn_v9ZH9NQf4xwbbukk1bJyXX81'
+const BING_MAPS_API_KEY = 'AlLYsXWEqlXy8y14QMZcm-iBTC8SsOP3_7SsRo_K5mwfaii_aLhwc0dqsPDfBSWU'
 
 /**
  * This component is used to display route information for all 
