@@ -259,7 +259,7 @@ render() {
 
                 <Row className="mb-3">
                     <Form.Group as={Col}>
-                        <Form.Label htmlFor="room_number">Address 2</Form.Label>
+                        <Form.Label htmlFor="room_number">Apartment Number</Form.Label>
                         <Form.Control type="text" name="location" id="room_number"
                         onChange={this.handleObjectChange} value={this.state.location.room_number} />
                     </Form.Group>

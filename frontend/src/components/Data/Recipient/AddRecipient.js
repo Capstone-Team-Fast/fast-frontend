@@ -230,9 +230,9 @@ render() {
 
                 <Row className="mb-3" key="address_data">
                     <Form.Group as={Col} >
-                        <Form.Label htmlFor="room_number">Address 2</Form.Label>
+                        <Form.Label htmlFor="room_number">Apartment Number</Form.Label>
                         <Form.Control type="text" name="location" id="room_number"
-                        onChange={this.handleObjectChange} placeholder="Apartment, studio, or floor" />
+                        onChange={this.handleObjectChange} placeholder="Apt #" />
                     </Form.Group>
                     
                     <Form.Group as={Col}>

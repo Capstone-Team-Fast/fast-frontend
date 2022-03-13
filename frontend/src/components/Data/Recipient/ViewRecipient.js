@@ -102,7 +102,7 @@ render() {
                     <thead>
                         <tr>
                             <th>Address</th>
-                            <th>Room Number</th>
+                            <th>Apt #</th>
                             <th>City</th>
                             <th>State</th>
                             <th>Zip Code</th>

@@ -87,6 +87,46 @@ getRecipientName(recipient) {
         }
     }
 }
+     
+/**
+ * Function that returns the clients comment if present. Called for each client	
+ * in the itinerary for each driver's route.	
+ * @param {Object} recipient Recipient object from the route.	
+ * @returns The clients comment section	
+ */	
+getRecipientComment(recipient) {	
+    let clients = this.state.recipients	
+    for (let i = 0; i < clients.length; i++) {	
+        if (clients[i].id === recipient.id) {	
+            if (clients[i].comments !== undefined) {	
+                return clients[i].comments	
+            }	
+            else {	
+                return ""	
+            }	
+        }	
+    }	
+}
+     
+/**	
+ * Function that returns the clients room number if present. Called for each client	
+ * in the itinerary for each driver's route	
+ * @param {Number} recipient Recipient object from the route	
+ * @returns The clients room number	
+ */	
+getRecipientRoomNumber(recipient) {	
+    let clients = this.state.recipients	
+    for (let i = 0; i < clients.length; i++) {	
+        if (clients[i].id === recipient.id) {	
+            if (clients[i].location.room_number !== undefined && clients[i].location.room_number !== "N/A") {	
+                return clients[i].location.room_number	
+            }	
+            else {	
+                return ""	
+            }	
+        }	
+    }	
+}
 
 /**
  * Function to return full name for missing recipients. Called 
@@ -262,13 +302,17 @@ render() {
             <Card.Title className="card-header border-dark bg-grey">
                 <Col>
                     <Row className="d-flex flex-row">
-                        <Col sm={8} className="title">
+                        <Col sm={7} className="title">
                             {this.getDriverName(r)}
                         </Col>
-                        <Col sm={4} className="justify-content-end d-flex flex-row">
+                        <Col sm={0} className="justify-content-around d-flex flex-row">
+                            <Button 	
+                                target="_blank" >View Metrics</Button>	
+                            <Button href={this.getItineraryMapURL(r)}	
+                                target="_blank">View Route Map</Button>
                             <Button href={"/routeResults/driverRoute/" 
                                 + r.id + "/" + r.assigned_to} 
-                                target="_blank">Print</Button>
+                                target="_blank">Print Itinerary</Button>
                         </Col>   
                     </Row>
                 </Col>
@@ -300,10 +344,6 @@ render() {
                     <Row className="d-flex flex-row">
                         <Col sm={8} className="title">
                             Delivery List
-                        </Col>
-                        <Col sm={4} className="justify-content-end d-flex flex-row">
-                            <Button href={"https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/Routes?wp.0=5545 Center St, Omaha, NE 68106;64;0&wp.1=6001 Dodge St;64;1&wp.2=1110 S 67th St, Omaha, NE 68182;64;2&key=" + BING_MAPS_API_KEY}
-                                target="_blank">View Route Map</Button>
                         </Col>   
                     </Row>
                 </Col> 
@@ -314,11 +354,13 @@ render() {
                         <tr>
                             <th>Name</th>
                             <th>Address</th>
+                            <th>Apt #</th>
                             <th>City</th>
                             <th>State</th>
                             <th>Zip Code</th>
                             <th>Phone Number</th>
                             <th>Quantity</th>
+                            <th>Comments</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -326,11 +368,13 @@ render() {
                         <tr>
                             <td>{this.getRecipientName(l)}</td>
                             <td>{l.address.address}</td>
+                            <td>{this.getRecipientRoomNumber(l) ? this.getRecipientRoomNumber(l) : ""}</td>
                             <td>{l.address.city}</td>
                             <td>{l.address.state}</td>
                             <td>{l.address.zipcode}</td>
                             <td>{this.getPhone(l)}</td>
                             <td>{l.demand}</td>
+                            <td>{this.getRecipientComment(l)}</td>
                         </tr>
                     )}
                     </tbody>

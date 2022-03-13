@@ -1,4 +1,5 @@
 import  React, { Component } from  'react';
+import Spinner from 'react-bootstrap/Spinner'
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -27,7 +28,10 @@ constructor(props) {
             location: {},
           },
           duration_limit: '',
-         }
+         },
+         loading: false,
+         error: '',
+         errorMessage: ''
      };
 
     //  this.getCenter = this.getCenter.bind(this);
@@ -103,8 +107,10 @@ handleDeliveryLimit(event){
   this.setState(prevState => ({
     route : {
     ...prevState.route,
-    delivery_limit: value}
+    delivery_limit: value},
+    error: false
   }));
+  this.delivery_limit = value
 }
 
 handleDuration(event){
@@ -112,8 +118,10 @@ handleDuration(event){
   this.setState(prevState => ({
     route : {
     ...prevState.route,
-    duration_limit: value}
+    duration_limit: value},
+    error: false
   }));
+  this.duration_limit = value
 }
 
 handleDeparture(event){
@@ -152,14 +160,43 @@ getCenter(location) {
 }
 
 handleSubmit = (event) => {
-  event.preventDefault();
-  routeService.createRoute(this.state.route).then(result => {
-    let redirect = "/routeResults/" + result.id 
-    window.open(redirect, "_blank")
-  });
+  if (this.delivery_limit && this.duration_limit &&  this.delivery_limit && this.duration_limit) {
+    event.preventDefault();
+    this.setState({
+      loading: true,
+      error: false
+    });
+    routeService.createRoute(this.state.route).then(result => {
+      let redirect = "/routeResults/" + result.id 
+      window.open(redirect, "_blank")
+      this.setState({
+        loading: false
+      });
+    });
+  }
+  else if (!(this.delivery_limit) && !(this.duration_limit)) {
+    this.setState({
+      error: true,
+      errorMessage: 'ERROR: Delivery Limit and Duration are empty'
+    })
+  }
+  else if (!(this.duration_limit)) {
+    this.setState({
+      error: true,
+      errorMessage: 'ERROR: Duration is empty'
+    })
+  }
+  else {
+    this.setState({
+      error: true,
+      errorMessage: 'ERROR: Delivery Limit is empty'
+    })
+  }
 }
 
 render() {
+     
+    const { handleSubmit, state } = this;
 
     return (
       <Container>
@@ -196,7 +233,16 @@ render() {
         <SelectDriver parentCallback = {this.handleDriverCallback}/>
         <SelectRecipient parentCallback = {this.handleRecipientCallback} />
        
-        <Button className="mr-2 mt-4 btn" variant="primary" onClick={this.handleSubmit}>Create Route</Button>
+        <Button className="mr-2 mt-4 btn" variant="primary" disabled={this.state.loading}
+               onClick={handleSubmit}>
+                 {this.state.loading ?  	
+                   <Spinner	
+                     animation="border" role="status">	
+                     <span className="visually-hidden">Loading...</span>	
+                   </Spinner> : "Create Route"}	
+        </Button>
+        {this.state.error ? 	
+                    <h3 className='error' style={{fontSize: 20, color: "red", marginTop: 10}}> { this.state.errorMessage } </h3> : ""}
         </Form> 
       </Container>
     );
