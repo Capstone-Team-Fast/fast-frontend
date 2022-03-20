@@ -308,8 +308,6 @@ render() {
                         <Col sm={0} className="justify-content-around d-flex flex-row">
                             <Button 	
                                 target="_blank" >View Metrics</Button>	
-                            <Button href={this.getItineraryMapURL(r)}	
-                                target="_blank">View Route Map</Button>
                             <Button href={"/routeResults/driverRoute/" 
                                 + r.id + "/" + r.assigned_to} 
                                 target="_blank">Print Itinerary</Button>
