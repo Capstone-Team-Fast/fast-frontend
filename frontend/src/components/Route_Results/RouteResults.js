@@ -10,11 +10,13 @@ import RouteService from '../../services/RouteService'
 import RecipientService from '../../services/RecipientService'
 import DriverService from '../../services/DriverService'
 import LocationService from '../../services/LocationService'
+import BingMapsKey from './BingMapsKey';
 
 const  routeService  =  new  RouteService();
 const  recipientService  =  new  RecipientService();
 const  driverService  =  new  DriverService();
-const BING_MAPS_API_KEY = 'AuOCdC5Cfap5amj2xF7Ww-2lXNDCH3P_YRg5hDn_v9ZH9NQf4xwbbukk1bJyXX81'
+const BING_MAPS_API_KEY = BingMapsKey.key;
+
 
 /**
  * This component is used to display route information for all 
@@ -45,6 +47,10 @@ constructor(props) {
      this.getMissingName = this.getMissingName.bind(this)
      this.getMissingPhone = this.getMissingPhone.bind(this)
      this.getMissingAddress = this.getMissingAddress.bind(this)
+     this.getRecipientComment = this.getRecipientComment.bind(this)
+     this.getRecipientRoomNumber = this.getRecipientRoomNumber.bind(this)
+     this.isEmployee = this.isEmployee.bind(this)
+     
 }
 
 /**
@@ -87,45 +93,45 @@ getRecipientName(recipient) {
         }
     }
 }
-     
+
 /**
- * Function that returns the clients comment if present. Called for each client	
- * in the itinerary for each driver's route.	
- * @param {Object} recipient Recipient object from the route.	
- * @returns The clients comment section	
- */	
-getRecipientComment(recipient) {	
-    let clients = this.state.recipients	
-    for (let i = 0; i < clients.length; i++) {	
-        if (clients[i].id === recipient.id) {	
-            if (clients[i].comments !== undefined) {	
-                return clients[i].comments	
-            }	
-            else {	
-                return ""	
-            }	
-        }	
-    }	
+ * Function that returns the clients comment if present. Called for each client
+ * in the itinerary for each driver's route.
+ * @param {Object} recipient Recipient object from the route.
+ * @returns The clients comment section
+ */
+getRecipientComment(recipient) {
+    let clients = this.state.recipients
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].id === recipient.id) {
+            if (clients[i].comments !== undefined) {
+                return clients[i].comments
+            }
+            else {
+                return ""
+            }
+        }
+    }
 }
-     
-/**	
- * Function that returns the clients room number if present. Called for each client	
- * in the itinerary for each driver's route	
- * @param {Number} recipient Recipient object from the route	
- * @returns The clients room number	
- */	
-getRecipientRoomNumber(recipient) {	
-    let clients = this.state.recipients	
-    for (let i = 0; i < clients.length; i++) {	
-        if (clients[i].id === recipient.id) {	
-            if (clients[i].location.room_number !== undefined && clients[i].location.room_number !== "N/A") {	
-                return clients[i].location.room_number	
-            }	
-            else {	
-                return ""	
-            }	
-        }	
-    }	
+
+/**
+ * Function that returns the clients room number if present. Called for each client
+ * in the itinerary for each driver's route
+ * @param {Number} recipient Recipient object from the route
+ * @returns The clients room number
+ */
+getRecipientRoomNumber(recipient) {
+    let clients = this.state.recipients
+    for (let i = 0; i < clients.length; i++) {
+        if (clients[i].id === recipient.id) {
+            if (clients[i].location.room_number !== undefined && clients[i].location.room_number !== "N/A") {
+                return clients[i].location.room_number
+            }
+            else {
+                return ""
+            }
+        }
+    }
 }
 
 /**
@@ -241,6 +247,204 @@ getEmployeeStatus(route) {
     return ""
 }
 
+isEmployee(driver) {
+    let empStatus = this.getEmployeeStatus(driver)
+    if (empStatus === "Employee") {
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+/**
+* Function which returns the array of itinerary information.
+* @returns Array of itinerary information.
+*/
+getItineraryArray(route) {
+    let itineraryArray = route.itinerary;
+    return itineraryArray;
+}
+
+/**
+ * Function which returns the array of itinerary street addresses
+ * @returns Array of itinerary street addresses
+ */
+getItineraryAddresses(route) {
+    let itineraryAddresses = [];
+    let itineraryArray = this.getItineraryArray(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryAddresses.push(itineraryArray[i].address.address);
+    }
+    return itineraryAddresses;
+}
+
+/**
+ * Function which returns the array of itinerary cities
+ * @returns Array of itinerary cities
+ */
+ getItineraryCities(route) {
+    let itineraryCities = [];
+    let itineraryArray = this.getItineraryArray(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryCities.push(itineraryArray[i].address.city);
+    }
+    return itineraryCities;
+}
+
+/**
+ * Function which returns the array of itinerary states
+ * @returns Array of itinerary states
+ */
+ getItineraryStates(route) {
+    let itineraryStates = [];
+    let itineraryArray = this.getItineraryArray(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryStates.push(itineraryArray[i].address.state);
+    }
+    return itineraryStates;
+}
+
+/**
+ * Function which returns the array of itinerary locations.
+ * Utilizes itinerary getter functions.
+ * @returns Array of itinerary locations
+ */
+ getItineraryLocationsForMap(route) {
+    let itineraryLocationsForMap = [];
+    let itineraryArray = this.getItineraryArray(route);
+    let itineraryAddresses = this.getItineraryAddresses(route);
+    let itineraryCities = this.getItineraryCities(route);
+    let itineraryStates = this.getItineraryStates(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryLocationsForMap.push(
+            itineraryAddresses[i] + "," +
+            itineraryCities[i] + "," +
+            itineraryStates[i])
+    }
+    return itineraryLocationsForMap;
+}
+
+/** Function that returns a URL string used for a static itinerary map.
+ * Utilizes the getItineraryLocationsForMap() function.
+ * Utilizes Microsoft Bing Maps API
+ * https://docs.microsoft.com/en-us/bingmaps/rest-services/imagery/get-a-static-map
+ * @returns String of static itinerary map URL
+ */
+getItineraryMapURL(route) {
+    let mapURL = "https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/Routes?"
+    let locations = this.getItineraryLocationsForMap(route);
+    let mapSize = "1280,720";
+    let optimize = "distance";
+    let pinStyleStart = 64;
+    let pinStyleOnward = 66;
+    mapURL += "optimize=" + optimize + "&";
+    mapURL += "mapSize=" + mapSize + "&";
+    for (let i = 0; i < locations.length; i++) {
+        if (i === 0) {
+            mapURL += "wp." + i + "=" + locations[i] + ";" + pinStyleStart + ";" + (i + 1) + "&";
+        } else {
+            mapURL += "wp." + i + "=" + locations[i] + ";" + pinStyleOnward + ";" + (i + 1) + "&";
+        }
+    }
+    mapURL += "key=" + BING_MAPS_API_KEY; 
+    return mapURL;
+}
+
+/**
+* Function which returns the array of itinerary information.
+* @returns Array of itinerary information.
+*/
+getItineraryArray(route) {
+    let itineraryArray = route.itinerary;
+    return itineraryArray;
+}
+
+/**
+ * Function which returns the array of itinerary street addresses
+ * @returns Array of itinerary street addresses
+ */
+getItineraryAddresses(route) {
+    let itineraryAddresses = [];
+    let itineraryArray = this.getItineraryArray(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryAddresses.push(itineraryArray[i].address.address);
+    }
+    return itineraryAddresses;
+}
+
+/**
+ * Function which returns the array of itinerary cities
+ * @returns Array of itinerary cities
+ */
+ getItineraryCities(route) {
+    let itineraryCities = [];
+    let itineraryArray = this.getItineraryArray(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryCities.push(itineraryArray[i].address.city);
+    }
+    return itineraryCities;
+}
+
+/**
+ * Function which returns the array of itinerary states
+ * @returns Array of itinerary states
+ */
+ getItineraryStates(route) {
+    let itineraryStates = [];
+    let itineraryArray = this.getItineraryArray(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryStates.push(itineraryArray[i].address.state);
+    }
+    return itineraryStates;
+}
+
+/**
+ * Function which returns the array of itinerary locations.
+ * Utilizes itinerary getter functions.
+ * @returns Array of itinerary locations
+ */
+ getItineraryLocationsForMap(route) {
+    let itineraryLocationsForMap = [];
+    let itineraryArray = this.getItineraryArray(route);
+    let itineraryAddresses = this.getItineraryAddresses(route);
+    let itineraryCities = this.getItineraryCities(route);
+    let itineraryStates = this.getItineraryStates(route);
+    for (let i = 0; i < itineraryArray.length; i++) {
+        itineraryLocationsForMap.push(
+            itineraryAddresses[i] + "," +
+            itineraryCities[i] + "," +
+            itineraryStates[i])
+    }
+    return itineraryLocationsForMap;
+}
+
+/** Function that returns a URL string used for a static itinerary map.
+ * Utilizes the getItineraryLocationsForMap() function.
+ * Utilizes Microsoft Bing Maps API
+ * https://docs.microsoft.com/en-us/bingmaps/rest-services/imagery/get-a-static-map
+ * @returns String of static itinerary map URL
+ */
+getItineraryMapURL(route) {
+    let mapURL = "https://dev.virtualearth.net/REST/v1/Imagery/Map/Road/Routes?"
+    let locations = this.getItineraryLocationsForMap(route);
+    let mapSize = "1280,720";
+    let optimize = "distance";
+    let pinStyleStart = 64;
+    let pinStyleOnward = 66;
+    mapURL += "optimize=" + optimize + "&";
+    mapURL += "mapSize=" + mapSize + "&";
+    for (let i = 0; i < locations.length; i++) {
+        if (i == 0) {
+            mapURL += "wp." + i + "=" + locations[i] + ";" + pinStyleStart + ";" + (i + 1) + "&";
+        } else {
+            mapURL += "wp." + i + "=" + locations[i] + ";" + pinStyleOnward + ";" + (i + 1) + "&";
+        }
+    }
+    mapURL += "key=" + BING_MAPS_API_KEY;
+    return mapURL;
+}
+
 /**
  * The render method used to display the component. 
  * @returns The HTML to be rendered.
@@ -306,8 +510,8 @@ render() {
                             {this.getDriverName(r)}
                         </Col>
                         <Col sm={0} className="justify-content-around d-flex flex-row">
-                            <Button 	
-                                target="_blank" >View Metrics</Button>	
+                            <Button href={this.getItineraryMapURL(r)}
+                                target="_blank">View Route Map</Button>
                             <Button href={"/routeResults/driverRoute/" 
                                 + r.id + "/" + r.assigned_to} 
                                 target="_blank">Print Itinerary</Button>
@@ -356,13 +560,13 @@ render() {
                             <th>City</th>
                             <th>State</th>
                             <th>Zip Code</th>
-                            <th>Phone Number</th>
+                            <th>{this.isEmployee(r) ? "Phone Number" : ""}</th>
                             <th>Quantity</th>
                             <th>Comments</th>
                         </tr>
                     </thead>
                     <tbody>
-                {r.itinerary.map( l =>                     
+                {r.itinerary.map( l =>  
                         <tr>
                             <td>{this.getRecipientName(l)}</td>
                             <td>{l.address.address}</td>
@@ -370,7 +574,7 @@ render() {
                             <td>{l.address.city}</td>
                             <td>{l.address.state}</td>
                             <td>{l.address.zipcode}</td>
-                            <td>{this.getPhone(l)}</td>
+                            <td>{this.isEmployee(r) ? this.getPhone(l) : ""}</td>
                             <td>{l.demand}</td>
                             <td>{this.getRecipientComment(l)}</td>
                         </tr>

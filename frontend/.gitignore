@@ -18,6 +18,9 @@
 # production
 /build
 
+# bing maps key class
+src/components/Route_Results/BingMapsKey.js
+
 # misc
 .DS_Store
 .env.local

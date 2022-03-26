@@ -12,6 +12,7 @@ The third milestone objective was to fix any visible bugs that occurred within t
 
 One of our overall objectives for the project throughout the semester is to implement a map feature for routes. As of this milestone, we have successfully implemented a static map feature which provides a visualization of a generated route. We will continue to evaluate to see whether or not this feature can be improved upon.
 
+
 ## Milestone 2 Release Notes:
 
 For Milestone 2, the two primary objectives our team wanted to focus on for the frontend was:

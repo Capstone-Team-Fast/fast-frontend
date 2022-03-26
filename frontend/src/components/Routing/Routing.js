@@ -15,6 +15,7 @@ const  locationService  =  new  LocationService();
 const  routeService  =  new  RouteService();
 
 class  Routing  extends  Component {
+  
 
 constructor(props) {
      super(props);
@@ -31,7 +32,9 @@ constructor(props) {
          },
          loading: false,
          error: '',
-         errorMessage: ''
+         errorMessage: '',
+         errorDurationColor: '',
+         errorDeliveryColor: '',
      };
 
     //  this.getCenter = this.getCenter.bind(this);
@@ -108,7 +111,9 @@ handleDeliveryLimit(event){
     route : {
     ...prevState.route,
     delivery_limit: value},
-    error: false
+    error: false,
+    errorDurationColor: '',
+    errorDeliveryColor: ''
   }));
   this.delivery_limit = value
 }
@@ -119,7 +124,9 @@ handleDuration(event){
     route : {
     ...prevState.route,
     duration_limit: value},
-    error: false
+    error: false,
+    errorDurationColor: '',
+    errorDeliveryColor: ''
   }));
   this.duration_limit = value
 }
@@ -177,25 +184,30 @@ handleSubmit = (event) => {
   else if (!(this.delivery_limit) && !(this.duration_limit)) {
     this.setState({
       error: true,
-      errorMessage: 'ERROR: Delivery Limit and Duration are empty'
+      errorMessage: 'ERROR: Delivery Limit and Duration are empty',
+      errorDurationColor: 'red',
+      errorDeliveryColor: 'red'
     })
   }
   else if (!(this.duration_limit)) {
     this.setState({
       error: true,
-      errorMessage: 'ERROR: Duration is empty'
+      errorMessage: 'ERROR: Duration is empty',
+      errorDurationColor: 'red'
     })
   }
   else {
     this.setState({
       error: true,
-      errorMessage: 'ERROR: Delivery Limit is empty'
+      errorMessage: 'ERROR: Delivery Limit is empty',
+      errorDeliveryColor: 'red'
     })
   }
 }
 
+
 render() {
-     
+
     const { handleSubmit, state } = this;
 
     return (
@@ -204,14 +216,14 @@ render() {
         <Row className="mt-4">
         <Form.Group as={Col} controlId="formGridDeliveryLimit">
           <Form.Label className="title">Delivery Limit</Form.Label>
-          <Form.Control type="number" placeholder="Driver Delivery Limit"
+          <Form.Control type="number" placeholder="Driver Delivery Limit" style={{ borderColor: this.state.errorDeliveryColor }}
                         required onChange={this.handleDeliveryLimit} name="delivery_limit" min="1"/>
         </Form.Group>
         <Form.Group as={Col} controlId="formGridDurationLimit">
           <Form.Label className="title">Duration</Form.Label>
-          <Form.Control type="number" placeholder="Duration Limit in Hours"
+          <Form.Control type="number" placeholder="Duration Limit in Hours" style={{ borderColor: this.state.errorDurationColor }} 
                         required onChange={this.handleDuration} name="duration_limit" min="1"/>
-        </Form.Group>
+        </Form.Group> 
         <Form.Group as={Col} controlId="formGridDeparture">
           <Form.Label className="title">Departure Location</Form.Label>
           <Form.Select value={this.state.route.departure.location.address} 
@@ -227,22 +239,22 @@ render() {
 
           </Form.Select>
         </Form.Group>
-        </Row>   
+        </Row>  
           
         <br/>
         <SelectDriver parentCallback = {this.handleDriverCallback}/>
         <SelectRecipient parentCallback = {this.handleRecipientCallback} />
        
         <Button className="mr-2 mt-4 btn" variant="primary" disabled={this.state.loading}
-               onClick={handleSubmit}>
-                 {this.state.loading ?  	
-                   <Spinner	
-                     animation="border" role="status">	
-                     <span className="visually-hidden">Loading...</span>	
-                   </Spinner> : "Create Route"}	
+                onClick={handleSubmit}>
+                  {this.state.loading ?  
+                    <Spinner
+                      animation="border" role="status">
+                      <span className="visually-hidden">Loading...</span>
+                    </Spinner> : "Create Route"}
         </Button>
-        {this.state.error ? 	
-                    <h3 className='error' style={{fontSize: 20, color: "red", marginTop: 10}}> { this.state.errorMessage } </h3> : ""}
+        {this.state.error ? 
+                    <h3 className='error' style={{ fontSize: 20, color: "red", marginTop: 10 }}> { this.state.errorMessage } </h3> : ""}
         </Form> 
       </Container>
     );
