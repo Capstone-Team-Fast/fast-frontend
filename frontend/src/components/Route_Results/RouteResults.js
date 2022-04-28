@@ -506,7 +506,7 @@ render() {
             <Card.Title className="card-header border-dark bg-grey">
                 <Col>
                     <Row className="d-flex flex-row">
-                        <Col sm={7} className="title">
+                        <Col sm={8} className="title">
                             {this.getDriverName(r)}
                         </Col>
                         <Col sm={0} className="justify-content-around d-flex flex-row">
