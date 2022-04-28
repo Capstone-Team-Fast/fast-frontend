@@ -294,8 +294,8 @@ render() {
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="zipcode">Zip</Form.Label>
-                        <Form.Control type="number" onChange={this.handleObjectChange} 
-                            required name="location" id="zipcode" value={this.state.location.zipcode}/>
+                        <Form.Control type="text" pattern="[0-9]{5}" onChange={this.handleObjectChange} 
+                            required name="location" id="zipcode" placeholder="#####" minlength="5" maxlength="5" value={this.state.location.zipcode}/>
                     </Form.Group>
                 </Row>
 

@@ -1,5 +1,6 @@
 import  React, { Component } from  'react';
 import Spinner from 'react-bootstrap/Spinner'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -31,10 +32,15 @@ constructor(props) {
           duration_limit: '',
          },
          loading: false,
-         error: '',
-         errorMessage: '',
+         errorDurDel: '',
+         errorDurDelMessage: '',
+         errorDriRec: '',
+         errorDriRecMessage: '',
          errorDurationColor: '',
          errorDeliveryColor: '',
+         progressBar: 0,
+         progressBarMessage: '',
+         showProgressBar: false
      };
 
     //  this.getCenter = this.getCenter.bind(this);
@@ -44,6 +50,8 @@ constructor(props) {
      this.handleDeparture = this.handleDeparture.bind(this);
      this.handleDeliveryLimit = this.handleDeliveryLimit.bind(this);
      this.getEventValues = this.getEventValues.bind(this);
+     this.handleDurDelError = this.handleDurDelError.bind(this);
+     this.handleDriRecError = this.handleDriRecError.bind(this);
      this.handleSubmit = this.handleSubmit.bind(this);
 }
 
@@ -77,6 +85,9 @@ handleDriverCallback = (event) =>{
           driver_ids : newDrivers
           }}));
           console.log(this.state)
+    this.setState({
+      errorDriRec: false
+    })
 }
 
 handleRecipientCallback = (event) =>{
@@ -87,6 +98,9 @@ handleRecipientCallback = (event) =>{
       client_ids : newRecipients
       }}));
       console.log(this.state)  
+    this.setState({
+      errorDriRec: false
+    })
 }
 
 /**
@@ -111,7 +125,7 @@ handleDeliveryLimit(event){
     route : {
     ...prevState.route,
     delivery_limit: value},
-    error: false,
+    errorDurDel: false,
     errorDurationColor: '',
     errorDeliveryColor: ''
   }));
@@ -124,7 +138,7 @@ handleDuration(event){
     route : {
     ...prevState.route,
     duration_limit: value},
-    error: false,
+    errorDurDel: false,
     errorDurationColor: '',
     errorDeliveryColor: ''
   }));
@@ -165,43 +179,84 @@ getCenter(location) {
   }
   return 
 }
-
-handleSubmit = (event) => {
-  if (this.delivery_limit && this.duration_limit &&  this.delivery_limit && this.duration_limit) {
-    event.preventDefault();
+  
+handleDurDelError() {
+  if (!(this.delivery_limit) && !(this.duration_limit)) {
     this.setState({
-      loading: true,
-      error: false
-    });
-    routeService.createRoute(this.state.route).then(result => {
-      let redirect = "/routeResults/" + result.id 
-      window.open(redirect, "_blank")
-      this.setState({
-        loading: false
-      });
-    });
-  }
-  else if (!(this.delivery_limit) && !(this.duration_limit)) {
-    this.setState({
-      error: true,
-      errorMessage: 'ERROR: Delivery Limit and Duration are empty',
+      errorDurDel: true,
+      errorDurDelMessage: 'ERROR: Delivery Limit and Duration are empty',
       errorDurationColor: 'red',
       errorDeliveryColor: 'red'
     })
   }
   else if (!(this.duration_limit)) {
     this.setState({
-      error: true,
-      errorMessage: 'ERROR: Duration is empty',
+      errorDurDel: true,
+      errorDurDelMessage: 'ERROR: Duration is empty',
       errorDurationColor: 'red'
     })
   }
-  else {
+  else if (!(this.delivery_limit)) {
     this.setState({
-      error: true,
-      errorMessage: 'ERROR: Delivery Limit is empty',
+      errorDurDel: true,
+      errorDurDelMessage: 'ERROR: Delivery Limit is empty',
       errorDeliveryColor: 'red'
     })
+  }
+}
+
+handleDriRecError() {
+  let driverLength = this.state.route.driver_ids.length
+  let recipientLength = this.state.route.client_ids.length
+  if (driverLength === 0 && recipientLength === 0) {
+    this.setState({
+      errorDriRec: true,
+      errorDriRecMessage: 'ERROR: No Driver(s) or Recipient(s) selected'
+    })
+  }
+  else if (driverLength === 0) {
+    this.setState({
+      errorDriRec: true,
+      errorDriRecMessage: "ERROR: No Driver(s) selected"
+    })
+  }
+  else if (recipientLength === 0) {
+    this.setState({
+      errorDriRec: true,
+      errorDriRecMessage: "ERROR: No Recipient(s) selected"
+    })
+  }
+}
+
+handleSubmit = (event) => {
+  let driverLength = this.state.route.driver_ids.length
+  let recipientLength = this.state.route.client_ids.length
+  if (this.delivery_limit && this.duration_limit && driverLength > 0 && recipientLength > 0) {
+    event.preventDefault();
+    this.setState({
+      loading: true,
+      errorDurDel: false,
+      errorDriRec: false,
+      showProgressBar: true,
+      progressBar: 0,
+      progressBarMessage: 'Creating Route...'
+    });
+    setTimeout(() => { this.setState({ progressBar: 50 }); }, 500);
+    routeService.createRoute(this.state.route).then(result => {
+      this.setState({
+        progressBar: 100,
+        progressBarMessage: 'Finalizing Route...'
+      });
+      routeService.getRouteList(result.id).then(routeResult => {
+        let redirect = "/routeResults/" + routeResult.id 
+        setTimeout(() => { window.open(redirect, "_blank"); }, 2500);
+        setTimeout(() => { this.setState({ loading: false, progressBar: 0, progressBarMessage: '', showProgressBar: false }); }, 2500);
+      });
+    });
+  }
+  else {
+    this.handleDurDelError();
+    this.handleDriRecError();
   }
 }
 
@@ -245,16 +300,24 @@ render() {
         <SelectDriver parentCallback = {this.handleDriverCallback}/>
         <SelectRecipient parentCallback = {this.handleRecipientCallback} />
        
-        <Button className="mr-2 mt-4 btn" variant="primary" disabled={this.state.loading}
+        <Row>
+         <Col sm={0} className="d-flex flex-row">
+          <Button className="mr-2 mt-4 btn" variant="primary" disabled={this.state.loading}
                 onClick={handleSubmit}>
                   {this.state.loading ?  
                     <Spinner
-                      animation="border" role="status">
-                      <span className="visually-hidden">Loading...</span>
+                      animation="border" role="status" style={{ height: 25, width: 25 }}>
                     </Spinner> : "Create Route"}
-        </Button>
-        {this.state.error ? 
-                    <h3 className='error' style={{ fontSize: 20, color: "red", marginTop: 10 }}> { this.state.errorMessage } </h3> : ""}
+          </Button>
+            {this.state.showProgressBar ?
+                        <ProgressBar style={{ width: 400, marginTop: 45 }} animated now={this.state.progressBar}/> : ''}
+         </Col>
+            <h3 className="btn" style={{ fontSize: 20, marginTop: -38 }}> { this.state.progressBarMessage } </h3>
+        </Row>
+        {this.state.errorDurDel ? 
+                    <h3 className='errorDurDel' style={{ fontSize: 20, color: "red", marginTop: 10 }}> { this.state.errorDurDelMessage } </h3> : ""}
+        {this.state.errorDriRec ?
+                    <h3 className='errorDriRec' style={{ fontSize: 20, color: "red", marginTop: 10 }}> { this.state.errorDriRecMessage } </h3> : ""}
         </Form> 
       </Container>
     );
