@@ -4,11 +4,11 @@ import { Route } from 'react-router-dom'
 
 //import CustomersList from './example/CustomersList'
 
-import Home from './components/Home'
-import Recipient from './components/Data/Recipient/Recipient'
-import Driver from './components/Data/Driver/Driver'
-import AddDriver from './components/Data/Driver/AddDriver'
-import AddRecipient from './components/Data/Recipient/AddRecipient'
+import Recipient from './components/Data/Recipient/Recipient';
+import Driver from './components/Data/Driver/Driver';
+import AddDriver from './components/Data/Driver/AddDriver';
+import AddRecipient from './components/Data/Recipient/AddRecipient';
+import Home from './components/Home';
 import UpdateDriver from './components/Data/Driver/UpdateDriver';
 import UpdateRecipient from './components/Data/Recipient/UpdateRecipient';
 import ViewRecipient from './components/Data/Recipient/ViewRecipient';
@@ -18,6 +18,7 @@ import UploadDriversList from './components/Data/Driver/UploadDriversList'
 import PreviewDrivers from './components/Data/Driver/PreviewDrivers'
 import RouteResults from './components/Route_Results/RouteResults';
 import DriverRoute from './components/Route_Results/DriverRoute';
+import History from './components/History/History';
 
 import './App.css';
 
@@ -31,6 +32,7 @@ const BaseLayout = () => (
           <div className="navbar-nav">
             <a className="nav-item nav-link" href="/data">DATA</a>
             <a className="nav-item nav-link" href="/routing">CREATE ROUTE</a>
+            <a className="nav-item nav-link" href="/history">HISTORY</a>
           </div>
         </div>
       </nav>
@@ -40,6 +42,7 @@ const BaseLayout = () => (
       <Route path="/" exact component={Home} />
       <Route path="/data" exact component={Driver} />
       <br/>
+      <Route path="/history" exact component={History} />
       <Route path="/data" exact component={Recipient} />
       <Route path="/routing" exact component={Routing} />
       <Route path="/routeResults/:id" exact component={RouteResults} />

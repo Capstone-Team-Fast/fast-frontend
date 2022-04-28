@@ -10,7 +10,7 @@ import RouteService from '../../services/RouteService'
 import RecipientService from '../../services/RecipientService'
 import DriverService from '../../services/DriverService'
 import LocationService from '../../services/LocationService'
-import BingMapsKey from './BingMapsKey';
+import BingMapsKey from '../BingMapsKey';
 
 const  routeService  =  new  RouteService();
 const  recipientService  =  new  RecipientService();
