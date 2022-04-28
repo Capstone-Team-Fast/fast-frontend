@@ -431,7 +431,7 @@ getItineraryMapURL(route) {
             <Card.Title className="card-header border-dark bg-grey">
               <Col>
                 <Row className="d-flex flex-row">
-                  <Col sm={7} className="title">
+                  <Col sm={8} className="title">
                     <h6 style={{ paddingLeft: 0 }}>
                       {this.getRouteDate(r.created_on)}
                     </h6>
