@@ -39,7 +39,7 @@ export default class PreviewDrivers extends Component {
                         <Button className="mx-1 " variant="outline-primary" onClick={
                             () => fileService.saveFile(this.state.data)
                         }>Save</Button>
-                        <Button className="mx-1 " href={"/"} variant="outline-secondary">Cancel</Button>
+                        <Button className="mx-1 " href={"/data"} variant="outline-secondary">Cancel</Button>
                     </Col>
                 </Row>
                 <Row className="card-body table-wrapper-scroll-y"> {/*my-custom-scrollbar*/}

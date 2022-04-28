@@ -238,17 +238,16 @@ render() {
                 <Row className="mb-3">
                     <Form.Group as={Col} className="mb-3" controlId="formGridPhone">
                         <Form.Label>Phone Number</Form.Label>
-                        
                         <Form.Control  type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                         onChange={this.handlePhoneChange} value={this.state.phone}
                         required placeholder="402-345-6789" name="phone" maxlength="12"/>
                     </Form.Group>
 
-                <Form.Group as={Col}>
+                    <Form.Group as={Col}>
                         <Form.Label htmlFor="quantity">Quantity</Form.Label> 
-                        <Form.Control type="number" onChange={this.handleChange} 
-                            required name="quantity" min="1"/>
-                </Form.Group>
+                        <Form.Control type="number" value={this.state.quantity} 
+                        required onChange={this.handleChange} name="quantity" min="1"/>
+                    </Form.Group>
                 </Row>
 
                 <Form.Group className="mb-3">
@@ -320,7 +319,7 @@ render() {
                 <Button variant="primary" className="mr-4" 
                     onClick={this.handleSubmit}>Submit
                 </Button>
-                <Link to="/">
+                <Link to="/data">
                     <Button variant="secondary">Return</Button>
                 </Link>
                 {this.state.saved ?
