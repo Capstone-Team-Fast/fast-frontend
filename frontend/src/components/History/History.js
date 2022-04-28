@@ -438,10 +438,10 @@ getItineraryMapURL(route) {
                     {this.getDriverName(r)}
                   </Col>
                   <Col sm={0} className="justify-content-around d-flex flex-row">
-                            <Button href={this.getItineraryMapURL(r)}
+                            <Button href={this.getItineraryMapURL(r)} style={{ margin: 10}}
                                 target="_blank">View Route Map</Button>
                             <Button href={"/routeResults/driverRoute/" 
-                                + r.id + "/" + r.assigned_to} 
+                                + r.id + "/" + r.assigned_to} style={{margin: 10}}
                                 target="_blank">Print Itinerary</Button>
                         </Col>   
                 </Row>
