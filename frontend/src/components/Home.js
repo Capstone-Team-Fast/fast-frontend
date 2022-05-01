@@ -85,7 +85,7 @@ function Home() {
                 City: The City the Recipient lives in<br/>
                 State: The State of the Recipient<br/>
                 Zipcode: The Zipcode of the Recipient <br/>
-                Center: If the address is the ISC Address, set to 0 otherwise<br/>
+                Center: Set to 1 if this address is a ISC address or a Departure location, otherwise set to 0<br/>
                 Room_Number: The Room Number of the Recipient, if applicable, otherwise leave blank.<br/>
                 Language: The Languages the Recipient can communicate in<br/>
                 Quantity: The Quantity of packages the Recipient requests<br/>
