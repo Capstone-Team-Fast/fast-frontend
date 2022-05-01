@@ -11,6 +11,15 @@ function Home() {
             <h1 style={{color:"blue", textAlign:"center"}}>Instructions</h1><br />
             <h3 style={{color:"navy", paddingLeft:"400px"}}>How to add new data:</h3>
             <p style={{paddingLeft:"400px", paddingRight:"300px"}}>
+                To add a new Center/Departure location:
+                <ol style={{paddingLeft:"100px"}}>
+                    <li>Click on Data at the upper right</li>
+                    <li>Click Add New to the right of the Recipient title</li>
+                    <li>Add the Center's address in the Address field</li>
+                    <li>Make sure 'Center Location?'' is 'Yes'</li>
+                    <li>Enter other relevant fields of data</li>
+                    <li>Click the Submit button</li>
+                </ol>
                 To add a single new Driver to this App: 
                 <ol style={{paddingLeft:"100px"}}>
                     <li>Click on Data at the upper right</li>
@@ -75,10 +84,10 @@ function Home() {
                 Address: The Address of the Recipient<br/>
                 City: The City the Recipient lives in<br/>
                 State: The State of the Recipient<br/>
-                Zipcode: The Zipccode of the Recipient <br/>
+                Zipcode: The Zipcode of the Recipient <br/>
                 Center: If the address is the ISC Address, set to 0 otherwise<br/>
                 Room_Number: The Room Number of the Recipient, if applicable, otherwise leave blank.<br/>
-                Language: The Languages the Recipient can communiacate in<br/>
+                Language: The Languages the Recipient can communicate in<br/>
                 Quantity: The Quantity of packages the Recipient requests<br/>
                 <br />
                 These files can be uploaded by clicking on the Browse Files button and browsing to your prepared file on your computer.<br /><br />
