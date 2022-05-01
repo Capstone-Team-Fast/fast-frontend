@@ -10,12 +10,14 @@ import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import RecipientService from '../../../services/RecipientService';
+import LocationService from '../../../services/LocationService';
 import SearchService from '../../../services/SearchService';
 import FileService from '../../../services/FileService';
 import { DialogBox } from '../../Utils/DialogBox';
 import Stack from 'react-bootstrap/Stack';
 
 const recipientService = new RecipientService();
+const locationService = new LocationService();
 const searchService = new SearchService();
 const  fileService = new FileService();
 
@@ -35,19 +37,24 @@ class Recipient extends Component {
         super(props);
         this.state  = {
             recipients: [],
-            filtered: [], 
+            locations: [],
+            filtered_recipients: [], 
+            filtered_locations: [],
             fileContent: [],
             new_recipients: [],
             show: false,
             allShow: false,
             recipientToDelete: {},
             allRecipientsDelete: [],
+            locationToDelete: {},
             sorted: false,
             loading: false
         };
         this.fileInput = React.createRef();
         this.handleRecipientDelete = this.handleRecipientDelete.bind(this);
         this.handleAllRecipientsDelete = this.handleAllRecipientsDelete.bind(this);
+        this.handleLocationDelete = this.handleLocationDelete.bind(this);
+        this.handleAllLocationsDelete = this.handleAllLocationsDelete.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.readFile = this.readFile.bind(this);
         this.refreshRecipients = this.refreshRecipients.bind(this);
@@ -64,7 +71,13 @@ class Recipient extends Component {
     componentDidMount() {
         var  self  =  this;
         recipientService.getRecipients().then(function (result) {
-            self.setState({ recipients:  result, filtered: result});
+            self.setState({ recipients:  result, filtered_recipients: result});
+        });
+
+        locationService.getLocations().then((result) => {
+            this.setState({
+                locations: result,
+            });
         });
     }
 
@@ -101,7 +114,7 @@ class Recipient extends Component {
     refreshRecipients(){
         var  self  =  this;
         recipientService.getRecipients().then(function (result) {
-            self.setState({ recipients:  result, filtered: result, loading: false});
+            self.setState({ recipients:  result, filtered_recipients: result, loading: false});
             });
     }
 
@@ -109,29 +122,35 @@ class Recipient extends Component {
         this.setState({show: false, allShow: false});
     }
     
-    // For deleting 1 or all recipients
+    // For deleting 1 or all recipients with associated locations
     handleSave() {
         this.handleClose();
         if (this.state.show) {
             this.handleRecipientDelete(this.state.recipientToDelete);
-            this.setState({recipientToDelete: {}});
+            this.handleLocationDelete(this.state.locationToDelete);
+            this.setState({recipientToDelete: {}, locationToDelete: {}});
         }
         else if (this.state.allShow) {
             this.handleAllRecipientsDelete(this.state.allRecipientsDelete);
-            this.setState({ allRecipientsDelete: [] });
+            this.handleAllLocationsDelete(this.state.allLocationsDelete);
+            this.setState({ allRecipientsDelete: [], allLocationsDelete: [] });
         }
     }
     
-    // For deleting 1 recipients
+    // For deleting 1 recipient and associated location
     handleShow(e, r) {
         e.preventDefault();
-        this.setState({show: true, recipientToDelete: r});
+        this.setState({show: true, recipientToDelete: r, locationToDelete: r.location});
     }
     
-    // For deleting all recipients
+    // For deleting all recipients and associated locations
     handleAllShow(e, r) {
         e.preventDefault();
-        this.setState({allShow: true, allRecipientsDelete: r});
+        let locsToDelete = [];
+        for (let i = 0; i < r.length; i++) {
+            locsToDelete.push(r[i].location);
+        }
+        this.setState({allShow: true, allRecipientsDelete: r, allLocationsDelete: locsToDelete});
     }
 
 /**
@@ -145,7 +164,7 @@ handleRecipientDelete(r){
         var  newArr  =  self.state.recipients.filter(function(obj) {
             return  obj.id  !==  r.id;
         });
-        self.setState({recipients:  newArr, filtered: newArr})
+        self.setState({recipients:  newArr, filtered_recipients: newArr})
     });
 }
 
@@ -162,6 +181,33 @@ handleAllRecipientsDelete(r) {
 }
 
 /**
+ * Event handler used to delete a location from the database when the 
+ * user clicks on the delete button.
+ * @param {Object} loc The location object to be deleted.
+ */
+ handleLocationDelete(loc){
+    let  self  =  this;
+    locationService.deleteLocation(loc).then(()=>{
+        let  newArr  =  self.state.locations.filter(function(obj) {
+            return  obj.id  !==  loc.id;
+        });
+        self.setState({locations: newArr, filtered_locations: newArr})
+    });
+} 
+
+/**
+* Event handler used to delete all locations except ones designated as center from the database when the 
+* user clicks on the delete all button.
+* @param {Object} locs the array of locations to be deleted.
+*/
+handleAllLocationsDelete(locs) {
+    let notCenterLocs = locs.filter(loc => loc.is_center == false)
+    for (var i = 0; i < notCenterLocs.length; i++) {
+        this.handleLocationDelete(notCenterLocs[i]);
+    }
+}
+
+/**
  * Event handler method called when the user enters a value into the 
  * recipient search box.
  * @param {Object} e The event triggered when a user enters information
@@ -170,7 +216,7 @@ handleAllRecipientsDelete(r) {
  handleSearch(e) {
     let newList = searchService.findRecipients(e, this.state.recipients);
     this.setState({
-        filtered: newList
+        filtered_recipients: newList
     });
 }
 
@@ -261,7 +307,6 @@ handleAllRecipientsDelete(r) {
                 }
                 recipients.push(recipient_template);
             }
-            console.log(recipients);
             this.setState({
                 new_recipients: JSON.stringify(recipients)
             });
@@ -386,7 +431,7 @@ handleAllRecipientsDelete(r) {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.filtered.map( r  =>
+                            {this.state.filtered_recipients.map( r  =>
                                 <tr  key={r.id}>
                                 <td>{r.first_name}</td>
                                 <td>{r.last_name}</td>
