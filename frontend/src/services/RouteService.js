@@ -20,14 +20,39 @@ export default class RouteService{
 
     /**
      * This method connects to the backend database to
-     * retrieve a list of all routes stored in the database.
-     * @returns The list of routes, as JSON objects, stored in the
+     * retrieve a list of all route lists stored in the database.
+     * @returns a list of all route lists, as JSON objects, stored in the
      *          database.
      */
-    getRouteList(pk) {
-        const url = `${API_URL}/api/routeList/${pk}/`;
+    getRouteLists() {
+        console.log("getRouteLists")
+        const url = `${API_URL}/api/routeList/`;
         return axios.get(url).then(response => response.data);
     }
+
+    /**
+     * This method connects to the backend database to
+     * retrieve a single route list stored in the database.
+     * @returns a single route list, as JSON objects, stored in the
+     *          database.
+     */
+     getRouteList(pk) {
+        console.log("getRouteList")
+        const url = `${API_URL}/api/routeList/${pk}/`;
+        return axios.get(url).then(response => response.data);
+    }    
+
+    /**
+     * This method deletes a route list from the database.
+     * @param {Object} routeList The object representing the route list to be deleted.
+     * @returns A response code indicating success or failure of the HTTP
+     *          deletion request.
+     */
+    deleteRouteList(routeList){
+        console.log("deleteRouteList")
+        const url = `${API_URL}/api/routeList/${routeList.id}/`;
+        return axios.delete(url);
+    }    
 
     /**
      * This method connects to the backend database to retrieve

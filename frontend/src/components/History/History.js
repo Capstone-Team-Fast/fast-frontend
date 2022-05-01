@@ -8,12 +8,17 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import RouteService from "../../services/RouteService";
 import RecipientService from "../../services/RecipientService";
+import SearchService from '../../services/SearchService';
 import DriverService from "../../services/DriverService";
+import { DialogBox } from '../Utils/DialogBox';
 import BingMapsKey from '../BingMapsKey';
 
 const recipientService = new RecipientService();
 const routeService = new RouteService();
 const driverService = new DriverService();
+const searchService = new SearchService();
+const dateFormat = new Intl.DateTimeFormat("en-US", {month: "short", day:"2-digit", year: "numeric"});
+const timeFormat = new Intl.DateTimeFormat("en-US", {hour: "numeric", minute: "numeric"});
 const BING_MAPS_API_KEY = BingMapsKey.key;
 
 /**
@@ -29,8 +34,12 @@ class History extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      routeLists: [],
+      routeList: [],
       routes: [],
       drivers: [],
+      allShow: false,
+      allRouteListDelete: [],
       route: {
         itinerary: [],
         total_distance: "",
@@ -47,6 +56,9 @@ class History extends Component {
     this.getPhone = this.getPhone.bind(this);
     this.getEmployeeStatus = this.getEmployeeStatus.bind(this);
     this.isEmployee = this.isEmployee.bind(this)
+    this.handleClose = this.handleClose.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleAllShow = this.handleAllShow.bind(this);
   }
 
   /**
@@ -72,6 +84,18 @@ class History extends Component {
         routes: result,
       });
     });
+
+    routeService.getRouteLists().then((result) => {
+      this.setState({
+        routeLists: result,
+      });
+    });
+
+    routeService.getRouteList().then((result) => {
+      this.setState({
+        routeList: result,
+    });
+  });
 
     driverService.getDrivers().then((result) => {
       this.setState({
@@ -206,18 +230,32 @@ class History extends Component {
   }
 
   /**
-   * Function to format date each route was generated on
+   * Function to format date each route was generated
    * for each driver.
    * @param {String} recipient.created_on from the route.
    * @returns formatted string of date of route generated.
    */
   getRouteDate(route_date) {
-    let month = route_date.substring(5, 7);
-    let day = route_date.substring(8, 10);
-    let year = route_date.substring(0, 4);
-    return month + "/" + day + "/" + year;
+    let date = new Date(route_date)
+    return dateFormat.format(date);
   }
 
+  /**
+   * Function to format time each route was generated
+   * for each driver.
+   * @param {String} recipient.created_on from the route.
+   * @returns formatted string of time of route generated.
+   */
+   getRouteTime(route_date) {
+    let time = new Date(route_date);
+    return timeFormat.format(time);
+  }
+
+/**
+ * Function to check if a driver is an employee * 
+ * @param {Object} driver
+ * @returns boolean true if employee; false otherwise.
+ */
   isEmployee(driver) {
     let empStatus = this.getEmployeeStatus(driver)
     if (empStatus === "Employee") {
@@ -416,6 +454,51 @@ getItineraryMapURL(route) {
   return mapURL;
 }
 
+/**
+ * Event handler used to delete a route from the database when the 
+ * user clicks on the delete button.
+ * @param {Object} r The route object to be deleted.
+ */
+ handleRouteListDelete(r) {
+  let self = this;
+  routeService.deleteRouteList(r).then(() => {
+      let newArr = self.state.routeLists.filter(function (obj) {
+          return obj.id !== r.id;
+      });
+      self.setState({ routeLists: newArr, filtered: newArr })
+  });
+}
+
+/**
+* Event handler used to delete all routes from the database when the 
+* user clicks on the delete all button.
+* @param {Object} r The routeList object to be deleted.
+*/
+handleAllRouteListsDelete(r) {
+  let self = this;
+  for (let i = 0; i < r.length; i++) {
+      this.handleRouteListDelete(r[i]);
+  }
+}
+
+handleClose() {
+  this.setState({allShow: false});
+}
+
+// For deleting all routeLists
+handleSave() {
+  this.handleClose();
+  if (this.state.allShow) {
+      this.handleAllRouteListsDelete(this.state.allRouteListsDelete);
+      this.setState({allRouteListsDelete: [] }, window.location.reload(true));
+  }
+}
+
+// For deleting all routeLists
+handleAllShow(e, r) {
+    this.setState({allShow: true, allRouteListsDelete: r});
+}
+
   /**
    * The render method used to display the component.
    * @returns The HTML to be rendered.
@@ -426,6 +509,23 @@ getItineraryMapURL(route) {
         <div>
           <h1 style={{ textAlign: "center" }}>Route History</h1>
         </div>
+        <Col>
+          <Row>
+            <Col>
+              <Button onClick={(e) => this.handleAllShow(e, this.state.routeLists)}>Delete All Route History</Button>
+              <DialogBox 
+                show={this.state.allShow} 
+                modalTitle='Confirm Deletion'
+                mainMessageText='Are you sure you want to delete all route history?'
+                handleClose={this.handleClose}
+                handleSave={this.handleSave}
+                closeText='Cancel'
+                saveText='Delete All Route History'
+                buttonType='danger'
+              />
+            </Col>
+          </Row>
+        </Col>
         {this.state.routes.reverse().map((r) => (
           <Card>
             <Card.Title className="card-header border-dark bg-grey">
@@ -433,7 +533,7 @@ getItineraryMapURL(route) {
                 <Row className="d-flex flex-row">
                   <Col sm={8} className="title">
                     <h6 style={{ paddingLeft: 0 }}>
-                      {this.getRouteDate(r.created_on)}
+                      {this.getRouteDate(r.created_on)} at {this.getRouteTime(r.created_on)}
                     </h6>
                     {this.getDriverName(r)}
                   </Col>
