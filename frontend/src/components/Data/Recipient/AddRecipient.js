@@ -198,7 +198,7 @@ handleChange(event) {
 handleSubmit = (event) => {
     event.preventDefault();
     this.recipientService.createRecipient(this.state).then( result => {
-        this.setState({redirect: "/"});
+        this.setState({redirect: "/data"});
     });
 }
     
