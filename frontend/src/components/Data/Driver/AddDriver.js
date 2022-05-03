@@ -162,7 +162,7 @@ handleChange(event) {
 handleSubmit = (event) => {
     event.preventDefault();
     this.driverService.createDriver(this.state).then( () => {
-        this.setState({redirect: "/"});
+        this.setState({redirect: "/data"});
     });
 }
 
