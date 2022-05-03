@@ -512,7 +512,7 @@ handleAllShow(e, r) {
         <Col>
           <Row>
             <Col>
-              <Button onClick={(e) => this.handleAllShow(e, this.state.routeLists)}>Delete All Route History</Button>
+              <Button className="m-2" onClick={(e) => this.handleAllShow(e, this.state.routeLists)}>Delete All Route History</Button>
               <DialogBox 
                 show={this.state.allShow} 
                 modalTitle='Confirm Deletion'
