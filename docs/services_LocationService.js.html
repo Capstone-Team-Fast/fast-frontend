@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: services/LocationService.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,48 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: services/LocationService.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import axios from 'axios';
+const API_URL = 'http://127.0.0.1:8000';
 
+/**
+ * This class provides a method to connect to the backend database
+ * for the retrieval of all locations stored in the database.
+ */
+export default class DriverService{
 
-    <h3> </h3>
+    /**
+     * This method connects to the backend database to
+     * retrieve a list of all locations stored in the database.
+     * @returns The list of locations, as JSON objects, stored in the
+     *          database.
+     */
+    getLocations() {
+        const url = `${API_URL}/api/locations/`;
+        return axios.get(url).then(response => response.data);
+    }
 
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+    /**
+     * This method deletes a location from the database.
+     * @param {Object} location The object representing the location to be deleted.
+     * @returns A response code indicating success or failure of the HTTP
+     *          deletion request.
+     */
+     deleteLocation(location){
+        const url = `${API_URL}/api/locations/${location.id}/`;
+        return axios.delete(url);
+    }
+}</code></pre>
+        </article>
+    </section>
 
 
 
