@@ -66,5 +66,6 @@ Furthermore, the team added a feature which allows a user to remove all drivers 
     - npm -v
 
 - Go to the fast-frontend/frontend folder.
-- If the directory "node modules" does not exist, enter the command "npm install"
-- Enter "npm run start" to run the application.
+    - If the directory "node modules" does not exist, enter the command "npm install"
+    - Enter "npm install react-csv --save;" (once this module is installed, you do not have to run this command again)
+    - Enter "npm run start" to run the application.

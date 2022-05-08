@@ -1,4 +1,5 @@
 import  React, { Component } from  'react';
+import { CSVLink } from "react-csv";
 import Spinner from 'react-bootstrap/Spinner'
 
 import Container from 'react-bootstrap/Container';
@@ -19,7 +20,8 @@ import Stack from 'react-bootstrap/Stack';
 const recipientService = new RecipientService();
 const locationService = new LocationService();
 const searchService = new SearchService();
-const  fileService = new FileService();
+const fileService = new FileService();
+const headers = ["Phone", "Firstname", "Lastname", "Address", "City", "State", "Zipcode", "Center", "Room_Number", "Language", "Quantity"];
 
 
 /**
@@ -328,6 +330,49 @@ handleAllLocationsDelete(locs) {
         }
     }
 
+/**
+ * Method which returns a String of a recipients's languages
+ * @param {Object} recipient The driver whose known languages are to be returned.
+ */
+ getRecipientLanguages(recipient) {
+    let languages = "";
+    for (let i = 0; i < recipient.languages.length; i++) {
+        languages = languages.concat(" ", recipient.languages[i].name);
+    }
+
+    languages = languages.trim();
+    languages = languages.split(" ").join(", ");
+    return languages;
+}
+
+/**
+ * Method which returns an array of recipient data to be used in exporting CSV file
+ */
+ getCSVData() {
+    let data = [];
+    let recipients = this.state.recipients;
+    for (let i = 0; i < recipients.length; i++) {
+        let row = [];
+        row.push(recipients[i].phone);
+        row.push(recipients[i].first_name);
+        row.push(recipients[i].last_name);
+        row.push(recipients[i].location.address);
+        row.push(recipients[i].location.city);
+        row.push(recipients[i].location.state);
+        row.push(recipients[i].location.zipcode);
+        if (recipients[i].location.is_center == false) {
+            row.push(0);
+        } else
+            row.push(1);     
+        row.push(recipients[i].location.room_number);
+        row.push(this.getRecipientLanguages(recipients[i]));
+        row.push(recipients[i].quantity);
+
+        data.push(row);
+    }
+    return data;
+  }
+
   /**
    * The render method used to display the component. 
    * @returns The HTML to be rendered.
@@ -482,6 +527,13 @@ handleAllLocationsDelete(locs) {
                                             animation="border" role="status" style={{ height: 25, width: 25 }}>
                                         </Spinner> : "Add Recipients"}
                                 </Button>
+                            </Col>
+                            <Col>
+                                <CSVLink style={{ margin: 20}}
+                                    data={this.getCSVData()}
+                                    headers={headers}
+                                    filename='recipients.csv'
+                                >Download Recipients</CSVLink>
                             </Col>
                         </Row>
                     </Col>
