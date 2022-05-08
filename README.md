@@ -57,6 +57,18 @@ The team adjusted location type validation and geocode validation on the backend
 
 Furthermore, the team added a feature which allows a user to remove all drivers or all recepients as a quality of life improvement to the application.
 
+## Milestone 5 Release Notes:
+The team's original objectives for milestone 5 were as follows:
+1) Focus on finalizing metrics 
+2) Get code ready for production
+3) Test everything and comment all new additions
+
+The first objective was to finish a feature that had not been able to be started because the Intercultural Senior Center informed us that they already had a metrics tracking app for volunteer drivers and thus this would be redundant on our part. 
+
+We then shifted our focus to expand the logging of the algorithm in an effort to increase quality of life. We also finished the History feature that was still half completed. At the end, we were also able to implement a feature that was specifically requested by the ISC, being able to export the database to an Excel file like the one they were using to upload the data initially. 
+
+The last two objectives objective was to finialize our codebase for the end of the project. This is what we spent the majority of our time this milestone on. We cleaned up irrelevant code, and formatted it for consistancy. We also searched for and fixed small bug and made sure the code has comments and logging was thorough.
+
 
 # Installation
 
