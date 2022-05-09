@@ -94,7 +94,7 @@ function Home() {
                 <h3 style={{color:"navy"}}>How to create new Routes:</h3>
                 To create a Route from the provided Data, at the top of the screen, click Create Route, you will be taken to a new page. 
                 <ol style={{paddingLeft:"100px"}}>
-                    <li>Select the Maximum Capacity hat the Drivers can deliver</li>
+                    <li>Select the Maximum Capacity that the Drivers can deliver</li>
                     <li>Select the Maximum Hours the volunteers can work this assignment</li>
                     <li>Select the Departure Location if one is not already selected</li>
                     <li>Enter the drivers to be added to the assignment
