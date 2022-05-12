@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/Data/Driver/AddDriver.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/Data/Driver/AddDriver.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import  React, { Component } from  'react';
+import { Redirect } from 'react-router';
+
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import DriverService from '../../../services/DriverService';
+import Link from 'react-router-dom/Link';
+
+/**
+ * This component is used to add individual drivers to the database.
+ */
+class  AddDriver  extends  Component {
+
+/**
+ * The constructor method initializes the component's state object and
+ * binds the methods of the component to the current instance.
+ * @param {Object} props The properties passed to the component.
+ */
+constructor(props) {
+    super(props);
+    this.state = {
+        'user': '', 'first_name': '', 'last_name': '', 
+        'phone': '', 'availability': {'sunday': false,
+        'monday': false, 'tuesday': false, 'wednesday': false, 
+        'thursday': false, 'friday': false, 'saturday': false}, 
+        'employee_status': 'Employee', 'capacity': '', 'languages': [{'name': 'English'}]
+    };
+    this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
+                        'Hindi', 'Russian', 'Portuguese', 'Other'];
+    this.days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 
+                    'Friday', 'Saturday']
+    
+    this.driverService = new DriverService();
+    this.handleChange = this.handleChange.bind(this);
+    this.handlePhoneChange = this.handlePhoneChange.bind(this);
+    this.handleAvailabilityChange = this.handleAvailabilityChange.bind(this);
+    this.handleLanguageChange = this.handleLanguageChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.getEventValues = this.getEventValues.bind(this);
+    this.checkLanguage = this.checkLanguage.bind(this);
+}
+
+/**
+ * This method retrieves the value, name, and id properties of the 
+ * event that has been triggered.
+ * @param {Object} event The event that has been triggered.
+ * @returns The value, name, and id properties of the triggered event.
+ */
+getEventValues(event) {
+    let [value, name, id] = [   event.target.value, 
+                                event.target.name, 
+                                event.target.id];
+    return [value, name, id];
+}
+
+/**
+ * Event handler that is called to update the component's state when
+ * the user changes the values of the form fields associated with a 
+ * driver's availability.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the availability fields in the form.
+ */
+handleAvailabilityChange(event) {
+    let [value, name, id] = this.getEventValues(event);
+    let checked = event.target.checked 
+    this.setState(prevState => ({
+            [name]: {
+                 ...prevState[name],
+                [id.toLowerCase()]: checked
+            }    
+        }
+        ));
+}
+
+/**
+ * Event handler that is called to update the component's state when
+ * the user changes the values of the form fields associated with a 
+ * driver's languages.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the language fields in the form.
+ */
+handleLanguageChange(event) {
+    let [value, name, id] = this.getEventValues(event);
+    if (event.target.checked) {
+        this.setState({
+            languages: this.state.languages.concat({'name':id})
+        });
+    }
+    else {
+        var newArr = this.state.languages.filter( l => {
+            return l.name !== id;
+        })
+        this.setState({languages:  newArr});
+    }
+}
+
+/**
+ * Event handler that is called to update the component's state
+ * when the user changes the value of the form field associated 
+ * with a driver's phone number.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the phone number field in the form.
+ */
+handlePhoneChange(event) {
+    let value = event.target.value.replace(/[^\d]/g, "")
+    let phone =""
+
+    if (value.length &lt; 4) {
+        phone = value 
+    }
+    else if (value.length &lt; 7) {
+        phone = value.slice(0, 3) + "-" + value.slice(3)
+    }
+    else {
+        phone = value.slice(0,3) + "-" + value.slice(3,6) + "-" +
+            value.slice(6)
+    }
+    
+    this.setState({
+        'phone': phone
+    });
+}
+
+/**
+ * Generic event handler that is called to update the component's state 
+ * when the user changes the value of a form field that does not require 
+ * special handling.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to a generic form field.
+ */
+handleChange(event) {
+    let [value, name] = this.getEventValues(event);
+    this.setState({
+        [name]: value
+    });
+}
+
+/**
+ * Method called to prepopulate the language fields of the form based on
+ * whether the language passed as a parameter is stored in the recipient's state.
+ * @param {String} language The name of a language.
+ * @returns True if the language is stored in the current recipient's state, 
+ *          false otherwise.
+ */
+ checkLanguage(language) {
+    for (let i = 0; i &lt; this.state.languages.length; i++) {
+        if (this.state.languages[i].name === language)
+            return true 
+    }
+}
+
+
+/**
+ * Event handler that is called upon form submission to create a new 
+ * driver in the database and redirect the user to the Data page.
+ * @param {Object} event The submission event that is triggered on  
+ *                          submission of the form.
+ */
+handleSubmit = (event) => {
+    event.preventDefault();
+    this.driverService.createDriver(this.state).then( () => {
+        this.setState({redirect: "/data"});
+    });
+}
+
+/**
+ * The render method used to display the component. 
+ * @returns The HTML to be rendered.
+ */
+render() {
+    if (this.state.redirect) {
+        return &lt;Redirect to={this.state.redirect}/>
+    }
+
+    return (
+        &lt;Container>
+            &lt;h1 className="h2">Driver's Details&lt;/h1>
+            &lt;Form onSubmit={this.handleSubmit}>
+                &lt;Row className="mb-3">
+                    &lt;Form.Group as={Col}>
+                        &lt;Form.Label htmlFor="first_name">First Name&lt;/Form.Label>
+                        &lt;Form.Control type="text" name="first_name" 
+                            onChange={this.handleChange} required placeholder="Enter First Name" />
+                    &lt;/Form.Group>
+
+                    &lt;Form.Group as={Col}>
+                        &lt;Form.Label htmlFor="last_name">Last Name&lt;/Form.Label>
+                        &lt;Form.Control type="text" name="last_name"
+                        onChange={this.handleChange} required placeholder="Enter Last Name" />
+                    &lt;/Form.Group>
+                &lt;/Row>
+
+                &lt;Row>
+                    &lt;Form.Group as={Col} className="mb-3" controlId="formGridPhone">
+                        &lt;Form.Label>Phone Number&lt;/Form.Label>
+                        
+                        &lt;Form.Control  type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        onChange={this.handlePhoneChange} value={this.state.phone}
+                        required placeholder="402-345-6789" name="phone" maxlength="12"/>
+                    &lt;/Form.Group>
+
+                    &lt;Form.Group as={Col} className="mb-3" controlId="formGridStatus">
+                        &lt;Form.Label>Status&lt;/Form.Label>
+                        &lt;Form.Select onChange={this.handleChange} name="employee_status">
+                            &lt;option>Employee&lt;/option>
+                            &lt;option>Volunteer&lt;/option>
+                        &lt;/Form.Select>
+                    &lt;/Form.Group>
+
+                    &lt;Form.Group as={Col} controlId="formGridCapacity">
+                        &lt;Form.Label>Capacity&lt;/Form.Label>
+                        &lt;Form.Control type="number" placeholder="Vehicle Capacity"
+                        required onChange={this.handleChange} name="capacity" min="0"/>
+                    &lt;/Form.Group>
+                &lt;/Row>
+
+                &lt;Form.Group className="mb-3">
+                    &lt;Row>&lt;Form.Label>Availabilty&lt;/Form.Label>&lt;/Row>
+                        { this.days.map( d => 
+                            &lt;Form.Check type="checkbox" name="availability" value="true" 
+                            inline label={d} id={d} 
+                            onChange={this.handleAvailabilityChange} />
+                        )}
+                &lt;/Form.Group>
+
+                &lt;Form.Group className="mb-3">
+                    &lt;Row>&lt;Form.Label>Languages&lt;/Form.Label>&lt;/Row>
+                        { this.languages.map( l => 
+                            &lt;Form.Check type="checkbox" inline label={l} id={l}
+                                name="languages" onChange={this.handleLanguageChange} 
+                                checked={this.checkLanguage(l)} />
+                        )}
+                &lt;/Form.Group>
+
+                &lt;Button variant="primary" className="mr-4" type="submit">Submit&lt;/Button>
+                &lt;Link to="/data">
+                    &lt;Button variant="secondary">Cancel&lt;/Button>
+                &lt;/Link>
+            &lt;/Form>
+        &lt;/Container>
+        );
+    }
+}
+export default AddDriver;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddDriver.html">AddDriver</a></li><li><a href="AddRecipient.html">AddRecipient</a></li><li><a href="Driver.html">Driver</a></li><li><a href="DriverRoute.html">DriverRoute</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="Recipient.html">Recipient</a></li><li><a href="RouteResults.html">RouteResults</a></li><li><a href="UpdateDriver.html">UpdateDriver</a></li><li><a href="UpdateRecipient.html">UpdateRecipient</a></li><li><a href="ViewDriver.html">ViewDriver</a></li><li><a href="ViewRecipient.html">ViewRecipient</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createDriver">createDriver</a></li><li><a href="global.html#createRecipient">createRecipient</a></li><li><a href="global.html#createRoute">createRoute</a></li><li><a href="global.html#deleteDriver">deleteDriver</a></li><li><a href="global.html#deleteLocation">deleteLocation</a></li><li><a href="global.html#deleteRecipient">deleteRecipient</a></li><li><a href="global.html#deleteRouteList">deleteRouteList</a></li><li><a href="global.html#findDrivers">findDrivers</a></li><li><a href="global.html#findRecipients">findRecipients</a></li><li><a href="global.html#getDriver">getDriver</a></li><li><a href="global.html#getDrivers">getDrivers</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#getRecipient">getRecipient</a></li><li><a href="global.html#getRecipients">getRecipients</a></li><li><a href="global.html#getRoute">getRoute</a></li><li><a href="global.html#getRouteList">getRouteList</a></li><li><a href="global.html#getRouteLists">getRouteLists</a></li><li><a href="global.html#getRoutes">getRoutes</a></li><li><a href="global.html#updateDriver">updateDriver</a></li><li><a href="global.html#updateRecipient">updateRecipient</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri May 06 2022 16:22:02 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

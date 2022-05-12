@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: services/SearchService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: services/SearchService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * This class provides methods to search the lists of drivers and recipients
+ * for based on the current information entered into the search field(s) on
+ * the Data page.
+ */
+ export default class SearchService{
+
+    /**
+     * This method uses two parameters - an event object that is triggered 
+     * when the user enters information into the Driver search field and 
+     * the list of drivers stored in the database - to return a list of drivers
+     * that have relevant field values matching the value entered in the 
+     * search box.
+     * @param {Object} event The event triggered when a user enters information 
+     *                          into the Driver search field on the Data page.
+     * @param {Array} drivers The list of drivers stored in the database.
+     * @returns A list of drivers that have at least one data field matching 
+     *          the value entered into the search box.
+     */
+    findDrivers(event, drivers) {
+        let currentList = drivers;
+        let newList = []
+    
+        if (event.target.value) {
+            newList = currentList.filter(item => {
+                let driverId = item.id;
+                let fName = item.first_name.toLowerCase();
+                let lName = item.last_name.toLowerCase();
+                let fullName = fName + " " + lName 
+                let formalName = lName + ", " + fName
+                let phone = item.phone;
+                let emp_status = item.employee_status.toLowerCase();
+                const filter = event.target.value.toLowerCase();
+                return driverId.toString().includes(filter) | fullName.includes(filter) 
+                        | formalName.includes(filter) | phone.toString().includes(filter) 
+                        | emp_status.includes(filter);
+            });
+        }
+        else {
+            newList = drivers;
+        }
+        return newList;
+    }
+
+    /**
+     * This method uses two parameters - an event object that is triggered 
+     * when the user enters information into the Recipient search field and 
+     * the list of recipients stored in the database - to return a list of 
+     * recipients that have relevant field values matching the value entered in the 
+     * search box.
+     * @param {Object} event The event triggered when a user enters information 
+     *                          into the Recipient search field on the Data page.
+     * @param {Array} recipients The list of recipients stored in the database.
+     * @returns A list of recipients that have at least one data field matching 
+     *          the value entered into the search box.
+     */
+     findRecipients(event, recipients) {
+        let currentList = recipients;
+        let newList = []
+    
+        if (event.target.value) {
+            newList = currentList.filter(item => {
+                let recipientId = item.id.toString();
+                let fName = item.first_name.toLowerCase();
+                let lName = item.last_name.toLowerCase();
+                let fullName = fName + " " + lName 
+                let formalName = lName + ", " + fName
+                let phone = item.phone.toString();
+                let address = item.location.address.toLowerCase()
+                let city = item.location.city.toLowerCase() 
+                let zip = item.location.zipcode.toString()
+                let isCenter = item.location.is_center
+                const filter = event.target.value.toLowerCase();
+                return (recipientId.includes(filter) | fullName.includes(filter) 
+                        | formalName.includes(filter) | phone.includes(filter) 
+                        | address.includes(filter) 
+                        | city.includes(filter) | zip.includes(filter));
+            });
+        }
+        else {
+            newList = recipients;
+        }
+        return newList;
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddDriver.html">AddDriver</a></li><li><a href="AddRecipient.html">AddRecipient</a></li><li><a href="Driver.html">Driver</a></li><li><a href="DriverRoute.html">DriverRoute</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="Recipient.html">Recipient</a></li><li><a href="RouteResults.html">RouteResults</a></li><li><a href="UpdateDriver.html">UpdateDriver</a></li><li><a href="UpdateRecipient.html">UpdateRecipient</a></li><li><a href="ViewDriver.html">ViewDriver</a></li><li><a href="ViewRecipient.html">ViewRecipient</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createDriver">createDriver</a></li><li><a href="global.html#createRecipient">createRecipient</a></li><li><a href="global.html#createRoute">createRoute</a></li><li><a href="global.html#deleteDriver">deleteDriver</a></li><li><a href="global.html#deleteLocation">deleteLocation</a></li><li><a href="global.html#deleteRecipient">deleteRecipient</a></li><li><a href="global.html#deleteRouteList">deleteRouteList</a></li><li><a href="global.html#findDrivers">findDrivers</a></li><li><a href="global.html#findRecipients">findRecipients</a></li><li><a href="global.html#getDriver">getDriver</a></li><li><a href="global.html#getDrivers">getDrivers</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#getRecipient">getRecipient</a></li><li><a href="global.html#getRecipients">getRecipients</a></li><li><a href="global.html#getRoute">getRoute</a></li><li><a href="global.html#getRouteList">getRouteList</a></li><li><a href="global.html#getRouteLists">getRouteLists</a></li><li><a href="global.html#getRoutes">getRoutes</a></li><li><a href="global.html#updateDriver">updateDriver</a></li><li><a href="global.html#updateRecipient">updateRecipient</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri May 06 2022 16:22:02 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -97,7 +97,7 @@ render() {
                     <Row className="d-flex flex-row">
                         <Col sm={8} className="h2">Driver Detail</Col>
                         <Col sm={4} className="justify-content-end btn-sm d-flex flex-row">
-                            <Button href="/">Return</Button>
+                            <Button href="/data">Return</Button>
                         </Col>
                     </Row>
                 </Col>

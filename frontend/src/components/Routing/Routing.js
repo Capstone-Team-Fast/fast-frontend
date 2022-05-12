@@ -1,4 +1,6 @@
 import  React, { Component } from  'react';
+import Spinner from 'react-bootstrap/Spinner'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -14,6 +16,7 @@ const  locationService  =  new  LocationService();
 const  routeService  =  new  RouteService();
 
 class  Routing  extends  Component {
+  
 
 constructor(props) {
      super(props);
@@ -27,7 +30,17 @@ constructor(props) {
             location: {},
           },
           duration_limit: '',
-         }
+         },
+         loading: false,
+         errorDurDel: '',
+         errorDurDelMessage: '',
+         errorDriRec: '',
+         errorDriRecMessage: '',
+         errorDurationColor: '',
+         errorDeliveryColor: '',
+         progressBar: 0,
+         progressBarMessage: '',
+         showProgressBar: false
      };
 
     //  this.getCenter = this.getCenter.bind(this);
@@ -37,6 +50,8 @@ constructor(props) {
      this.handleDeparture = this.handleDeparture.bind(this);
      this.handleDeliveryLimit = this.handleDeliveryLimit.bind(this);
      this.getEventValues = this.getEventValues.bind(this);
+     this.handleDurDelError = this.handleDurDelError.bind(this);
+     this.handleDriRecError = this.handleDriRecError.bind(this);
      this.handleSubmit = this.handleSubmit.bind(this);
 }
 
@@ -70,6 +85,9 @@ handleDriverCallback = (event) =>{
           driver_ids : newDrivers
           }}));
           console.log(this.state)
+    this.setState({
+      errorDriRec: false
+    })
 }
 
 handleRecipientCallback = (event) =>{
@@ -80,6 +98,9 @@ handleRecipientCallback = (event) =>{
       client_ids : newRecipients
       }}));
       console.log(this.state)  
+    this.setState({
+      errorDriRec: false
+    })
 }
 
 /**
@@ -103,8 +124,12 @@ handleDeliveryLimit(event){
   this.setState(prevState => ({
     route : {
     ...prevState.route,
-    delivery_limit: value}
+    delivery_limit: value},
+    errorDurDel: false,
+    errorDurationColor: '',
+    errorDeliveryColor: ''
   }));
+  this.delivery_limit = value
 }
 
 handleDuration(event){
@@ -112,8 +137,12 @@ handleDuration(event){
   this.setState(prevState => ({
     route : {
     ...prevState.route,
-    duration_limit: value}
+    duration_limit: value},
+    errorDurDel: false,
+    errorDurationColor: '',
+    errorDeliveryColor: ''
   }));
+  this.duration_limit = value
 }
 
 handleDeparture(event){
@@ -150,16 +179,91 @@ getCenter(location) {
   }
   return 
 }
-
-handleSubmit = (event) => {
-  event.preventDefault();
-  routeService.createRoute(this.state.route).then(result => {
-    let redirect = "/routeResults/" + result.id 
-    window.open(redirect, "_blank")
-  });
+  
+handleDurDelError() {
+  if (!(this.delivery_limit) && !(this.duration_limit)) {
+    this.setState({
+      errorDurDel: true,
+      errorDurDelMessage: 'ERROR: Delivery Limit and Duration are empty',
+      errorDurationColor: 'red',
+      errorDeliveryColor: 'red'
+    })
+  }
+  else if (!(this.duration_limit)) {
+    this.setState({
+      errorDurDel: true,
+      errorDurDelMessage: 'ERROR: Duration is empty',
+      errorDurationColor: 'red'
+    })
+  }
+  else if (!(this.delivery_limit)) {
+    this.setState({
+      errorDurDel: true,
+      errorDurDelMessage: 'ERROR: Delivery Limit is empty',
+      errorDeliveryColor: 'red'
+    })
+  }
 }
 
+handleDriRecError() {
+  let driverLength = this.state.route.driver_ids.length
+  let recipientLength = this.state.route.client_ids.length
+  if (driverLength === 0 && recipientLength === 0) {
+    this.setState({
+      errorDriRec: true,
+      errorDriRecMessage: 'ERROR: No Driver(s) or Recipient(s) selected'
+    })
+  }
+  else if (driverLength === 0) {
+    this.setState({
+      errorDriRec: true,
+      errorDriRecMessage: "ERROR: No Driver(s) selected"
+    })
+  }
+  else if (recipientLength === 0) {
+    this.setState({
+      errorDriRec: true,
+      errorDriRecMessage: "ERROR: No Recipient(s) selected"
+    })
+  }
+}
+
+handleSubmit = (event) => {
+  let driverLength = this.state.route.driver_ids.length
+  let recipientLength = this.state.route.client_ids.length
+  if (this.delivery_limit && this.duration_limit && driverLength > 0 && recipientLength > 0) {
+    event.preventDefault();
+    this.setState({
+      loading: true,
+      errorDurDel: false,
+      errorDriRec: false,
+      showProgressBar: true,
+      progressBar: 0,
+      progressBarMessage: 'Creating Route...'
+    });
+    setTimeout(() => { this.setState({ progressBar: 50 }); }, 500);
+    routeService.createRoute(this.state.route).then(result => {
+      this.setState({
+        progressBar: 100,
+        progressBarMessage: 'Finalizing Route...'
+      });
+      routeService.getRouteList(result.id).then(routeResult => {
+        let redirect = "/routeResults/" + routeResult.id 
+        setTimeout(() => { window.open(redirect, "_blank"); }, 2500);
+        setTimeout(() => { this.setState({ loading: false, progressBar: 0, progressBarMessage: '', showProgressBar: false }); }, 2500);
+      });
+    });
+  }
+  else {
+    this.handleDurDelError();
+    this.handleDriRecError();
+  }
+}
+
+
 render() {
+
+    const { handleSubmit, state } = this;
 
     return (
       <Container>
@@ -167,14 +271,14 @@ render() {
         <Row className="mt-4">
         <Form.Group as={Col} controlId="formGridDeliveryLimit">
           <Form.Label className="title">Delivery Limit</Form.Label>
-          <Form.Control type="number" placeholder="Driver Delivery Limit"
+          <Form.Control type="number" placeholder="Driver Delivery Limit" style={{ borderColor: this.state.errorDeliveryColor }}
                         required onChange={this.handleDeliveryLimit} name="delivery_limit" min="1"/>
         </Form.Group>
         <Form.Group as={Col} controlId="formGridDurationLimit">
           <Form.Label className="title">Duration</Form.Label>
-          <Form.Control type="number" placeholder="Duration Limit in Hours"
+          <Form.Control type="number" placeholder="Duration Limit in Hours" style={{ borderColor: this.state.errorDurationColor }} 
                         required onChange={this.handleDuration} name="duration_limit" min="1"/>
-        </Form.Group>
+        </Form.Group> 
         <Form.Group as={Col} controlId="formGridDeparture">
           <Form.Label className="title">Departure Location</Form.Label>
           <Form.Select value={this.state.route.departure.location.address} 
@@ -190,13 +294,30 @@ render() {
 
           </Form.Select>
         </Form.Group>
-        </Row>   
+        </Row>  
           
         <br/>
         <SelectDriver parentCallback = {this.handleDriverCallback}/>
         <SelectRecipient parentCallback = {this.handleRecipientCallback} />
        
-        <Button className="mr-2 mt-4 btn" variant="primary" onClick={this.handleSubmit}>Create Route</Button>
+        <Row>
+         <Col sm={0} className="d-flex flex-row">
+          <Button className="mr-2 mt-4 btn" variant="primary" disabled={this.state.loading}
+                onClick={handleSubmit}>
+                  {this.state.loading ?  
+                    <Spinner
+                      animation="border" role="status" style={{ height: 25, width: 25 }}>
+                    </Spinner> : "Create Route"}
+          </Button>
+            {this.state.showProgressBar ?
+                        <ProgressBar style={{ width: 400, marginTop: 45 }} animated now={this.state.progressBar}/> : ''}
+         </Col>
+            <h3 className="btn" style={{ fontSize: 20, marginTop: -38 }}> { this.state.progressBarMessage } </h3>
+        </Row>
+        {this.state.errorDurDel ? 
+                    <h3 className='errorDurDel' style={{ fontSize: 20, color: "red", marginTop: 10 }}> { this.state.errorDurDelMessage } </h3> : ""}
+        {this.state.errorDriRec ?
+                    <h3 className='errorDriRec' style={{ fontSize: 20, color: "red", marginTop: 10 }}> { this.state.errorDriRecMessage } </h3> : ""}
         </Form> 
       </Container>
     );

@@ -162,7 +162,7 @@ handleChange(event) {
 handleSubmit = (event) => {
     event.preventDefault();
     this.driverService.createDriver(this.state).then( () => {
-        this.setState({redirect: "/"});
+        this.setState({redirect: "/data"});
     });
 }
 
@@ -236,7 +236,7 @@ render() {
                 </Form.Group>
 
                 <Button variant="primary" className="mr-4" type="submit">Submit</Button>
-                <Link to="/">
+                <Link to="/data">
                     <Button variant="secondary">Cancel</Button>
                 </Link>
             </Form>

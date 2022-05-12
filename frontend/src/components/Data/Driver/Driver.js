@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-
+import { CSVLink } from "react-csv";
+import Spinner from 'react-bootstrap/Spinner'
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -17,7 +18,7 @@ import Stack from 'react-bootstrap/Stack';
 const driverService = new DriverService();
 const searchService = new SearchService();
 const fileService = new FileService();
-
+const headers = ["Firstname", "Lastname", "Role", "Availability", "Language", "Phone", "Capacity"]
 
 /**
  * This component is used to display driver information on the application's
@@ -38,18 +39,24 @@ constructor(props) {
         fileContent: [],
         new_drivers: [],
         show: false,
+        allShow: false,
         driverToDelete: {},
-        sorted: false
+        allDriversDelete: [],
+        sorted: false,
+        loading: false
     };
     this.fileInput = React.createRef();
     this.handleDriverDelete = this.handleDriverDelete.bind(this);
+    this.handleAllDriversDelete = this.handleAllDriversDelete.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
     this.readFile = this.readFile.bind(this);
     this.refreshDrivers = this.refreshDrivers.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleSave = this.handleSave.bind(this);
     this.handleShow = this.handleShow.bind(this);
+    this.handleAllShow = this.handleAllShow.bind(this);
     this.sortColumn = this.sortColumn.bind(this);
+    this.handleUploadSubmit = this.handleUploadSubmit.bind(this);
 }
   
 /**
@@ -65,7 +72,7 @@ componentDidMount() {
 refreshDrivers(){
     var self = this;
     driverService.getDrivers().then(function (result) {
-        self.setState({ drivers: result, filtered: result });
+        self.setState({ drivers: result, filtered: result, loading: false });
     });
 }
 
@@ -94,18 +101,32 @@ sortColumn(key) {
 }
 
 handleClose() {
-    this.setState({show: false});
+    this.setState({show: false, allShow: false});
 }
 
+// For deleting 1 or all drivers
 handleSave() {
     this.handleClose();
-    this.handleDriverDelete(this.state.driverToDelete);
-    this.setState({driverToDelete: {}});
+    if (this.state.show) {
+        this.handleDriverDelete(this.state.driverToDelete);
+        this.setState({driverToDelete: {}});
+    }
+    else if (this.state.allShow) {
+        this.handleAllDriversDelete(this.state.allDriversDelete);
+        this.setState({ allDriversDelete: [] });
+    }
 }
 
+  // For deleting 1 driver
 handleShow(e, d) {
     e.preventDefault();
     this.setState({show: true, driverToDelete: d});
+}
+  
+// For deleting all drivers
+handleAllShow(e, d) {
+    e.preventDefault();
+    this.setState({allShow: true, allDriversDelete: d});
 }
 
 /**
@@ -121,6 +142,18 @@ handleDriverDelete(d) {
         });
         self.setState({ drivers: newArr, filtered: newArr })
     });
+}
+  
+ /**
+ * Event handler used to delete all drivers from the database when the 
+ * user clicks on the delete all button.
+ * @param {Object} d The drivers object to be deleted.
+ */
+handleAllDriversDelete(d) {
+    var self = this;
+    for (var i = 0; i < d.length; i++) {
+        this.handleDriverDelete(d[i]);
+    }
 }
 
 get_availability(availability_list) {
@@ -228,18 +261,103 @@ readFile(event) {
             driver_template.phone = this.get_phone(driver_data.phone.trim());
             drivers.push(driver_template);
         }
-        console.log(drivers);
         this.setState({
             new_drivers: JSON.stringify(drivers)
         });
     });
 }
+  
+  // Handle uploading Drivers when button is clicked
+  handleUploadSubmit = (event) => {
+    if (this.fileInput.current.value) {
+        this.setState({
+            loading: true
+        });
+        driverService.uploadDrivers(this.state.new_drivers);
+        this.fileInput.current.value = '';
+        this.refreshDrivers();
+        this.setState({
+            new_drivers: [],
+        });
+    }
+}
+
+/**
+ * Method which returns a String of a driver's availability
+ * @param {Object} driver The driver whose availability is to be returned.
+ */
+getDriverAvailability(driver) {
+    let availability = "";
+    
+    if (driver.availability.sunday == true) {
+        availability = availability.concat(" ", "Sunday");
+    }
+    if (driver.availability.monday == true) {
+        availability = availability.concat(" ", "Monday");
+    }
+    if (driver.availability.tuesday == true) {
+        availability = availability.concat(" ", "Tuesday");
+    }
+    if (driver.availability.wednesday == true) {
+        availability = availability.concat(" ", "Wednesday");
+    }
+    if (driver.availability.thursday == true) {
+        availability = availability.concat(" ", "Thursday");
+    }
+    if (driver.availability.friday == true) {
+        availability = availability.concat(" ", "Friday");
+    }
+    if (driver.availability.saturday == true) {
+        availability = availability.concat(" ", "Saturday");
+    }
+
+    availability = availability.trim();
+    availability = availability.split(" ").join(", ");
+    return availability;
+}
+
+/**
+ * Method which returns a String of a driver's languages
+ * @param {Object} driver The driver whose known languages are to be returned.
+ */
+getDriverLanguages(driver) {
+    let languages = "";
+    for (let i = 0; i < driver.languages.length; i++) {
+        languages = languages.concat(" ", driver.languages[i].name);
+    }
+
+    languages = languages.trim();
+    languages = languages.split(" ").join(", ");
+    return languages;
+}
+
+/**
+ * Method which returns an array of driver data to be used in exporting CSV file
+ */
+getCSVData() {
+    let data = [];
+    let drivers = this.state.drivers;
+    for (let i = 0; i < drivers.length; i++) {
+        let row = [];
+        row.push(drivers[i].first_name);
+        row.push(drivers[i].last_name);
+        row.push(drivers[i].employee_status);
+        row.push(this.getDriverAvailability(drivers[i]));
+        row.push(this.getDriverLanguages(drivers[i]));
+        row.push(drivers[i].phone);
+        row.push(drivers[i].capacity);
+
+        data.push(row);
+    }
+    return data;
+  }
 
   /**
  * The render method used to display the component. 
  * @returns The HTML to be rendered.
  */
     render() {
+        
         return (
             <Container className="card">
                 <Row className="card-header">
@@ -260,8 +378,19 @@ readFile(event) {
                                     ></FormControl>
                                 </InputGroup>
                             </Col>
-                            <Col sm={2} className="justify-content-end d-flex flex-row">
-                                <Button href="/addDriver">Add New</Button>
+                            <Col sm={2} className="justify-content-around d-flex flex-row">
+                                <Button href="/addDriver" style={{ marginRight: 2.5 }}>Add New</Button>
+                                <Button onClick={(e) => this.handleAllShow(e, searchService.findDrivers(e, this.state.drivers))} variant='primary' style={{ marginLeft: 2.5 }}>Delete All</Button>
+                                <DialogBox 
+                                    show={this.state.allShow} 
+                                    modalTitle='Confirm Deletion'
+                                    mainMessageText='Are you sure you want to delete all entries?'
+                                    handleClose={this.handleClose}
+                                    handleSave={this.handleSave}
+                                    closeText='Cancel'
+                                    saveText='Delete'
+                                    buttonType='danger'
+                                />
                             </Col>
                         </Row>
                     </Col>
@@ -350,14 +479,19 @@ readFile(event) {
                     <Col>
                         <Row>
                             <Col sm={2} className="d-flex flex-row">
-                                <Button className="mx-1" onClick={() => {
-                                    driverService.uploadDrivers(this.state.new_drivers);
-                                    this.setState({
-                                        new_drivers: [],
-                                    });
-                                    this.fileInput.current.value = '';
-                                    this.refreshDrivers();
-                                }}>Add Drivers</Button>
+                                <Button className="mx-1" onClick={this.handleUploadSubmit}>
+                                    {this.state.loading ?
+                                        <Spinner
+                                            animation="border" role="status" style={{ height: 25, width: 25 }}>
+                                        </Spinner> : "Add Drivers"}
+                                </Button>
+                            </Col>
+                            <Col>
+                            <CSVLink
+                                data={this.getCSVData()}
+                                headers={headers}
+                                filename='drivers.csv'
+                            >Download Drivers</CSVLink>
                             </Col>
                         </Row>
                     </Col>

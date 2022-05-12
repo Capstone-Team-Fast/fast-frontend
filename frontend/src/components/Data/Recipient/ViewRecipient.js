@@ -68,7 +68,7 @@ render() {
                     <Row className="d-flex flex-row">
                         <Col sm={8} className="h2">Recipient Detail</Col>
                         <Col sm={4} className="justify-content-end btn-sm d-flex flex-row">
-                            <Button href="/">Return</Button>
+                            <Button href="/data">Return</Button>
                         </Col>
                     </Row>
                 </Col>
@@ -102,7 +102,7 @@ render() {
                     <thead>
                         <tr>
                             <th>Address</th>
-                            <th>Room Number</th>
+                            <th>Apt #</th>
                             <th>City</th>
                             <th>State</th>
                             <th>Zip Code</th>

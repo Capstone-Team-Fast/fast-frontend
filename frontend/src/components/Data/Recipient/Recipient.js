@@ -1,4 +1,6 @@
 import  React, { Component } from  'react';
+import { CSVLink } from "react-csv";
+import Spinner from 'react-bootstrap/Spinner'
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -9,14 +11,17 @@ import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import RecipientService from '../../../services/RecipientService';
+import LocationService from '../../../services/LocationService';
 import SearchService from '../../../services/SearchService';
 import FileService from '../../../services/FileService';
 import { DialogBox } from '../../Utils/DialogBox';
 import Stack from 'react-bootstrap/Stack';
 
 const recipientService = new RecipientService();
+const locationService = new LocationService();
 const searchService = new SearchService();
-const  fileService = new FileService();
+const fileService = new FileService();
+const headers = ["Phone", "Firstname", "Lastname", "Address", "City", "State", "Zipcode", "Center", "Room_Number", "Language", "Quantity"];
 
 
 /**
@@ -34,20 +39,32 @@ class Recipient extends Component {
         super(props);
         this.state  = {
             recipients: [],
-            filtered: [], 
+            locations: [],
+            filtered_recipients: [], 
+            filtered_locations: [],
             fileContent: [],
             new_recipients: [],
             show: false,
+            allShow: false,
             recipientToDelete: {},
-            sorted: false
+            allRecipientsDelete: [],
+            locationToDelete: {},
+            sorted: false,
+            loading: false
         };
         this.fileInput = React.createRef();
         this.handleRecipientDelete = this.handleRecipientDelete.bind(this);
+        this.handleAllRecipientsDelete = this.handleAllRecipientsDelete.bind(this);
+        this.handleLocationDelete = this.handleLocationDelete.bind(this);
+        this.handleAllLocationsDelete = this.handleAllLocationsDelete.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.readFile = this.readFile.bind(this);
+        this.refreshRecipients = this.refreshRecipients.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.handleShow = this.handleShow.bind(this);
+        this.handleAllShow = this.handleAllShow.bind(this);
+        this.handleUploadSubmit = this.handleUploadSubmit.bind(this);
     }
 
     /**
@@ -56,7 +73,13 @@ class Recipient extends Component {
     componentDidMount() {
         var  self  =  this;
         recipientService.getRecipients().then(function (result) {
-            self.setState({ recipients:  result, filtered: result});
+            self.setState({ recipients:  result, filtered_recipients: result});
+        });
+
+        locationService.getLocations().then((result) => {
+            this.setState({
+                locations: result,
+            });
         });
     }
 
@@ -93,23 +116,43 @@ class Recipient extends Component {
     refreshRecipients(){
         var  self  =  this;
         recipientService.getRecipients().then(function (result) {
-            self.setState({ recipients:  result, filtered: result});
+            self.setState({ recipients:  result, filtered_recipients: result, loading: false});
             });
     }
 
     handleClose() {
-        this.setState({show: false});
+        this.setState({show: false, allShow: false});
     }
     
+    // For deleting 1 or all recipients with associated locations
     handleSave() {
         this.handleClose();
-        this.handleRecipientDelete(this.state.recipientToDelete);
-        this.setState({recipientToDelete: {}});
+        if (this.state.show) {
+            this.handleRecipientDelete(this.state.recipientToDelete);
+            this.handleLocationDelete(this.state.locationToDelete);
+            this.setState({recipientToDelete: {}, locationToDelete: {}});
+        }
+        else if (this.state.allShow) {
+            this.handleAllRecipientsDelete(this.state.allRecipientsDelete);
+            this.handleAllLocationsDelete(this.state.allLocationsDelete);
+            this.setState({ allRecipientsDelete: [], allLocationsDelete: [] });
+        }
     }
     
-    handleShow(e, d) {
+    // For deleting 1 recipient and associated location
+    handleShow(e, r) {
         e.preventDefault();
-        this.setState({show: true, recipientToDelete: d});
+        this.setState({show: true, recipientToDelete: r, locationToDelete: r.location});
+    }
+    
+    // For deleting all recipients and associated locations
+    handleAllShow(e, r) {
+        e.preventDefault();
+        let locsToDelete = [];
+        for (let i = 0; i < r.length; i++) {
+            locsToDelete.push(r[i].location);
+        }
+        this.setState({allShow: true, allRecipientsDelete: r, allLocationsDelete: locsToDelete});
     }
 
 /**
@@ -123,9 +166,47 @@ handleRecipientDelete(r){
         var  newArr  =  self.state.recipients.filter(function(obj) {
             return  obj.id  !==  r.id;
         });
-
-        self.setState({recipients:  newArr, filtered: newArr})
+        self.setState({recipients:  newArr, filtered_recipients: newArr})
     });
+}
+
+/**
+* Event handler used to delete all recipients from the database when the 
+* user clicks on the delete all button.
+* @param {Object} r The recipients object to be deleted.
+*/
+handleAllRecipientsDelete(r) {
+    var self = this;
+    for (var i = 0; i < r.length; i++) {
+        this.handleRecipientDelete(r[i]);
+    }
+}
+
+/**
+ * Event handler used to delete a location from the database when the 
+ * user clicks on the delete button.
+ * @param {Object} loc The location object to be deleted.
+ */
+ handleLocationDelete(loc){
+    let  self  =  this;
+    locationService.deleteLocation(loc).then(()=>{
+        let  newArr  =  self.state.locations.filter(function(obj) {
+            return  obj.id  !==  loc.id;
+        });
+        self.setState({locations: newArr, filtered_locations: newArr})
+    });
+} 
+
+/**
+* Event handler used to delete all locations except ones designated as center from the database when the 
+* user clicks on the delete all button.
+* @param {Object} locs the array of locations to be deleted.
+*/
+handleAllLocationsDelete(locs) {
+    let notCenterLocs = locs.filter(loc => loc.is_center == false)
+    for (var i = 0; i < notCenterLocs.length; i++) {
+        this.handleLocationDelete(notCenterLocs[i]);
+    }
 }
 
 /**
@@ -137,7 +218,7 @@ handleRecipientDelete(r){
  handleSearch(e) {
     let newList = searchService.findRecipients(e, this.state.recipients);
     this.setState({
-        filtered: newList
+        filtered_recipients: newList
     });
 }
 
@@ -228,12 +309,69 @@ handleRecipientDelete(r){
                 }
                 recipients.push(recipient_template);
             }
-            console.log(recipients);
             this.setState({
                 new_recipients: JSON.stringify(recipients)
             });
         });
     }
+    
+    // Handles upload Recipients button when clicked
+    handleUploadSubmit = (event) => {
+        if (this.fileInput.current.value) {
+            this.setState({
+                loading: true
+            });
+            recipientService.uploadRecipients(this.state.new_recipients);
+            this.fileInput.current.value = '';
+            this.refreshRecipients();
+            this.setState({
+                new_recipients: [],
+            });
+        }
+    }
+
+/**
+ * Method which returns a String of a recipients's languages
+ * @param {Object} recipient The driver whose known languages are to be returned.
+ */
+ getRecipientLanguages(recipient) {
+    let languages = "";
+    for (let i = 0; i < recipient.languages.length; i++) {
+        languages = languages.concat(" ", recipient.languages[i].name);
+    }
+
+    languages = languages.trim();
+    languages = languages.split(" ").join(", ");
+    return languages;
+}
+
+/**
+ * Method which returns an array of recipient data to be used in exporting CSV file
+ */
+ getCSVData() {
+    let data = [];
+    let recipients = this.state.recipients;
+    for (let i = 0; i < recipients.length; i++) {
+        let row = [];
+        row.push(recipients[i].phone);
+        row.push(recipients[i].first_name);
+        row.push(recipients[i].last_name);
+        row.push(recipients[i].location.address);
+        row.push(recipients[i].location.city);
+        row.push(recipients[i].location.state);
+        row.push(recipients[i].location.zipcode);
+        if (recipients[i].location.is_center == false) {
+            row.push(0);
+        } else
+            row.push(1);     
+        row.push(recipients[i].location.room_number);
+        row.push(this.getRecipientLanguages(recipients[i]));
+        row.push(recipients[i].quantity);
+
+        data.push(row);
+    }
+    return data;
+  }
 
   /**
    * The render method used to display the component. 
@@ -265,8 +403,19 @@ handleRecipientDelete(r){
                                     ></FormControl>
                                 </InputGroup>
                             </Col>
-                            <Col sm={2} className="justify-content-end d-flex flex-row">
-                                <Button href="/addRecipient">Add New</Button>
+                            <Col sm={2} className="justify-content-around d-flex flex-row">
+                                <Button href="/addRecipient" style={{ marginRight: 2.5 }}>Add New</Button>
+                                <Button onClick={(e) => this.handleAllShow(e, searchService.findRecipients(e, this.state.recipients))} style={{ marginLeft: 2.5 }}>Delete All</Button>
+                                <DialogBox 
+                                    show={this.state.allShow} 
+                                    modalTitle='Confirm Deletion'
+                                    mainMessageText='Are you sure you want to delete all entries?'
+                                    handleClose={this.handleClose}
+                                    handleSave={this.handleSave}
+                                    closeText='Cancel'
+                                    saveText='Delete'
+                                    buttonType='danger'
+                                />
                             </Col>
                         </Row>
                     </Col>
@@ -327,7 +476,7 @@ handleRecipientDelete(r){
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.filtered.map( r  =>
+                            {this.state.filtered_recipients.map( r  =>
                                 <tr  key={r.id}>
                                 <td>{r.first_name}</td>
                                 <td>{r.last_name}</td>
@@ -372,14 +521,19 @@ handleRecipientDelete(r){
                     <Col>
                         <Row>
                             <Col sm={2} className="d-flex flex-row">
-                                <Button className="mx-1" onClick={() => {
-                                    recipientService.uploadRecipients(this.state.new_recipients);
-                                    this.setState({
-                                        new_recipients: [],
-                                    });
-                                    this.fileInput.current.value = '';
-                                    this.refreshRecipients();
-                                }}>Add Recipients</Button>
+                                <Button className="mx-1" onClick={this.handleUploadSubmit}>
+                                    {this.state.loading ?
+                                        <Spinner
+                                            animation="border" role="status" style={{ height: 25, width: 25 }}>
+                                        </Spinner> : "Add Recipients"}
+                                </Button>
+                            </Col>
+                            <Col>
+                                <CSVLink style={{ margin: 20}}
+                                    data={this.getCSVData()}
+                                    headers={headers}
+                                    filename='recipients.csv'
+                                >Download Recipients</CSVLink>
                             </Col>
                         </Row>
                     </Col>

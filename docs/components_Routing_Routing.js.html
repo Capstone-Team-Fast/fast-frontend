@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/Routing/Routing.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/Routing/Routing.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import  React, { Component } from  'react';
+import Spinner from 'react-bootstrap/Spinner'
+import ProgressBar from 'react-bootstrap/ProgressBar'
+
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import SelectDriver from './SelectDriver/SelectDriver.js';
+import SelectRecipient from './SelectRecipient/SelectRecipient.js';
+import LocationService from '../../services/LocationService'
+import RouteService from '../../services/RouteService'
+
+const  locationService  =  new  LocationService();
+const  routeService  =  new  RouteService();
+
+class  Routing  extends  Component {
+  
+
+constructor(props) {
+     super(props);
+     this.state  = {
+         locations: [],
+         route: {
+          driver_ids:[],
+          client_ids:[],
+          delivery_limit: '',
+          departure: {
+            location: {},
+          },
+          duration_limit: '',
+         },
+         loading: false,
+         errorDurDel: '',
+         errorDurDelMessage: '',
+         errorDriRec: '',
+         errorDriRecMessage: '',
+         errorDurationColor: '',
+         errorDeliveryColor: '',
+         progressBar: 0,
+         progressBarMessage: '',
+         showProgressBar: false
+     };
+
+    //  this.getCenter = this.getCenter.bind(this);
+     this.handleDriverCallback = this.handleDriverCallback.bind(this);
+     this.handleChange = this.handleChange.bind(this);
+     this.handleDuration = this.handleDuration.bind(this);
+     this.handleDeparture = this.handleDeparture.bind(this);
+     this.handleDeliveryLimit = this.handleDeliveryLimit.bind(this);
+     this.getEventValues = this.getEventValues.bind(this);
+     this.handleDurDelError = this.handleDurDelError.bind(this);
+     this.handleDriRecError = this.handleDriRecError.bind(this);
+     this.handleSubmit = this.handleSubmit.bind(this);
+}
+
+componentDidMount() {
+  var  self  =  this;
+  locationService.getLocations().then(function (result) {
+      let defaultLocation = {}
+      for (let i = 0; i &lt; result.length; i++) {
+        // Set ISC as default address
+        if (result[i].is_center &amp;&amp; result[i].address.includes("5545")) {
+          defaultLocation = result[i];
+          break;
+        }
+      }
+      
+      self.setState(prevState => ({ 
+          locations:  result,
+          route: {                // object that we want to update
+          ...prevState.route,     // keep all other key-value pairs
+          departure: {
+            location: defaultLocation
+        }}})              
+  )});
+}
+
+handleDriverCallback = (event) =>{
+    const newDrivers = event.map( e => e.id)
+    this.setState(prevState => ({
+          route: {               // object that we want to update
+          ...prevState.route,    // keep all other key-value pairs
+          driver_ids : newDrivers
+          }}));
+          console.log(this.state)
+    this.setState({
+      errorDriRec: false
+    })
+}
+
+handleRecipientCallback = (event) =>{
+  const newRecipients = event.map(e => e.id)
+    this.setState(prevState => ({
+      route: {               // object that we want to update
+      ...prevState.route,    // keep all other key-value pairs
+      client_ids : newRecipients
+      }}));
+      console.log(this.state)  
+    this.setState({
+      errorDriRec: false
+    })
+}
+
+/**
+ * Generic event handler that is called to update the component's state 
+ * when the user changes the value of a form field that does not require 
+ * special handling.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to a generic form field.
+ */
+ handleChange(event) {
+  let [value, name] = this.getEventValues(event);
+  this.setState(prevState => ({
+    route : {
+    ...prevState.route,
+    name: value}
+  }));
+}
+
+handleDeliveryLimit(event){
+  let [value, name] = this.getEventValues(event);
+  this.setState(prevState => ({
+    route : {
+    ...prevState.route,
+    delivery_limit: value},
+    errorDurDel: false,
+    errorDurationColor: '',
+    errorDeliveryColor: ''
+  }));
+  this.delivery_limit = value
+}
+
+handleDuration(event){
+  let [value, name] = this.getEventValues(event);
+  this.setState(prevState => ({
+    route : {
+    ...prevState.route,
+    duration_limit: value},
+    errorDurDel: false,
+    errorDurationColor: '',
+    errorDeliveryColor: ''
+  }));
+  this.duration_limit = value
+}
+
+handleDeparture(event){
+  let [value, name] = this.getEventValues(event);
+
+  let full_location = this.state.locations.filter(function(l){
+    return l.address === value;
+  });
+
+  this.setState(prevState => ({
+    route : {
+    ...prevState.route,
+    departure: {
+      ...prevState.route.departure,
+      location: full_location[0]
+    }
+    }}));
+}
+
+/**
+ * This method retrieves the value, name, and id properties of the 
+ * event that has been triggered.
+ * @param {Object} event The event that has been triggered.
+ * @returns The value, name, and id properties of the triggered event.
+ */
+ getEventValues(event) {
+  let [value, name] = [event.target.value, event.target.name];
+  return [value, name];
+}
+
+getCenter(location) {
+  if (location.is_center) {
+    return location.address;
+  }
+  return 
+}
+  
+handleDurDelError() {
+  if (!(this.delivery_limit) &amp;&amp; !(this.duration_limit)) {
+    this.setState({
+      errorDurDel: true,
+      errorDurDelMessage: 'ERROR: Delivery Limit and Duration are empty',
+      errorDurationColor: 'red',
+      errorDeliveryColor: 'red'
+    })
+  }
+  else if (!(this.duration_limit)) {
+    this.setState({
+      errorDurDel: true,
+      errorDurDelMessage: 'ERROR: Duration is empty',
+      errorDurationColor: 'red'
+    })
+  }
+  else if (!(this.delivery_limit)) {
+    this.setState({
+      errorDurDel: true,
+      errorDurDelMessage: 'ERROR: Delivery Limit is empty',
+      errorDeliveryColor: 'red'
+    })
+  }
+}
+
+handleDriRecError() {
+  let driverLength = this.state.route.driver_ids.length
+  let recipientLength = this.state.route.client_ids.length
+  if (driverLength === 0 &amp;&amp; recipientLength === 0) {
+    this.setState({
+      errorDriRec: true,
+      errorDriRecMessage: 'ERROR: No Driver(s) or Recipient(s) selected'
+    })
+  }
+  else if (driverLength === 0) {
+    this.setState({
+      errorDriRec: true,
+      errorDriRecMessage: "ERROR: No Driver(s) selected"
+    })
+  }
+  else if (recipientLength === 0) {
+    this.setState({
+      errorDriRec: true,
+      errorDriRecMessage: "ERROR: No Recipient(s) selected"
+    })
+  }
+}
+
+handleSubmit = (event) => {
+  let driverLength = this.state.route.driver_ids.length
+  let recipientLength = this.state.route.client_ids.length
+  if (this.delivery_limit &amp;&amp; this.duration_limit &amp;&amp; driverLength > 0 &amp;&amp; recipientLength > 0) {
+    event.preventDefault();
+    this.setState({
+      loading: true,
+      errorDurDel: false,
+      errorDriRec: false,
+      showProgressBar: true,
+      progressBar: 0,
+      progressBarMessage: 'Creating Route...'
+    });
+    setTimeout(() => { this.setState({ progressBar: 50 }); }, 500);
+    routeService.createRoute(this.state.route).then(result => {
+      this.setState({
+        progressBar: 100,
+        progressBarMessage: 'Finalizing Route...'
+      });
+      routeService.getRouteList(result.id).then(routeResult => {
+        let redirect = "/routeResults/" + routeResult.id 
+        setTimeout(() => { window.open(redirect, "_blank"); }, 2500);
+        setTimeout(() => { this.setState({ loading: false, progressBar: 0, progressBarMessage: '', showProgressBar: false }); }, 2500);
+      });
+    });
+  }
+  else {
+    this.handleDurDelError();
+    this.handleDriRecError();
+  }
+}
+
+
+render() {
+
+    const { handleSubmit, state } = this;
+
+    return (
+      &lt;Container>
+        &lt;Form onSubmit={this.handleSubmit}>
+        &lt;Row className="mt-4">
+        &lt;Form.Group as={Col} controlId="formGridDeliveryLimit">
+          &lt;Form.Label className="title">Delivery Limit&lt;/Form.Label>
+          &lt;Form.Control type="number" placeholder="Driver Delivery Limit" style={{ borderColor: this.state.errorDeliveryColor }}
+                        required onChange={this.handleDeliveryLimit} name="delivery_limit" min="1"/>
+        &lt;/Form.Group>
+        &lt;Form.Group as={Col} controlId="formGridDurationLimit">
+          &lt;Form.Label className="title">Duration&lt;/Form.Label>
+          &lt;Form.Control type="number" placeholder="Duration Limit in Hours" style={{ borderColor: this.state.errorDurationColor }} 
+                        required onChange={this.handleDuration} name="duration_limit" min="1"/>
+        &lt;/Form.Group> 
+        &lt;Form.Group as={Col} controlId="formGridDeparture">
+          &lt;Form.Label className="title">Departure Location&lt;/Form.Label>
+          &lt;Form.Select value={this.state.route.departure.location.address} 
+            onChange={this.handleDeparture} name="departure_location" required>
+          { this.state.locations.map( l => {
+                  if (this.getCenter(l)) {
+                    return &lt;option>{this.getCenter(l)}&lt;/option>
+                  }
+                  return ""
+                }
+                
+          )}
+
+          &lt;/Form.Select>
+        &lt;/Form.Group>
+        &lt;/Row>  
+          
+        &lt;br/>
+        &lt;SelectDriver parentCallback = {this.handleDriverCallback}/>
+        &lt;SelectRecipient parentCallback = {this.handleRecipientCallback} />
+       
+        &lt;Row>
+         &lt;Col sm={0} className="d-flex flex-row">
+          &lt;Button className="mr-2 mt-4 btn" variant="primary" disabled={this.state.loading}
+                onClick={handleSubmit}>
+                  {this.state.loading ?  
+                    &lt;Spinner
+                      animation="border" role="status" style={{ height: 25, width: 25 }}>
+                    &lt;/Spinner> : "Create Route"}
+          &lt;/Button>
+            {this.state.showProgressBar ?
+                        &lt;ProgressBar style={{ width: 400, marginTop: 45 }} animated now={this.state.progressBar}/> : ''}
+         &lt;/Col>
+            &lt;h3 className="btn" style={{ fontSize: 20, marginTop: -38 }}> { this.state.progressBarMessage } &lt;/h3>
+        &lt;/Row>
+        {this.state.errorDurDel ? 
+                    &lt;h3 className='errorDurDel' style={{ fontSize: 20, color: "red", marginTop: 10 }}> { this.state.errorDurDelMessage } &lt;/h3> : ""}
+        {this.state.errorDriRec ?
+                    &lt;h3 className='errorDriRec' style={{ fontSize: 20, color: "red", marginTop: 10 }}> { this.state.errorDriRecMessage } &lt;/h3> : ""}
+        &lt;/Form> 
+      &lt;/Container>
+    );
+  }
+}
+export  default  Routing;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddDriver.html">AddDriver</a></li><li><a href="AddRecipient.html">AddRecipient</a></li><li><a href="Driver.html">Driver</a></li><li><a href="DriverRoute.html">DriverRoute</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="Recipient.html">Recipient</a></li><li><a href="RouteResults.html">RouteResults</a></li><li><a href="UpdateDriver.html">UpdateDriver</a></li><li><a href="UpdateRecipient.html">UpdateRecipient</a></li><li><a href="ViewDriver.html">ViewDriver</a></li><li><a href="ViewRecipient.html">ViewRecipient</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createDriver">createDriver</a></li><li><a href="global.html#createRecipient">createRecipient</a></li><li><a href="global.html#createRoute">createRoute</a></li><li><a href="global.html#deleteDriver">deleteDriver</a></li><li><a href="global.html#deleteLocation">deleteLocation</a></li><li><a href="global.html#deleteRecipient">deleteRecipient</a></li><li><a href="global.html#deleteRouteList">deleteRouteList</a></li><li><a href="global.html#findDrivers">findDrivers</a></li><li><a href="global.html#findRecipients">findRecipients</a></li><li><a href="global.html#getDriver">getDriver</a></li><li><a href="global.html#getDrivers">getDrivers</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#getRecipient">getRecipient</a></li><li><a href="global.html#getRecipients">getRecipients</a></li><li><a href="global.html#getRoute">getRoute</a></li><li><a href="global.html#getRouteList">getRouteList</a></li><li><a href="global.html#getRouteLists">getRouteLists</a></li><li><a href="global.html#getRoutes">getRoutes</a></li><li><a href="global.html#updateDriver">updateDriver</a></li><li><a href="global.html#updateRecipient">updateRecipient</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri May 06 2022 16:22:02 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

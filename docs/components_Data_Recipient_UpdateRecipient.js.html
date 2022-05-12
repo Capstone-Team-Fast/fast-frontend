@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/Data/Recipient/UpdateRecipient.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/Data/Recipient/UpdateRecipient.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import  React, { Component } from  'react';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import InputGroup from 'react-bootstrap/InputGroup';
+import FormControl from 'react-bootstrap/FormControl';
+import RecipientService from '../../../services/RecipientService';
+import Link from 'react-router-dom/Link';
+
+/**
+ * This component is used to update individual recipient information stored 
+ * in the database.
+ */
+ class  UpdateRecipient  extends  Component {
+
+/**
+ * The constructor method initializes the component's state object and
+ * binds the methods of the component to the current instance.
+ * @param {Object} props The properties passed to the component.
+ */
+constructor(props) {
+    super(props);
+    const {id} = props.match.params; 
+    this.state = {'id': id, 'first_name': '', 'last_name': '', 'quantity': '', 
+                    'phone': '', 'comments': '', 'languages': [], 'location': { 'is_center': false,
+                    'latitude': '','longitude': ''}
+                };
+    this.states = ['Choose...', 'KS', 'IA', 'NE', 'SD'];
+    this.languages = ['English', 'Spanish', 'Arabic', 'Chinese', 'German', 'French',
+                        'Hindi', 'Russian', 'Portuguese', 'Other'];
+    
+    this.recipientService = new RecipientService();
+    this.handleChange = this.handleChange.bind(this);
+    this.handleObjectChange = this.handleObjectChange.bind(this);
+    this.handleLanguageChange = this.handleLanguageChange.bind(this);
+    this.handlePhoneChange = this.handlePhoneChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.getEventValues = this.getEventValues.bind(this);
+    this.getEventIDValue = this.getEventIDValue.bind(this);
+    this.checkLanguage = this.checkLanguage.bind(this);
+    this.getCenter = this.getCenter.bind(this);
+}
+
+/**
+ * Life cycle hook that is called after the component is first rendered.
+ */
+componentDidMount() {
+    var self = this 
+    self.recipientService.getRecipient(self.state.id).then(function (result) {
+        self.setState(result);
+    })  
+    
+}
+
+/**
+ * This method retrieves the value, name, and id properties of the 
+ * event that has been triggered.
+ * @param {Object} event The event that has been triggered.
+ * @returns The value, name, and id properties of the triggered event.
+ */
+ getEventValues(event) {
+    let [value, name, id] = [   event.target.value, 
+                                event.target.name, 
+                                event.target.id];
+    return [value, name, id];
+}
+
+/**
+ * This method retrieves the id property of the event that has been triggered.
+ * @param {Object} event The event that has been triggered.
+ * @returns The id property of the triggered event.
+ */
+ getEventIDValue(event) {
+    return event.target.id;
+}
+
+
+/**
+ * Generic event handler that is called to update the component's state 
+ * when the user changes the value of a form field associated with a property 
+ * of the component's state that is an object.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to a form field.
+ */
+handleObjectChange(event) {
+    let [value, name, id] = this.getEventValues(event);
+    if (id === "is_center") {
+        value = (value === "No") ? false : true 
+    }
+
+    this.setState(prevState => ({
+        [name]: {
+             ...prevState[name],
+            [id]: value
+        }, 
+        saved: false    
+    }
+    ));
+}
+
+/**
+ * Event handler that is called to update the component's state
+ * when the user changes the value of the form field associated 
+ * with a recipient's phone number.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the phone number field in the form.
+ */
+handlePhoneChange(event) {
+    let value = event.target.value.replace(/[^\d]/g, "")
+    let phone =""
+
+    if (value.length &lt; 4) {
+        phone = value 
+    }
+    else if (value.length &lt; 7) {
+        phone = value.slice(0, 3) + "-" + value.slice(3)
+    }
+    else {
+        phone = value.slice(0,3) + "-" + value.slice(3,6) + "-" +
+            value.slice(6)
+    }
+    
+    this.setState({
+        'phone': phone,
+        saved: false
+    });
+}
+
+
+/**
+ * Event handler that is called to update the component's state when
+ * the user changes the values of the form fields associated with a 
+ * recipient's languages.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to the language fields in the form.
+ */
+handleLanguageChange(event) {
+    let id = this.getEventIDValue(event);
+    if (event.target.checked) {
+        this.setState({
+            languages: this.state.languages.concat({'name': id}),
+            saved: false
+        });
+    }
+    else {
+        var newArr = this.state.languages.filter( l => {
+            return l.name !== id
+        })
+        this.setState({languages:  newArr, saved: false});
+    }
+}
+
+/**
+ * Generic event handler that is called to update the component's state 
+ * when the user changes the value of a form field that does not require 
+ * special handling.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to a generic form field.
+ */
+handleChange(event) {
+    let [value, name] = this.getEventValues(event);
+    this.setState({
+        [name]: value,
+        saved: false
+    });
+}
+
+/**
+ * Event handler that is called upon form submission to update a recipient's 
+ * information in the database and redirect the user to the Data page.
+ * @param {Object} event The submission event that is triggered on  
+ *                          submission of the form.
+ */
+ handleSubmit = (event) => {
+    event.preventDefault();
+    this.recipientService.updateRecipient(this.state).then(result => {
+            if (result.data.id === this.state.id) {
+                this.setState({
+                    saved: true 
+                })
+            }
+            else {
+                this.setState({
+                    saved: false 
+                })
+            }});
+}
+
+/**
+ * Method called to prepopulate the language fields of the form based on
+ * whether the language passed as a parameter is stored in the recipient's state.
+ * @param {String} language The name of a language.
+ * @returns True if the language is stored in the current recipient's state, 
+ *          false otherwise.
+ */
+checkLanguage(language) {
+    for (let i = 0; i &lt; this.state.languages.length; i++) {
+        if (this.state.languages[i].name === language)
+            return true 
+    }
+}
+
+/**
+ * Method called to prepopulate the 'Central Location?' field of the form 
+ * based on the value stored in the recipient's state.
+ * @returns Yes if the recipient's location is the central departure location,
+ *          false otherwise.
+ */
+getCenter() {
+    return (this.state.location.is_center) ? "Yes" : "No" ; 
+}
+
+/**
+ * The render method used to display the component. 
+ * @returns The HTML to be rendered.
+ */
+render() {
+    return (
+        &lt;Container>
+            &lt;h1 className="h2">Update Recipient Data&lt;/h1>
+            &lt;Form onSubmit={this.handleSubmit}>
+                &lt;Row className="mb-3">
+                    &lt;Form.Group as={Col}>
+                        &lt;Form.Label htmlFor="first_name">First Name&lt;/Form.Label>
+                        &lt;Form.Control type="text" name="first_name" value={this.state.first_name}
+                           required onChange={this.handleChange} />
+                    &lt;/Form.Group>
+
+                    &lt;Form.Group as={Col}>
+                        &lt;Form.Label htmlFor="last_name">Last Name&lt;/Form.Label>
+                        &lt;Form.Control type="text" name="last_name" value={this.state.last_name}
+                        required onChange={this.handleChange} />
+                    &lt;/Form.Group>
+                &lt;/Row>
+
+                &lt;Row className="mb-3">
+                    &lt;Form.Group as={Col} className="mb-3" controlId="formGridPhone">
+                        &lt;Form.Label>Phone Number&lt;/Form.Label>
+                        &lt;Form.Control  type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                        onChange={this.handlePhoneChange} value={this.state.phone}
+                        required placeholder="402-345-6789" name="phone" maxlength="12"/>
+                    &lt;/Form.Group>
+
+                    &lt;Form.Group as={Col}>
+                        &lt;Form.Label htmlFor="quantity">Quantity&lt;/Form.Label> 
+                        &lt;Form.Control type="number" value={this.state.quantity} 
+                        required onChange={this.handleChange} name="quantity" min="1"/>
+                    &lt;/Form.Group>
+                &lt;/Row>
+
+                &lt;Form.Group className="mb-3">
+                    &lt;Form.Label htmlFor="address">Address&lt;/Form.Label>
+                    &lt;Form.Control type="text" name="location" id="address" 
+                    required value={this.state.location.address}  onChange={this.handleObjectChange} />
+                &lt;/Form.Group>
+
+                &lt;Row className="mb-3">
+                    &lt;Form.Group as={Col}>
+                        &lt;Form.Label htmlFor="room_number">Apartment Number&lt;/Form.Label>
+                        &lt;Form.Control type="text" name="location" id="room_number"
+                        onChange={this.handleObjectChange} value={this.state.location.room_number} />
+                    &lt;/Form.Group>
+
+                    &lt;Form.Group as={Col}>
+                        &lt;Form.Label htmlFor="is_center">Central Location?&lt;/Form.Label> 
+                        &lt;Form.Select onChange={this.handleObjectChange}
+                            name="location" id="is_center" 
+                            value={this.getCenter()}>
+                            &lt;option>No&lt;/option>
+                            &lt;option>Yes&lt;/option>
+                        &lt;/Form.Select>
+                    &lt;/Form.Group>
+                &lt;/Row>
+
+                &lt;Row className="mb-3">
+                    &lt;Form.Group as={Col}>
+                        &lt;Form.Label htmlFor="city">City&lt;/Form.Label>
+                        &lt;Form.Control type="text" name="location" id="city" 
+                        required onChange={this.handleObjectChange} value={this.state.location.city} />
+                    &lt;/Form.Group>
+
+                    &lt;Form.Group as={Col} >
+                        &lt;Form.Label htmlFor="state">State&lt;/Form.Label>
+                        &lt;Form.Select onChange={this.handleObjectChange} value={this.state.location.state}
+                            required name="location" id="state">
+                        { this.states.map( s => 
+                            &lt;option>{s}&lt;/option>
+                        )}
+                        &lt;/Form.Select>
+                    &lt;/Form.Group>
+
+                    &lt;Form.Group as={Col}>
+                        &lt;Form.Label htmlFor="zipcode">Zip&lt;/Form.Label>
+                        &lt;Form.Control type="text" pattern="[0-9]{5}" onChange={this.handleObjectChange} 
+                            required name="location" id="zipcode" placeholder="#####" minlength="5" maxlength="5" value={this.state.location.zipcode}/>
+                    &lt;/Form.Group>
+                &lt;/Row>
+
+                &lt;Form.Group className="mb-3" id="formGridCheckbox">
+                    &lt;Row>&lt;Form.Label>Languages&lt;/Form.Label>&lt;/Row>
+                        { this.languages.map( l => 
+                            &lt;Form.Check type="checkbox" inline label={l} id={l} 
+                                checked={this.checkLanguage(l)}
+                                name="language" onChange={this.handleLanguageChange} />
+                        )}
+                &lt;/Form.Group>
+
+                &lt;Row className="mb-3">
+                &lt;InputGroup>
+                    &lt;InputGroup.Text>Comments&lt;/InputGroup.Text>
+                    &lt;FormControl as="textarea" aria-label="With textarea" 
+                    value={this.state.comments}
+                                name="comments" onChange={this.handleChange}/>
+                &lt;/InputGroup>
+                &lt;/Row>
+
+                &lt;Button variant="primary" className="mr-4" 
+                    onClick={this.handleSubmit}>Submit
+                &lt;/Button>
+                &lt;Link to="/data">
+                    &lt;Button variant="secondary">Return&lt;/Button>
+                &lt;/Link>
+                {this.state.saved ?
+                    &lt;Row className='text-success h4 mb-4 mt-2'>Recipient Updated!&lt;/Row> :
+                    &lt;Row className='mb-4'>&lt;/Row> }
+            &lt;/Form>
+        &lt;/Container>
+        );
+    }
+}
+export default UpdateRecipient;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AddDriver.html">AddDriver</a></li><li><a href="AddRecipient.html">AddRecipient</a></li><li><a href="Driver.html">Driver</a></li><li><a href="DriverRoute.html">DriverRoute</a></li><li><a href="History.html">History</a></li><li><a href="module.exports.html">exports</a></li><li><a href="Recipient.html">Recipient</a></li><li><a href="RouteResults.html">RouteResults</a></li><li><a href="UpdateDriver.html">UpdateDriver</a></li><li><a href="UpdateRecipient.html">UpdateRecipient</a></li><li><a href="ViewDriver.html">ViewDriver</a></li><li><a href="ViewRecipient.html">ViewRecipient</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createDriver">createDriver</a></li><li><a href="global.html#createRecipient">createRecipient</a></li><li><a href="global.html#createRoute">createRoute</a></li><li><a href="global.html#deleteDriver">deleteDriver</a></li><li><a href="global.html#deleteLocation">deleteLocation</a></li><li><a href="global.html#deleteRecipient">deleteRecipient</a></li><li><a href="global.html#deleteRouteList">deleteRouteList</a></li><li><a href="global.html#findDrivers">findDrivers</a></li><li><a href="global.html#findRecipients">findRecipients</a></li><li><a href="global.html#getDriver">getDriver</a></li><li><a href="global.html#getDrivers">getDrivers</a></li><li><a href="global.html#getLocations">getLocations</a></li><li><a href="global.html#getRecipient">getRecipient</a></li><li><a href="global.html#getRecipients">getRecipients</a></li><li><a href="global.html#getRoute">getRoute</a></li><li><a href="global.html#getRouteList">getRouteList</a></li><li><a href="global.html#getRouteLists">getRouteLists</a></li><li><a href="global.html#getRoutes">getRoutes</a></li><li><a href="global.html#updateDriver">updateDriver</a></li><li><a href="global.html#updateRecipient">updateRecipient</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Fri May 06 2022 16:22:02 GMT-0500 (Central Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

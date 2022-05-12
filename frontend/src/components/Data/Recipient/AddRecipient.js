@@ -34,6 +34,7 @@ constructor(props) {
     this.recipientService = new RecipientService();
     this.handleChange = this.handleChange.bind(this);
     this.handleObjectChange = this.handleObjectChange.bind(this);
+    this.handleZipcodeChange = this.handleZipcodeChange.bind(this);
     this.handleLanguageChange = this.handleLanguageChange.bind(this);
     this.handlePhoneChange = this.handlePhoneChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -81,6 +82,30 @@ handleObjectChange(event) {
         [name]: {
              ...prevState[name],
             [id]: value
+        }    
+    }
+    ));
+}
+    
+/**
+ * Generic event handler that is called to update the zipcode state
+ * when the user changes the value.
+ * @param {Object} event The event that is triggered on a change of value
+ *                          to a form field.
+ * @returns 
+ */
+handleZipcodeChange(event) {
+    let [value, name, id] = this.getEventValues(event);
+    let zipcode = parseInt(value);
+
+    if (isNaN(zipcode)) {
+        return;
+    }
+
+    this.setState(prevState => ({
+        [name]: {
+             ...prevState[name],
+            [id]: zipcode
         }    
     }
     ));
@@ -173,7 +198,7 @@ handleChange(event) {
 handleSubmit = (event) => {
     event.preventDefault();
     this.recipientService.createRecipient(this.state).then( result => {
-        this.setState({redirect: "/"});
+        this.setState({redirect: "/data"});
     });
 }
     
@@ -230,9 +255,9 @@ render() {
 
                 <Row className="mb-3" key="address_data">
                     <Form.Group as={Col} >
-                        <Form.Label htmlFor="room_number">Address 2</Form.Label>
+                        <Form.Label htmlFor="room_number">Apartment Number</Form.Label>
                         <Form.Control type="text" name="location" id="room_number"
-                        onChange={this.handleObjectChange} placeholder="Apartment, studio, or floor" />
+                        onChange={this.handleObjectChange} placeholder="Apt #" />
                     </Form.Group>
                     
                     <Form.Group as={Col}>
@@ -264,8 +289,8 @@ render() {
 
                     <Form.Group as={Col}>
                         <Form.Label htmlFor="zipcode">Zip</Form.Label>
-                        <Form.Control type="number" onChange={this.handleObjectChange} 
-                            required name="location" id="zipcode" min="0"/>
+                        <Form.Control type="text" pattern="[0-9]{5}" onChange={this.handleZipcodeChange} 
+                            required name="location" id="zipcode" placeholder="#####" maxlength="5"/>
                     </Form.Group>
                 </Row>
 
@@ -288,7 +313,7 @@ render() {
                 </Form.Group>
 
                 <Button variant="primary" className="mr-4" type="submit">Submit</Button>
-                <Link to="/">
+                <Link to="/data">
                     <Button variant="secondary">Cancel</Button>
                 </Link>
             </Form>
